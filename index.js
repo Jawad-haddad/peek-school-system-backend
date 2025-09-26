@@ -1,7 +1,10 @@
-require('dotenv').config({ path: __dirname + '/.env' });
+// index.js
 
-console.log("✅ Loaded DATABASE_URL:", process.env.DATABASE_URL);
-console.log("✅ Loaded JWT_SECRET:", process.env.JWT_SECRET);const express = require('express');
+require('dotenv').config();
+const express = require('express');
+const helmet = require('helmet'); // Import helmet
+const cors = require('cors');     // Import cors
+
 const mainRoutes = require('./src/routes/mainRoutes');
 const userRoutes = require('./src/routes/userRoutes');
 const schoolRoutes = require('./src/routes/schoolRoutes');
@@ -11,7 +14,32 @@ const posRoutes = require('./src/routes/posRoutes');
 const busRoutes = require('./src/routes/busRoutes');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+
+// --- NEW: Security Middleware ---
+
+// 1. Use Helmet to set various security headers
+app.use(helmet());
+
+// 2. Configure CORS to allow specific origins
+const whitelist = [
+    // Add the URLs of your future frontends here
+    'http://localhost:3001', // For local Next.js frontend development
+    // 'https://dashboard.peek-app.com', // Example for production
+];
+
+const corsOptions = {
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or Postman)
+        if (!origin || whitelist.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
+};
+app.use(cors(corsOptions));
+
+// -----------------------------
 
 app.use(express.json());
 
