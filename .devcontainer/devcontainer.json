@@ -1,0 +1,22 @@
+{
+  "name": "Selsal Backend Dev Container",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [3000, 5432],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Prisma.prisma",
+        "dbaeumer.vscode-eslint"
+      ]
+    }
+  },
+  // --- أضف القسم الجديد هنا ---
+  "remoteEnv": {
+    "DATABASE_URL": "postgresql://postgres:1234@db:5432/school_system?schema=public",
+    "JWT_SECRET": "THIS_IS_A_VERY_SECRET_KEY_AND_SHOULD_BE_CHANGED_LATER"
+  },
+  // --------------------------
+  "postCreateCommand": "npm install"
+}
