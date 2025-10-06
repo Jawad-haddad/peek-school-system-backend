@@ -87,6 +87,10 @@ model School {
   // Timestamps
   createdAt             DateTime            @default(now())
   updatedAt             DateTime            @updatedAt
+  exams                 Exam[]
+  timeTableEntries      TimeTableEntry[]
+  twoFactorCode          String?
+  twoFactorCodeExpires   DateTime?
 }
 
 model User {
@@ -110,6 +114,9 @@ model User {
   auditLogs              AuditLog[]
   busTrips               BusTrip[]                  @relation("BusTripSupervisor")
   deviceTokens           DeviceToken[]
+  timeTableEntries       TimeTableEntry[]
+  twoFactorCode          String?
+  twoFactorCodeExpires   DateTime?
   @@index([role, schoolId])
 }
 model Student {
@@ -134,6 +141,7 @@ model Student {
   busTripEntries        BusTripEntry[]
   createdAt             DateTime            @default(now())
   updatedAt             DateTime            @updatedAt
+  examMarks             ExamMark[]
 
   @@index([schoolId])
   @@index([parentId])
@@ -169,7 +177,8 @@ model Class {
   enrollments    StudentEnrollment[]
   assignments    TeacherSubjectAssignment[]
   homework       Homework[]
-
+  examSchedules  ExamSchedule[]
+  timeTableEntries TimeTableEntry[]
   @@unique([academicYearId, name])
   @@index([academicYearId])
 }
@@ -182,7 +191,8 @@ model Subject {
   school      School                     @relation(fields: [schoolId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   assignments TeacherSubjectAssignment[]
   homework    Homework[]
-
+  examSchedules ExamSchedule[]
+  timeTableEntries TimeTableEntry[]
   @@unique([schoolId, name])
   @@index([schoolId])
 }
@@ -467,4 +477,71 @@ model AuditLog {
 
   @@index([schoolId, timestamp])
   @@index([userId, timestamp])
+}
+
+// ======================================================= //
+// ==============    EXAMINATION MODELS   ================ //
+// ======================================================= //
+
+model Exam {
+  id          String         @id @default(uuid())
+  name        String
+  startDate   DateTime
+  endDate     DateTime
+  schoolId    String
+  school      School         @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  schedules   ExamSchedule[]
+
+  @@unique([schoolId, name])
+}
+
+model ExamSchedule {
+  id        String      @id @default(uuid())
+  examId    String
+  exam      Exam        @relation(fields: [examId], references: [id], onDelete: Cascade)
+  classId   String
+  class     Class       @relation(fields: [classId], references: [id], onDelete: Cascade)
+  subjectId String
+  subject   Subject     @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  date      DateTime
+  startTime String
+  endTime   String
+  roomNo    String?
+  marks     ExamMark[]
+
+  @@unique([examId, classId, subjectId])
+}
+
+model ExamMark {
+  id              String       @id @default(uuid())
+  examScheduleId  String
+  examSchedule    ExamSchedule @relation(fields: [examScheduleId], references: [id], onDelete: Cascade)
+  studentId       String
+  student         Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  marksObtained   Decimal?     @db.Decimal(5, 2)
+  comments        String?
+
+  @@unique([examScheduleId, studentId])
+}
+
+// ======================================================= //
+// ==============     TIMETABLE MODELS    ================ //
+// ======================================================= //
+
+model TimeTableEntry {
+  id          String   @id @default(uuid())
+  classId     String
+  class       Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  subjectId   String
+  subject     Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  teacherId   String
+  teacher     User     @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  dayOfWeek   String   // e.g., "Monday", "Tuesday"
+  startTime   String   // e.g., "08:00 AM"
+  endTime     String   // e.g., "08:45 AM"
+  schoolId    String
+  school      School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@index([classId, dayOfWeek])
+  @@index([teacherId])
 }

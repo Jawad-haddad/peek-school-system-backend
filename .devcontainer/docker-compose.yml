@@ -18,6 +18,8 @@ services:
     restart: unless-stopped
     volumes:
       - postgres-data:/var/lib/postgresql/data
+            - ../backups:/backups 
+
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1234

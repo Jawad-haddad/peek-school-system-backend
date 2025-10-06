@@ -1,6 +1,6 @@
 const { Parser } = require('json2csv');
 const prisma = require('../prismaClient');
-
+const logger = require('../config/logger'); 
 // === SUPER ADMIN CONTROLLERS ===
 const createSchool = async (req, res) => {
   const { name, address } = req.body;
@@ -157,12 +157,48 @@ const exportStudentsToCsv = async (req, res) => {
   }
 };
 
-module.exports = { 
-  createSchool, 
-  addStudentToSchool, 
-  createAcademicYear, 
-  createSubject, 
-  createClass, 
-  enrollStudentInClass,
-  exportStudentsToCsv 
+const updateStudent = async (req, res) => {
+  const { studentId } = req.params;
+  const schoolId = req.user.schoolId;
+  try {
+      const student = await prisma.student.findFirst({ where: { id: studentId, schoolId } });
+      if (!student) {
+          return res.status(404).json({ message: "Student not found in your school." });
+      }
+      const updatedStudent = await prisma.student.update({
+          where: { id: studentId },
+          data: req.body
+      });
+      logger.info({ studentId: updatedStudent.id, schoolId }, "Student information updated");
+      res.status(200).json(updatedStudent);
+  } catch (error) {
+      logger.error({ error, studentId }, "Error updating student");
+      res.status(500).json({ message: "Failed to update student information." });
+  }
+};
+
+/**
+* Deletes a student from the school.
+* Accessible by: school_admin
+*/
+const deleteStudent = async (req, res) => {
+  const { studentId } = req.params;
+  const schoolId = req.user.schoolId;
+  try {
+      const student = await prisma.student.findFirst({ where: { id: studentId, schoolId } });
+      if (!student) {
+          return res.status(404).json({ message: "Student not found in your school." });
+      }
+      await prisma.student.delete({ where: { id: studentId } });
+      logger.info({ studentId, schoolId }, "Student deleted successfully");
+      res.status(204).send(); // 204 No Content is standard for successful deletion
+  } catch (error) {
+      logger.error({ error, studentId }, "Error deleting student");
+      res.status(500).json({ message: "Failed to delete student." });
+  }
+};
+
+module.exports = {
+  createSchool, addStudentToSchool, createAcademicYear, createSubject, createClass,
+  enrollStudentInClass, exportStudentsToCsv, updateStudent, deleteStudent
 };
