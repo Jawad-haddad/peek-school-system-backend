@@ -36,7 +36,11 @@ const createBusTrip = async (req, res) => {
  */
 // src/controllers/busController.js
 
-const recordBusAttendance = async (req, res) => {
+/**
+ * Updates the status of a student on a bus trip (e.g., boarded, dropped).
+ * Sends a notification to the parent.
+ */
+const updateBusStatus = async (req, res) => {
     const { tripId, studentId, status } = req.body;
 
     if (!tripId || !studentId || !status) {
@@ -49,7 +53,7 @@ const recordBusAttendance = async (req, res) => {
             where: { id: tripId, schoolId: req.user.schoolId }
         });
 
-        // Find student and include parentId and name for the notification
+        // Find student details for notification
         const student = await prisma.student.findFirst({
             where: { id: studentId, schoolId: req.user.schoolId },
             select: { id: true, parentId: true, fullName: true }
@@ -59,42 +63,102 @@ const recordBusAttendance = async (req, res) => {
             return res.status(404).json({ message: "Trip or Student not found in your school." });
         }
 
-        // Create the attendance entry
-        const attendanceEntry = await prisma.busTripEntry.create({
-            data: {
+        // Determine boardedAt value
+        let boardedAtUpdate = undefined;
+        if (status === 'boarded') {
+            boardedAtUpdate = new Date(); // Set timestamp if boarding
+        }
+        // If dropped, we don't overwrite boardedAt, assuming it was set earlier. 
+        // If we want to clear it or track dropoff time separately, schema changes would be needed. 
+        // For now, only 'boarded' triggers a timestamp set as per instructions.
+
+        // Update or Create the entry
+        // Using upsert ensures we handle both "student already on manifest" and "new student added dynamically"
+        const attendanceEntry = await prisma.busTripEntry.upsert({
+            where: {
+                busTripId_studentId: {
+                    busTripId: tripId,
+                    studentId: studentId
+                }
+            },
+            update: {
+                status: status,
+                boardedAt: boardedAtUpdate // Will be undefined (no change) if not 'boarded'
+            },
+            create: {
                 busTripId: tripId,
-                studentId,
-                status, // e.g., "boarded_on", "dropped_off"
-                boardedAt: new Date()
+                studentId: studentId,
+                status: status,
+                boardedAt: boardedAtUpdate
             }
         });
 
-        // --- NEW: Send notification to the parent ---
+        // Send Notification
         if (student.parentId) {
-            // Customize the message based on the status
-            let notificationBody = `An update regarding your child, ${student.fullName}, on the bus. Status: ${status}.`;
-            if (status.toLowerCase() === 'boarded_on') {
-                notificationBody = `Your child, ${student.fullName}, has successfully boarded the bus.`;
-            } else if (status.toLowerCase() === 'dropped_off') {
-                notificationBody = `Your child, ${student.fullName}, has been dropped off by the bus.`;
-            }
+            const action = status === 'boarded' ? 'boarded' : 'dropped from';
+            const notificationBody = `Your child ${student.fullName} has just ${action} the bus.`;
 
             sendNotification({
                 userId: student.parentId,
-                title: 'Bus Attendance Update',
+                title: 'Bus Status Update',
                 body: notificationBody,
-                data: { tripId: trip.id, screen: 'BusTracking' }
+                data: { tripId: trip.id, screen: 'BusTracking' },
+                preferenceType: 'bus'
             });
         }
-        // ---------------------------------------------
 
-        res.status(201).json(attendanceEntry);
+        res.status(200).json(attendanceEntry);
     } catch (error) {
-        if (error.code === 'P2002') {
-            return res.status(409).json({ message: 'This student\'s attendance has already been recorded for this trip.' });
-        }
-        console.error("Error recording bus attendance:", error);
+        console.error("Error updating bus status:", error);
         res.status(500).json({ message: 'Something went wrong.' });
     }
 };
-module.exports = { createBusTrip, recordBusAttendance };
+
+/**
+ * Retrieves the manifest for a bus trip, including student details and current status.
+ */
+const getBusTripDetails = async (req, res) => {
+    const { tripId } = req.params;
+    const schoolId = req.user.schoolId;
+
+    try {
+        // Verify trip existence and ownership
+        const trip = await prisma.busTrip.findFirst({
+            where: { id: tripId, schoolId }
+        });
+
+        if (!trip) {
+            return res.status(404).json({ message: "Bus trip not found." });
+        }
+
+        // Fetch entries with student details
+        // Ordering by student name since stop sequence is not available in schema
+        const entries = await prisma.busTripEntry.findMany({
+            where: { busTripId: tripId },
+            include: {
+                student: {
+                    select: {
+                        id: true,
+                        fullName: true,
+                        // Add other student fields if needed (e.g. class, photo)
+                    }
+                }
+            },
+            orderBy: {
+                student: {
+                    fullName: 'asc'
+                }
+            }
+        });
+
+        res.status(200).json({
+            trip,
+            manifest: entries
+        });
+    } catch (error) {
+        console.error("Error fetching bus trip details:", error);
+        res.status(500).json({ message: "Failed to fetch trip details." });
+    }
+};
+
+module.exports = { createBusTrip, updateBusStatus, getBusTripDetails };

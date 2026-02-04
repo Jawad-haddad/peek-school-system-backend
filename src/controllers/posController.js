@@ -4,6 +4,8 @@ const prisma = require('../prismaClient');
 const { WalletTxnType, POSOrderStatus } = require('@prisma/client');
 const { sendNotification } = require('../services/notificationService');
 
+// ... (previous imports)
+
 // --- Helper Functions for createPosOrder ---
 
 /**
@@ -13,7 +15,14 @@ const { sendNotification } = require('../services/notificationService');
 async function validateOrderPrerequisites(studentId, itemIds, schoolId) {
     const studentPromise = prisma.student.findFirst({ 
         where: { id: studentId, schoolId },
-        select: { id: true, wallet_balance: true, parentId: true, fullName: true, schoolId: true }
+        select: { 
+            id: true, 
+            wallet_balance: true, 
+            parentId: true, 
+            fullName: true, 
+            schoolId: true,
+            daily_spending_limit: true // Include daily limit
+        }
     });
 
     const itemsPromise = prisma.canteenItem.findMany({
@@ -43,6 +52,32 @@ function calculateOrderTotal(itemIds, itemsFromDb) {
     }, 0);
 }
 
+/**
+ * Calculates the total spent by the student today.
+ */
+async function getDailySpend(studentId, schoolId) {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const orders = await prisma.pOSOrder.findMany({
+        where: {
+            studentId,
+            schoolId,
+            createdAt: {
+                gte: startOfDay,
+                lte: endOfDay
+            },
+            status: POSOrderStatus.completed // Only count completed orders
+        },
+        select: { total: true }
+    });
+
+    return orders.reduce((sum, order) => sum + Number(order.total), 0);
+}
+
 
 // --- Main Controller Functions ---
 
@@ -63,6 +98,20 @@ const createPosOrder = async (req, res) => {
                 orderTotal: total
             });
         }
+
+        // --- NEW: Daily Spending Limit Check ---
+        if (student.daily_spending_limit) {
+            const currentDailySpend = await getDailySpend(studentId, schoolId);
+            if ((currentDailySpend + total) > Number(student.daily_spending_limit)) {
+                return res.status(403).json({ 
+                    message: 'Daily spending limit exceeded.',
+                    limit: student.daily_spending_limit,
+                    currentUsage: currentDailySpend,
+                    attempted: total
+                });
+            }
+        }
+        // ---------------------------------------
 
         // Step 3: Perform the database transaction
         const newOrder = await prisma.$transaction(async (tx) => {
@@ -94,13 +143,14 @@ const createPosOrder = async (req, res) => {
             include: { items: { include: { item: { select: { name: true } } } } }
         });
 
-        // Step 4: Send notification
+        // Step 4: Send notification with preferenceType
         if (student.parentId) {
             sendNotification({
                 userId: student.parentId,
                 title: 'Canteen Purchase',
                 body: `Your child, ${student.fullName}, made a purchase from the canteen for a total of ${total.toFixed(2)} JOD.`,
-                data: { orderId: finalOrder.id, screen: 'WalletHistory' }
+                data: { orderId: finalOrder.id, screen: 'WalletHistory' },
+                preferenceType: 'wallet' // Mapped to lowBalanceWarning in service for now, or we can add a specific one later
             });
         }
 

@@ -1,6 +1,6 @@
 # Dependencies
 # We ignore this folder because it can be re-created by running `npm install`
-/node_modules
+node_modules
 
 # Environment Variables & Secret Keys
 # These files contain sensitive data and should never be committed to Git

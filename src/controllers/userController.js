@@ -51,10 +51,20 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
+    console.log("LOGIN ATTEMPT:", email);
+
     try {
         const user = await prisma.user.findUnique({ where: { email } });
+        console.log("User Found:", user ? "YES" : "NO");
+        console.log("Stored Password Hash:", user?.password_hash);
 
-        if (!user || !(await bcrypt.compare(password, user.password_hash))) {
+        let isMatch = false;
+        if (user) {
+            isMatch = await bcrypt.compare(password, user.password_hash);
+        }
+        console.log("Password Match Result:", isMatch);
+
+        if (!user || !isMatch) {
             logger.warn({ email }, "Failed login attempt: Invalid credentials");
             return res.status(401).json({ message: 'Invalid email or password.' });
         }
@@ -88,7 +98,23 @@ const loginUser = async (req, res) => {
         }
         // --- END: NEW 2FA Logic ---
 
-        // If not an admin or no phone number, login directly
+        // Helper to map DB role to frontend role
+        const mapRole = (dbRole) => {
+            if (dbRole === 'school_admin') return 'ADMIN';
+            if (dbRole === 'teacher') return 'TEACHER';
+            if (dbRole === 'parent') return 'PARENT';
+            return dbRole.toUpperCase();
+        };
+
+        const frontendRole = mapRole(user.role);
+
+        console.log("LOGIN SUCCESS: ", { email, role: user.role, mappedRole: frontendRole });
+
+        if (!process.env.JWT_SECRET) {
+            console.error("FATAL ERROR: JWT_SECRET is not defined in environment variables!");
+            throw new Error("JWT_SECRET missing");
+        }
+
         const token = jwt.sign({ userId: user.id, email: user.email, role: user.role, schoolId: user.schoolId }, process.env.JWT_SECRET, { expiresIn: '24h' });
 
         logger.info({ userId: user.id }, "User login successful");
@@ -96,9 +122,17 @@ const loginUser = async (req, res) => {
         res.status(200).json({
             message: 'Logged in successfully!',
             token,
-            user: { id: user.id, fullName: user.fullName, email: user.email, role: user.role, schoolId: user.schoolId },
+            user: {
+                id: user.id,
+                name: user.fullName,
+                fullName: user.fullName,
+                email: user.email,
+                role: frontendRole, // Mapped to uppercase for frontend
+                schoolId: user.schoolId
+            },
         });
     } catch (error) {
+        console.error("LOGIN ERROR DETAILED:", error);
         logger.error({ error, email }, "Error during user login");
         res.status(500).json({ message: 'Something went wrong on the server.' });
     }
@@ -228,12 +262,12 @@ const registerDevice = async (req, res) => {
     }
 };
 
-module.exports = { 
-    registerUser, 
-    loginUser, 
-    verifyTwoFactorCode, 
-    getUserProfile, 
-    forgotPassword, 
+module.exports = {
+    registerUser,
+    loginUser,
+    verifyTwoFactorCode,
+    getUserProfile,
+    forgotPassword,
     resetPassword,
-    registerDevice 
+    registerDevice
 };

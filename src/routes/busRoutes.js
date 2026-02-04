@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const { authMiddleware, hasRole, belongsToSchool } = require('../middleware/authMiddleware');
-const { createBusTrip, recordBusAttendance } = require('../controllers/busController');
+const { createBusTrip, updateBusStatus, getBusTripDetails } = require('../controllers/busController');
 const { UserRole } = require('@prisma/client');
 
 /**
@@ -80,6 +80,29 @@ router.post('/trips', busActions, createBusTrip);
  *       "404":
  *         description: Trip or Student not found
  */
-router.post('/attendance', busActions, recordBusAttendance);
+router.post('/attendance', busActions, updateBusStatus);
+
+/**
+ * @swagger
+ * /api/buses/trips/{tripId}:
+ *   get:
+ *     summary: Get details and student manifest for a specific bus trip
+ *     tags: [Transportation (Buses)]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: tripId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the bus trip
+ *     responses:
+ *       "200":
+ *         description: Bus trip details and manifest retrieved successfully
+ *       "404":
+ *         description: Bus trip not found
+ */
+router.get('/trips/:tripId', busActions, getBusTripDetails);
 
 module.exports = router;

@@ -16,14 +16,14 @@ services:
   db:
     image: postgres:15
     restart: unless-stopped
+    # 👇 ADD THESE TWO LINES 👇
+    ports:
+      - "5432:5432"
+    # 👆 END OF ADDITION 👆
     volumes:
       - postgres-data:/var/lib/postgresql/data
-            - ../backups:/backups 
-
+      - ../backups:/backups 
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1234
       - POSTGRES_DB=school_system
-
-volumes:
-  postgres-data:
