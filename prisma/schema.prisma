@@ -125,26 +125,26 @@ model User {
   twoFactorCodeExpires   DateTime?
   sentMessages           Message[]                  @relation("SentMessages")
   receivedMessages       Message[]                  @relation("ReceivedMessages")
-  studentProfile         Student?                   @relation("StudentUser") // One-to-one with Student profile
+  // studentProfile removed as per schema simplification
   @@index([role, schoolId])
 }
 model Student {
   id                    String              @id @default(uuid())
   fullName              String
-  gender                String?   // Added as requested
-  dob                   DateTime? // Added as requested
-  date_of_birth         DateTime?
+  gender                String?
+  dob                   DateTime?
   nfc_card_id           String?             @unique
   is_nfc_active         Boolean             @default(true)
   wallet_balance        Decimal             @db.Decimal(12, 2) @default(0)
   daily_spending_limit  Decimal?            @db.Decimal(12, 2)
   schoolId              String
   parentId              String
-  userId                String?             @unique // Link to User account (optional if not all have login)
+  // userId removed - unique student identity now relies on parent/school context
+  
   // Relations
   school                School              @relation(fields: [schoolId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   parent                User                @relation("ParentStudents", fields: [parentId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  user                  User?               @relation("StudentUser", fields: [userId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  // user relation removed
   enrollments           StudentEnrollment[]
   invoices              Invoice[]
   grades                Grade[]

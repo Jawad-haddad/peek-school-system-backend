@@ -6,19 +6,30 @@ const logger = require('../config/logger');
 
 const createExam = async (req, res) => {
     const schoolId = req.user.schoolId;
-    // New Inputs: date, startTime, endTime
-    // Using 'date' as per prompt ("Inputs: date..."), previous code used 'examDate' in one version, 'date' in another.
-    // The prompt explicitly says: "Inputs: date (YYYY-MM-DD)..."
-    const { name, date, startTime, endTime } = req.body;
+    // Log payload for debugging
+    console.log("Create Exam Payload:", req.body);
 
-    if (!name || !date || !startTime || !endTime) {
-        return res.status(400).json({ message: "Name, date, startTime, and endTime are required." });
+    const { name, date, startTime, endTime, startDate } = req.body; // Added startDate fallback support
+
+    if (!name) {
+        return res.status(400).json({ message: "Exam name is required." });
     }
 
     try {
-        // startDateTime = ISO string of date + startTime
-        const startDateTime = new Date(`${date}T${startTime}`);
-        const endDateTime = new Date(`${date}T${endTime}`);
+        let startDateTime, endDateTime;
+
+        // Strategy 1: separate date + time (Preferred by Frontend now)
+        if (date && startTime && endTime) {
+            startDateTime = new Date(`${date}T${startTime}`);
+            endDateTime = new Date(`${date}T${endTime}`);
+        }
+        // Strategy 2: Legacy startDate/endDate (Fallback)
+        else if (startDate && req.body.endDate) {
+            startDateTime = new Date(startDate);
+            endDateTime = new Date(req.body.endDate);
+        } else {
+            return res.status(400).json({ message: "Date, startTime, and endTime are required." });
+        }
 
         if (isNaN(startDateTime.getTime()) || isNaN(endDateTime.getTime())) {
             return res.status(400).json({ message: "Invalid date or time format." });
@@ -199,9 +210,25 @@ const getStudentGrades = async (req, res) => {
     }
 };
 
+const getAllExams = async (req, res) => {
+    const schoolId = req.user.schoolId;
+    try {
+        const exams = await prisma.exam.findMany({
+            where: { schoolId },
+            include: { school: true }, // As requested
+            orderBy: { startDate: 'desc' }
+        });
+        res.status(200).json(exams);
+    } catch (error) {
+        logger.error({ error, schoolId }, "Error fetching exams");
+        res.status(500).json({ message: "Failed to fetch exams." });
+    }
+};
+
 module.exports = {
     createExam,
     createExamSchedule,
     submitBulkMarks,
-    getStudentGrades
+    getStudentGrades,
+    getAllExams // Exported
 };

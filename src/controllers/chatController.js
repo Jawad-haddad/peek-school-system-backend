@@ -65,34 +65,49 @@ const getContacts = async (req, res) => {
     try {
         let contacts = [];
 
+        // 1. ADMIN: Return ALL Teachers and ALL Parents
         if (role === UserRole.school_admin || role === UserRole.super_admin || role === 'ADMIN') {
             const allUsers = await prisma.user.findMany({
-                where: { schoolId, isActive: true },
+                where: {
+                    schoolId,
+                    isActive: true,
+                    role: { in: [UserRole.teacher, UserRole.parent] }
+                },
                 select: { id: true, fullName: true, role: true }
             });
-            contacts = allUsers.filter(u => u.id !== userId).map(u => ({ ...u, type: u.role, name: u.fullName }));
+            contacts = allUsers.map(u => ({ ...u, type: u.role, name: u.fullName }));
 
+            // 2. PARENT: See Teachers of their Children
         } else if (role === UserRole.parent || role === 'PARENT') {
-            // PARENT: Find my Kids -> Kid Enrollments -> Class -> TeacherAssignments -> Teachers
+
+            // Find Students -> Enrolled Classes
             const myKids = await prisma.student.findMany({
                 where: { parentId: userId },
-                select: { id: true }
+                select: {
+                    fullName: true,
+                    enrollments: {
+                        where: { academicYear: { current: true } },
+                        select: { classId: true }
+                    }
+                }
             });
-            const kidIds = myKids.map(k => k.id);
 
-            const enrollments = await prisma.studentEnrollment.findMany({
-                where: {
-                    studentId: { in: kidIds },
-                    academicYear: { current: true }
-                },
-                select: { classId: true }
+            // Map ClassId -> Student Name(s)
+            const classToStudentMap = new Map();
+            myKids.forEach(kid => {
+                kid.enrollments.forEach(enrollment => {
+                    if (!classToStudentMap.has(enrollment.classId)) {
+                        classToStudentMap.set(enrollment.classId, []);
+                    }
+                    classToStudentMap.get(enrollment.classId).push(kid.fullName);
+                });
             });
-            const classIds = [...new Set(enrollments.map(e => e.classId))];
+
+            // Extract all class IDs
+            const classIds = Array.from(classToStudentMap.keys());
 
             if (classIds.length > 0) {
-                const teacherMap = new Map();
-
-                // 1. Check Assignments (Preferred)
+                // Find Teachers assigned to these classes
                 const assignments = await prisma.teacherSubjectAssignment.findMany({
                     where: { classId: { in: classIds } },
                     include: {
@@ -101,48 +116,54 @@ const getContacts = async (req, res) => {
                     }
                 });
 
+                const teacherMap = new Map();
                 assignments.forEach(a => {
                     if (a.teacher) {
-                        teacherMap.set(a.teacher.id, {
-                            id: a.teacher.id,
-                            name: a.teacher.fullName,
-                            role: a.teacher.role,
-                            type: 'TEACHER',
-                            subject: a.subject.name
-                        });
+                        const studentNames = classToStudentMap.get(a.classId) || [];
+                        const studentNameStr = studentNames.join(', ');
+
+                        if (!teacherMap.has(a.teacher.id)) {
+                            teacherMap.set(a.teacher.id, {
+                                id: a.teacher.id,
+                                name: a.teacher.fullName,
+                                role: 'TEACHER',
+                                type: 'TEACHER',
+                                subject: a.subject.name,
+                                studentName: studentNameStr, // Added Field
+                                description: `Teacher (${a.subject.name}) of ${studentNameStr}`
+                            });
+                        } else {
+                            // Append subject if different
+                            const existing = teacherMap.get(a.teacher.id);
+                            if (!existing.subject.includes(a.subject.name)) {
+                                existing.subject += `, ${a.subject.name}`;
+                                // Check if student name is already in description (e.g. same student, new subject)
+                                // or new student, same teacher.
+                                // Logic: "Teacher (Math, Science) of Leo"
+                                existing.description = `Teacher (${existing.subject}) of ${existing.studentName}`;
+                            }
+                            // Append student name if new (e.g. Teacher teaches Sibling in another class)
+                            if (!existing.studentName.includes(studentNameStr)) {
+                                existing.studentName += `, ${studentNameStr}`;
+                                existing.description = `Teacher (${existing.subject}) of ${existing.studentName}`;
+                            }
+                        }
                     }
                 });
-
-                // 2. Check Subjects directly (Fallback/Coverage)
-                const subjects = await prisma.subject.findMany({
-                    where: { classId: { in: classIds }, teacherId: { not: null } },
-                    include: { teacher: { select: { id: true, fullName: true, role: true } } }
-                });
-
-                subjects.forEach(s => {
-                    if (s.teacher && !teacherMap.has(s.teacher.id)) {
-                        teacherMap.set(s.teacher.id, {
-                            id: s.teacher.id,
-                            name: s.teacher.fullName,
-                            role: s.teacher.role,
-                            type: 'TEACHER', // Derived from Role
-                            subject: s.name
-                        });
-                    }
-                });
-
                 contacts = Array.from(teacherMap.values());
             }
 
-            // Add Admins
+            // Always add Admin for support
             const admins = await prisma.user.findMany({
                 where: { schoolId, role: { in: [UserRole.school_admin, 'school_admin'] } },
                 select: { id: true, fullName: true, role: true }
             });
             admins.forEach(a => contacts.push({ ...a, name: a.fullName, type: 'ADMIN' }));
 
+            // 3. TEACHER: See Parents of their Students
         } else if (role === UserRole.teacher || role === 'TEACHER') {
-            // TEACHER: My Assignments -> Class -> Enrollments -> Students -> Parents
+
+            // Find Classes assigned to this teacher
             const myAssignments = await prisma.teacherSubjectAssignment.findMany({
                 where: { teacherId: userId },
                 select: { classId: true }
@@ -150,6 +171,7 @@ const getContacts = async (req, res) => {
             const classIds = [...new Set(myAssignments.map(a => a.classId))];
 
             if (classIds.length > 0) {
+                // Find Students in these classes -> Include Parent
                 const classEnrollments = await prisma.studentEnrollment.findMany({
                     where: {
                         classId: { in: classIds },
@@ -157,40 +179,40 @@ const getContacts = async (req, res) => {
                     },
                     include: {
                         student: {
-                            include: {
-                                parent: { select: { id: true, fullName: true, role: true, email: true } },
-                                user: { select: { id: true, fullName: true, role: true } }
+                            select: {
+                                fullName: true,
+                                parent: {
+                                    select: { id: true, fullName: true, role: true, email: true }
+                                }
                             }
                         }
                     }
                 });
 
-                const contactMap = new Map();
+                const parentMap = new Map();
                 classEnrollments.forEach(e => {
-                    // Contact: Parent
-                    if (e.student.parent) {
-                        const p = e.student.parent;
-                        contactMap.set(p.id, {
-                            id: p.id,
-                            name: p.fullName,
-                            role: p.role,
-                            type: 'PARENT',
-                            description: `Parent of ${e.student.fullName}`
-                        });
-                    }
-                    // Contact: Student (if user exists)
-                    if (e.student.userId && e.student.user) {
-                        const s = e.student.user;
-                        contactMap.set(s.id, {
-                            id: s.id,
-                            name: s.fullName,
-                            role: 'student',
-                            type: 'STUDENT',
-                            description: 'Student'
-                        });
+                    const student = e.student;
+                    const parent = student.parent;
+
+                    if (parent) {
+                        if (!parentMap.has(parent.id)) {
+                            parentMap.set(parent.id, {
+                                id: parent.id,
+                                name: parent.fullName,
+                                role: 'PARENT',
+                                type: 'PARENT',
+                                description: `Parent of ${student.fullName}`
+                            });
+                        } else {
+                            // If parent has multiple kids in teacher's classes
+                            const existing = parentMap.get(parent.id);
+                            if (!existing.description.includes(student.fullName)) {
+                                existing.description += `, ${student.fullName}`;
+                            }
+                        }
                     }
                 });
-                contacts = Array.from(contactMap.values());
+                contacts = Array.from(parentMap.values());
             }
 
             // Add Admins

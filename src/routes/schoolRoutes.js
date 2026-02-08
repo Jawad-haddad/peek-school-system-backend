@@ -20,6 +20,8 @@ const {
     deleteTeacher,
     deleteClass
 } = require('../controllers/schoolController');
+const { getAllExams } = require('../controllers/examController'); // Imported
+const { getClassTimetable } = require('../controllers/academicController'); // Imported
 const { UserRole } = require('@prisma/client');
 
 // Middleware for school admin actions
@@ -40,6 +42,10 @@ router.get('/students/export', schoolAdminActions, exportStudentsToCsv);
 router.get('/teachers', schoolAdminActions, getAllTeachers);
 router.get('/classes', schoolAdminActions, getAllClasses);
 router.get('/students', schoolAdminActions, getStudents);
+
+// NEW ROUTES (Fixing 404s)
+router.get('/exams', schoolAdminActions, getAllExams);
+router.get('/classes/:classId/timetable', schoolAdminActions, getClassTimetable);
 
 // --- NEW ROUTES FOR UPDATE AND DELETE ---
 // --- NEW ROUTES FOR UPDATE AND DELETE ---

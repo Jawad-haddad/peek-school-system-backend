@@ -18,7 +18,8 @@ const {
   getAcademicYears,
   createTeacher,
   getSubjects,
-  getMyStudents
+  getMyStudents,
+  deleteAcademicYear
 } = require('../controllers/academicController');
 const { createSubject } = require('../controllers/schoolController'); // Imported from schoolController
 const { UserRole } = require('@prisma/client');
@@ -77,6 +78,7 @@ const viewActions = [authMiddleware, belongsToSchool]; // General view access
 // Routes for when mounted at /api/academics
 router.post('/academic-years', adminActions, createAcademicYear);
 router.get('/academic-years', viewActions, getAcademicYears);
+router.delete('/academic-years/:id', adminActions, deleteAcademicYear); // New Route
 router.post('/teachers', adminActions, createTeacher);
 router.post('/subjects', adminActions, createSubject); // Ensure createSubject is imported or use one from schoolController? 
 // Wait, createSubject is currently in schoolController. If I want it here, I need to import it or move it.

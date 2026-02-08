@@ -1,0 +1,22 @@
+🚀 Starting Full MVP Verification...
+
+🔹 [STEP] Creating Initial Admin via Database (Seed Simulation)
+✅ School Created: 995d6ea3-99fe-444e-a18b-41a856258be7
+
+🔹 [STEP] Login as Admin
+❌ Verification Failed
+   Error:
+AggregateError
+    at AxiosError.from (C:\Users\Pc\Downloads\peek-school-system-backend\node_modules\axios\dist\node\axios.cjs:842:28)
+    at RedirectableRequest.handleRequestError (C:\Users\Pc\Downloads\peek-school-system-backend\node_modules\axios\dist\node\axios.cjs:3498:27)
+    at RedirectableRequest.emit (node:events:508:28)
+    at eventHandlers.<computed> (C:\Users\Pc\Downloads\peek-school-system-backend\node_modules\follow-redirects\index.js:49:24)
+    at ClientRequest.emit (node:events:508:28)
+    at emitErrorEvent (node:_http_client:108:11)
+    at Socket.socketErrorListener (node:_http_client:575:5)
+    at Socket.emit (node:events:508:28)
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+    at Axios.request (C:\Users\Pc\Downloads\peek-school-system-backend\node_modules\axios\dist\node\axios.cjs:4713:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async runVerification (C:\Users\Pc\Downloads\peek-school-system-backend\scripts\verify_mvp.js:138:26)

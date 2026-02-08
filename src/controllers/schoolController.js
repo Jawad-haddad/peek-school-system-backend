@@ -39,15 +39,30 @@ const createSubject = async (req, res) => {
     if (!name || !classId) { return res.status(400).json({ message: 'Subject name and Class ID are required.' }); }
 
     try {
-        const newSubject = await prisma.subject.create({
-            data: {
-                name,
-                schoolId,
-                classId,
-                teacherId: teacherId || undefined
+        const result = await prisma.$transaction(async (prisma) => {
+            const newSubject = await prisma.subject.create({
+                data: {
+                    name,
+                    schoolId,
+                    classId,
+                    teacherId: teacherId || undefined
+                }
+            });
+
+            // Sync with TeacherSubjectAssignment if teacher is assigned
+            if (teacherId) {
+                await prisma.teacherSubjectAssignment.create({
+                    data: {
+                        teacherId,
+                        subjectId: newSubject.id,
+                        classId
+                    }
+                });
             }
+            return newSubject;
         });
-        res.status(201).json(newSubject);
+
+        res.status(201).json(result);
     } catch (error) {
         if (error.code === 'P2002') { return res.status(409).json({ message: 'A subject with this name already exists for this class.' }); }
         console.error(error);
@@ -166,29 +181,20 @@ const createStudent = async (req, res) => {
                 }
             });
 
-            // 2. Student User
-            const newStudentUser = await prisma.user.create({
-                data: {
-                    fullName,
-                    email: studentEmail,
-                    password_hash: defaultPasswordHash, // Students get login too
-                    role: UserRole.STUDENT,
-                    schoolId,
-                    isActive: true,
-                    emailVerified: true
-                }
-            });
+            // 2. Student User - REMOVED (Students do not have login)
+            // const studentEmail = ... 
+            // const newStudentUser = ...
 
             // 3. Student Profile
             const newStudent = await prisma.student.create({
                 data: {
-                    userId: newStudentUser.id,
+                    // userId: newStudentUser.id, <--- REMOVED
                     parentId: parentUser.id,
                     schoolId: schoolId,
                     fullName: fullName,
                     nfc_card_id: nfcTagId || undefined,
                     dob: birthDateValue,
-                    date_of_birth: birthDateValue, // Sync
+                    // date_of_birth: birthDateValue, <--- REMOVED
                     gender: gender || 'Not Specified',
                     totalFee: studentFee,
                     balance: studentFee,
@@ -205,12 +211,11 @@ const createStudent = async (req, res) => {
                 }
             });
 
-            return { newStudentUser, newStudent, parentUser };
+            return { newStudent, parentUser };
         });
 
         res.status(201).json({
             student: result.newStudent,
-            user: result.newStudentUser,
             parent: result.parentUser,
             message: "Student created successfully."
         });
@@ -443,19 +448,85 @@ const exportStudentsToCsv = async (req, res) => {
 const updateStudent = async (req, res) => {
     const { studentId } = req.params;
     const schoolId = req.user.schoolId;
+
+    // 1. Strict Sanitization (Only allow these fields)
+    const { fullName, gender, dob, nfc_card_id, classId, date_of_birth } = req.body;
+
     try {
-        const student = await prisma.student.findFirst({ where: { id: studentId, schoolId } });
+        const student = await prisma.student.findFirst({
+            where: { id: studentId, schoolId },
+            include: { enrollments: { where: { academicYear: { current: true } } } }
+        });
+
         if (!student) {
             return res.status(404).json({ message: "Student not found in your school." });
         }
-        const updatedStudent = await prisma.student.update({
-            where: { id: studentId },
-            data: req.body
+
+        const dataToUpdate = {};
+        if (fullName) dataToUpdate.fullName = fullName;
+        if (gender) dataToUpdate.gender = gender;
+        if (nfc_card_id) dataToUpdate.nfc_card_id = nfc_card_id;
+
+        // Date Parsing
+        let newDob = null;
+        if (dob) newDob = new Date(dob);
+        else if (date_of_birth) newDob = new Date(date_of_birth);
+
+        if (newDob && !isNaN(newDob.getTime())) {
+            dataToUpdate.dob = newDob;
+        }
+
+        // 2. Transaction
+        const result = await prisma.$transaction(async (tx) => {
+            // Update Core Data
+            const updatedStudent = await tx.student.update({
+                where: { id: studentId },
+                data: dataToUpdate
+            });
+
+            // Handle Enrollment Change
+            if (classId) {
+                const currentEnrollment = student.enrollments[0];
+
+                // If class changed or no enrollment exists
+                if (!currentEnrollment || currentEnrollment.classId !== classId) {
+                    // Check if target class exists and get its year
+                    const targetClass = await tx.class.findUnique({
+                        where: { id: classId },
+                        select: { academicYearId: true }
+                    });
+
+                    if (targetClass) {
+                        // If an enrollment exists for this year, we must delete it first (or update it) due to Unique constraint.
+                        // The prompt asks to "create a new StudentEnrollment".
+                        // To clear the unique constraint for the *same* year, we delete the old one.
+                        if (currentEnrollment) {
+                            await tx.studentEnrollment.delete({ where: { id: currentEnrollment.id } });
+                        }
+
+                        // Create NEW enrollment
+                        await tx.studentEnrollment.create({
+                            data: {
+                                studentId,
+                                classId,
+                                academicYearId: targetClass.academicYearId
+                            }
+                        });
+                    }
+                }
+            }
+
+            return updatedStudent;
         });
-        logger.info({ studentId: updatedStudent.id, schoolId }, "Student information updated");
-        res.status(200).json(updatedStudent);
+
+        logger.info({ studentId: result.id, schoolId }, "Student updated successfully");
+        res.status(200).json(result);
+
     } catch (error) {
         logger.error({ error, studentId }, "Error updating student");
+        if (error.code === 'P2002') {
+            return res.status(409).json({ message: "NFC ID already in use." });
+        }
         res.status(500).json({ message: "Failed to update student information." });
     }
 };
@@ -523,17 +594,24 @@ const getAllClasses = async (req, res) => {
     const userId = req.user.id;
     const role = req.user.role;
 
-    try {
-        let classes;
+    console.log("getAllClasses Check:", { userId, role, schoolId });
 
-        if (role === UserRole.teacher || role === 'TEACHER') {
-            // TEACHER: Get classes from Assignments
+    try {
+        let classes = [];
+
+        // Check role case-insensitively
+        if (role === 'TEACHER' || role === 'teacher') {
+            console.log("Fetching classes for TEACHER...");
             const assignments = await prisma.teacherSubjectAssignment.findMany({
                 where: { teacherId: userId },
-                include: { class: { include: { academicYear: { select: { name: true, current: true } } } } }
+                include: {
+                    class: {
+                        include: { academicYear: true }
+                    }
+                }
             });
 
-            // Map to dedup classes
+            // Extract unique classes
             const classMap = new Map();
             assignments.forEach(a => {
                 if (a.class) {
@@ -541,13 +619,14 @@ const getAllClasses = async (req, res) => {
                 }
             });
             classes = Array.from(classMap.values());
+            console.log(`Found ${classes.length} classes for teacher`);
 
         } else {
             // ADMIN/OTHERS: Get All Classes
-            // CRITICAL CHECK: Ensure we don't have stray filters
+            console.log("Fetching ALL classes for ADMIN...");
             classes = await prisma.class.findMany({
                 where: { academicYear: { schoolId } }, // Scoped to school
-                include: { academicYear: { select: { name: true, current: true } } },
+                include: { academicYear: true },
                 orderBy: { name: 'asc' }
             });
         }
@@ -555,9 +634,9 @@ const getAllClasses = async (req, res) => {
         const formatted = classes.map(c => ({
             id: c.id,
             name: c.name,
-            academicYear: c.academicYear ? c.academicYear.name : 'N/A', // Flattened
+            academicYear: c.academicYear ? c.academicYear.name : 'N/A',
+            // Keeping these helpful fields as they don't break "id, name" requirement but add value
             isCurrent: c.academicYear ? c.academicYear.current : false,
-            // Add defaultFee for frontend reference if needed
             defaultFee: c.defaultFee
         }));
 
