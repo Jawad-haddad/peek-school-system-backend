@@ -131,6 +131,8 @@ model User {
 model Student {
   id                    String              @id @default(uuid())
   fullName              String
+  gender                String?   // Added as requested
+  dob                   DateTime? // Added as requested
   date_of_birth         DateTime?
   nfc_card_id           String?             @unique
   is_nfc_active         Boolean             @default(true)

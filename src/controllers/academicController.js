@@ -5,6 +5,68 @@ const { UserRole } = require('@prisma/client');
 
 // --- TEACHER & ADMIN CONTROLLERS ---
 
+const getMyStudents = async (req, res) => {
+    const teacherId = req.user.id;
+    try {
+        // 1. Get classes taught by teacher
+        const assignments = await prisma.teacherSubjectAssignment.findMany({
+            where: { teacherId },
+            select: { classId: true }
+        });
+        const classIds = [...new Set(assignments.map(a => a.classId))];
+
+        if (classIds.length === 0) {
+            return res.status(200).json([]);
+        }
+
+        // 2. Get students in these classes (current academic year)
+        const students = await prisma.student.findMany({
+            where: {
+                enrollments: {
+                    some: {
+                        classId: { in: classIds },
+                        academicYear: { current: true }
+                    }
+                }
+            },
+            select: {
+                id: true,
+                fullName: true,
+                nfc_card_id: true,
+                gender: true,
+                dob: true,
+                enrollments: {
+                    where: { academicYear: { current: true } },
+                    include: { class: { select: { name: true } } }
+                },
+                parent: {
+                    select: {
+                        id: true,
+                        fullName: true,
+                        email: true,
+                        phoneNumber: true
+                    }
+                }
+            }
+        });
+
+        // Format
+        const formatted = students.map(s => ({
+            id: s.id,
+            name: s.fullName,
+            class: s.enrollments[0]?.class?.name || 'Unknown',
+            parentName: s.parent?.fullName || 'N/A',
+            parentPhone: s.parent?.phoneNumber || 'N/A',
+            nfcStatus: s.nfc_card_id ? 'Active' : 'Missing'
+        }));
+
+        res.status(200).json(formatted);
+    } catch (error) {
+        logger.error({ error, teacherId }, "Error fetching my students");
+        res.status(500).json({ message: "Failed to fetch students." });
+    }
+};
+
 const createHomework = async (req, res) => {
     console.log("Homework Payload:", req.body);
     const { title, classId, subjectId, dueDate, description } = req.body;
@@ -179,12 +241,26 @@ const getMySchedule = async (req, res) => {
 const createExam = async (req, res) => {
     const schoolId = req.user.schoolId;
     const { name, startDate, endDate } = req.body;
+
     if (!name || !startDate || !endDate) {
         return res.status(400).json({ message: 'Exam name, start date, and end date are required.' });
     }
+
+    // Safe Date Parsing
+    let start, end;
+    try {
+        start = new Date(startDate);
+        end = new Date(endDate);
+        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+            throw new Error("Invalid Date");
+        }
+    } catch (e) {
+        return res.status(400).json({ message: "Invalid date format. Use YYYY-MM-DD." });
+    }
+
     try {
         const exam = await prisma.exam.create({
-            data: { name, startDate: new Date(startDate), endDate: new Date(endDate), schoolId }
+            data: { name, startDate: start, endDate: end, schoolId }
         });
         logger.info({ examId: exam.id, schoolId }, "New exam created");
         res.status(201).json(exam);
@@ -324,17 +400,19 @@ const createAcademicYear = async (req, res) => {
     const schoolId = req.user.schoolId;
     let { startYear, endYear, current } = req.body;
 
-    if (!startYear || !endYear) { return res.status(400).json({ message: 'Start year and end year are required.' }); }
+    // Validate inputs
+    if (!startYear || !endYear) {
+        return res.status(400).json({ message: 'Start year and end year are required.' });
+    }
 
     // Ensure Integers
     startYear = parseInt(startYear);
     endYear = parseInt(endYear);
 
+    // Auto-generate Name
     const name = `${startYear}-${endYear}`;
-    // Construct simplified dates or accept full dates?
-    // User requirement: "Input: startYear (Int), endYear (Int). Logic: Auto-generate name."
-    // We still need valid dates for the schema: startDate, endDate.
-    // Let's assume standard academic year: Sep 1st to June 30th.
+
+    // Auto-generate Dates (Standard Academic Calendar)
     const startDate = new Date(`${startYear}-09-01`);
     const endDate = new Date(`${endYear}-06-30`);
 
@@ -358,7 +436,9 @@ const createAcademicYear = async (req, res) => {
         });
         res.status(201).json(newYear);
     } catch (error) {
-        if (error.code === 'P2002') { return res.status(409).json({ message: 'An academic year with this name already exists for your school.' }); }
+        if (error.code === 'P2002') {
+            return res.status(409).json({ message: 'An academic year with this name already exists for your school.' });
+        }
         console.error(error);
         res.status(500).json({ message: 'Something went wrong.' });
     }
@@ -455,5 +535,6 @@ module.exports = {
     createAcademicYear, // Exported
     getAcademicYears,   // Exported
     createTeacher,      // Exported
-    getSubjects         // New
+    getSubjects,        // New
+    getMyStudents       // New
 };

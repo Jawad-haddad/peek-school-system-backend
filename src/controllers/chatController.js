@@ -65,151 +65,146 @@ const getContacts = async (req, res) => {
     try {
         let contacts = [];
 
-        if (role === UserRole.school_admin || role === UserRole.super_admin) {
+        if (role === UserRole.school_admin || role === UserRole.super_admin || role === 'ADMIN') {
             const allUsers = await prisma.user.findMany({
                 where: { schoolId, isActive: true },
                 select: { id: true, fullName: true, role: true }
             });
-            contacts = allUsers.map(u => ({ ...u, type: u.role }));
+            contacts = allUsers.filter(u => u.id !== userId).map(u => ({ ...u, type: u.role, name: u.fullName }));
 
-        } else if (role === UserRole.parent) {
-            const children = await prisma.student.findMany({
+        } else if (role === UserRole.parent || role === 'PARENT') {
+            // PARENT: Find my Kids -> Kid Enrollments -> Class -> TeacherAssignments -> Teachers
+            const myKids = await prisma.student.findMany({
                 where: { parentId: userId },
-                select: {
-                    enrollments: {
-                        where: { academicYear: { current: true } },
-                        select: {
-                            class: {
-                                select: {
-                                    assignments: {
-                                        select: {
-                                            teacher: {
-                                                select: { id: true, fullName: true, role: true }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                select: { id: true }
             });
+            const kidIds = myKids.map(k => k.id);
 
-            const teachersMap = new Map();
-            children.forEach(child => {
-                child.enrollments.forEach(enrollment => {
-                    enrollment.class.assignments.forEach(assignment => {
-                        const teacher = assignment.teacher;
-                        if (teacher) {
-                            teachersMap.set(teacher.id, { ...teacher, type: 'TEACHER' });
-                        }
-                    });
-                });
+            const enrollments = await prisma.studentEnrollment.findMany({
+                where: {
+                    studentId: { in: kidIds },
+                    academicYear: { current: true }
+                },
+                select: { classId: true }
             });
-            contacts = Array.from(teachersMap.values());
+            const classIds = [...new Set(enrollments.map(e => e.classId))];
 
-            // Add Admins
-            const admins = await prisma.user.findMany({
-                where: { schoolId, role: { in: [UserRole.school_admin, 'school_admin', 'ADMIN'] } },
-                select: { id: true, fullName: true, role: true }
-            });
-            admins.forEach(admin => contacts.push({ ...admin, type: 'ADMIN' }));
+            if (classIds.length > 0) {
+                const teacherMap = new Map();
 
-        } else if (role === UserRole.teacher) {
-            const assignments = await prisma.teacherSubjectAssignment.findMany({
-                where: { teacherId: userId },
-                select: {
-                    class: {
-                        select: {
-                            enrollments: {
-                                where: { academicYear: { current: true } },
-                                select: {
-                                    student: {
-                                        select: {
-                                            id: true,
-                                            fullName: true,
-                                            userId: true,
-                                            parent: {
-                                                select: { id: true, fullName: true, role: true }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            const contactMap = new Map();
-            assignments.forEach(assignment => {
-                assignment.class.enrollments.forEach(enrollment => {
-                    const student = enrollment.student;
-                    if (student && student.userId) {
-                        contactMap.set(student.userId, { id: student.userId, fullName: student.fullName, role: 'student', type: 'STUDENT' });
-                    }
-                    const parent = enrollment.student.parent;
-                    if (parent) {
-                        contactMap.set(parent.id, { ...parent, type: 'PARENT' });
-                    }
-                });
-            });
-
-            // Add Admins
-            const admins = await prisma.user.findMany({
-                where: { schoolId, role: { in: [UserRole.school_admin, 'school_admin', 'ADMIN'] } },
-                select: { id: true, fullName: true, role: true }
-            });
-            admins.forEach(admin => contactMap.set(admin.id, { ...admin, type: 'ADMIN' }));
-
-            contacts = Array.from(contactMap.values());
-
-        } else if (role === 'student') {
-            // STUDENT: Enrollment (Current) -> Class -> Teachers
-            const studentProfile = await prisma.student.findFirst({ where: { userId: userId } });
-            if (studentProfile) {
-                const enrollment = await prisma.studentEnrollment.findFirst({
-                    where: { studentId: studentProfile.id, academicYear: { current: true } },
+                // 1. Check Assignments (Preferred)
+                const assignments = await prisma.teacherSubjectAssignment.findMany({
+                    where: { classId: { in: classIds } },
                     include: {
-                        class: {
+                        teacher: { select: { id: true, fullName: true, role: true } },
+                        subject: { select: { name: true } }
+                    }
+                });
+
+                assignments.forEach(a => {
+                    if (a.teacher) {
+                        teacherMap.set(a.teacher.id, {
+                            id: a.teacher.id,
+                            name: a.teacher.fullName,
+                            role: a.teacher.role,
+                            type: 'TEACHER',
+                            subject: a.subject.name
+                        });
+                    }
+                });
+
+                // 2. Check Subjects directly (Fallback/Coverage)
+                const subjects = await prisma.subject.findMany({
+                    where: { classId: { in: classIds }, teacherId: { not: null } },
+                    include: { teacher: { select: { id: true, fullName: true, role: true } } }
+                });
+
+                subjects.forEach(s => {
+                    if (s.teacher && !teacherMap.has(s.teacher.id)) {
+                        teacherMap.set(s.teacher.id, {
+                            id: s.teacher.id,
+                            name: s.teacher.fullName,
+                            role: s.teacher.role,
+                            type: 'TEACHER', // Derived from Role
+                            subject: s.name
+                        });
+                    }
+                });
+
+                contacts = Array.from(teacherMap.values());
+            }
+
+            // Add Admins
+            const admins = await prisma.user.findMany({
+                where: { schoolId, role: { in: [UserRole.school_admin, 'school_admin'] } },
+                select: { id: true, fullName: true, role: true }
+            });
+            admins.forEach(a => contacts.push({ ...a, name: a.fullName, type: 'ADMIN' }));
+
+        } else if (role === UserRole.teacher || role === 'TEACHER') {
+            // TEACHER: My Assignments -> Class -> Enrollments -> Students -> Parents
+            const myAssignments = await prisma.teacherSubjectAssignment.findMany({
+                where: { teacherId: userId },
+                select: { classId: true }
+            });
+            const classIds = [...new Set(myAssignments.map(a => a.classId))];
+
+            if (classIds.length > 0) {
+                const classEnrollments = await prisma.studentEnrollment.findMany({
+                    where: {
+                        classId: { in: classIds },
+                        academicYear: { current: true }
+                    },
+                    include: {
+                        student: {
                             include: {
-                                assignments: {
-                                    include: { teacher: { select: { id: true, fullName: true, role: true } } }
-                                }
+                                parent: { select: { id: true, fullName: true, role: true, email: true } },
+                                user: { select: { id: true, fullName: true, role: true } }
                             }
                         }
                     }
                 });
 
-                if (enrollment && enrollment.class) {
-                    const teachersMap = new Map();
-                    enrollment.class.assignments.forEach(assignment => {
-                        if (assignment.teacher) {
-                            teachersMap.set(assignment.teacher.id, { ...assignment.teacher, type: 'TEACHER' });
-                        }
-                    });
-                    contacts = Array.from(teachersMap.values());
-                }
+                const contactMap = new Map();
+                classEnrollments.forEach(e => {
+                    // Contact: Parent
+                    if (e.student.parent) {
+                        const p = e.student.parent;
+                        contactMap.set(p.id, {
+                            id: p.id,
+                            name: p.fullName,
+                            role: p.role,
+                            type: 'PARENT',
+                            description: `Parent of ${e.student.fullName}`
+                        });
+                    }
+                    // Contact: Student (if user exists)
+                    if (e.student.userId && e.student.user) {
+                        const s = e.student.user;
+                        contactMap.set(s.id, {
+                            id: s.id,
+                            name: s.fullName,
+                            role: 'student',
+                            type: 'STUDENT',
+                            description: 'Student'
+                        });
+                    }
+                });
+                contacts = Array.from(contactMap.values());
             }
+
+            // Add Admins
+            const admins = await prisma.user.findMany({
+                where: { schoolId, role: { in: [UserRole.school_admin, 'school_admin'] } },
+                select: { id: true, fullName: true, role: true }
+            });
+            admins.forEach(a => contacts.push({ ...a, name: a.fullName, type: 'ADMIN' }));
         }
 
-        const formattedContacts = contacts.map(contact => ({
-            id: contact.id,
-            name: contact.fullName, // Map fullName to name
-            role: contact.role,
-            avatar: null,
-            type: contact.type || contact.role
-        }));
-
-        res.status(200).json(formattedContacts);
+        res.status(200).json(contacts);
     } catch (error) {
-        // Even if error, return empty to prevent crash/frontend error if desired? 
-        // User said: "If no contacts are found, return [] (empty array), NOT an error."
-        // This usually applies to search results. For a database error, 500 is technically correct.
-        // But if the user meant "Don't crash if contacts is undefined", I handled that.
-        // I will keep 500 for actual DB errors, but ensure logic doesn't throw.
-        logger.error({ error, userId }, "Error fetching contacts");
-        res.status(500).json({ message: 'Failed to fetch contacts.' });
+        console.error("Error fetching contacts:", error);
+        res.status(200).json([]); // Return empty list on error to prevent crash
     }
 };
 

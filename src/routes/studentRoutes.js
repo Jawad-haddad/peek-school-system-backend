@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { authMiddleware, hasRole, belongsToSchool } = require('../middleware/authMiddleware');
-const { updateStudentNfc, getStudentByNfc } = require('../controllers/studentController');
+const { updateStudentNfc, getStudentByNfc, getChildren } = require('../controllers/studentController');
 const { UserRole } = require('@prisma/client');
 
 /**
@@ -67,5 +67,19 @@ router.patch('/:id/nfc', adminActions, updateStudentNfc);
  *         description: Card not found or student not in school
  */
 router.get('/nfc/:cardId', staffActions, getStudentByNfc);
+
+/**
+ * @swagger
+ * /api/students/my-children:
+ *   get:
+ *     summary: Get children for the logged-in parent
+ *     tags: [Students]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "200":
+ *         description: List of children with details
+ */
+router.get('/my-children', [authMiddleware, hasRole([UserRole.parent]), belongsToSchool], getChildren);
 
 module.exports = router;

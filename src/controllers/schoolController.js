@@ -1,6 +1,7 @@
 const { Parser } = require('json2csv');
 const prisma = require('../prismaClient');
 const logger = require('../config/logger');
+const { UserRole } = require('@prisma/client');
 // === SUPER ADMIN CONTROLLERS ===
 const createSchool = async (req, res) => {
     const { name, address } = req.body;
@@ -84,117 +85,118 @@ const createClass = async (req, res) => {
 };
 
 const bcrypt = require('bcryptjs');
-const { UserRole } = require('@prisma/client');
 
 const createStudent = async (req, res) => {
     console.log("Create Student Body:", req.body);
     const schoolId = req.user.schoolId;
-    const { fullName, email, password, classId, parentId, nfcTagId, date_of_birth, fee } = req.body;
 
+    // Payload: { name, classId, gender, dob, ... }
+    const { name, classId, nfcTagId, date_of_birth, dob, fee, gender } = req.body;
+    const fullName = name || req.body.fullName;
+
+    // Validate Required Fields
     if (!classId) {
         return res.status(400).json({ message: "Class ID is required." });
     }
-
-    if (!fullName || !email || !password) {
-        return res.status(400).json({ message: "Full name, email, and password are required." });
+    if (!fullName) {
+        return res.status(400).json({ message: "Student Name is required." });
     }
 
-    // --- CULTURAL NAMING ALGORITHM START ---
+    // Safe Date Parsing
+    let birthDateValue = null;
+    try {
+        if (dob) birthDateValue = new Date(dob);
+        else if (date_of_birth) birthDateValue = new Date(date_of_birth);
+
+        // Check for invalid date
+        if (birthDateValue && isNaN(birthDateValue.getTime())) {
+            birthDateValue = null;
+        }
+    } catch (e) {
+        console.warn("Date parsing error in createStudent", e);
+        birthDateValue = null;
+    }
+
+    // --- PARENT LOGIC ---
     const parts = fullName.trim().split(/\s+/);
     let parentName;
-
-    if (parts.length >= 3) {
-        // Option A: Extract Suffix (Parts 2+)
+    if (parts.length > 2) {
+        // "Leo Andres Messi" -> "Andres Messi"
         parentName = parts.slice(1).join(' ');
+    } else if (parts.length === 2) {
+        // "Leo Messi" -> "Messi" (Family name usually, acting as Parent Name placeholder)
+        parentName = parts[1];
     } else {
-        // Option B: User entered short name (e.g. "Leo Messi")
-        // Use "Parent of [FullName]" as fallback
         parentName = `Parent of ${fullName}`;
     }
 
+    const uniqueStr = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+    // Generate a more unique email to avoid growing collisions in testing
+    const generatedParentEmail = `parent.${uniqueStr}.${Math.floor(Math.random() * 1000)}@peek.com`;
+    const studentEmail = `student.${uniqueStr}.${Math.floor(Math.random() * 1000)}@peek.com`;
+    const defaultPasswordHash = await bcrypt.hash('password123', 10);
+
     try {
-        // Check Class existence and get defaultFee
         const targetClass = await prisma.class.findUnique({ where: { id: classId } });
         if (!targetClass) {
             return res.status(404).json({ message: "Class not found." });
         }
 
-        // Determine Fee
         const studentFee = fee ? parseFloat(fee) : parseFloat(targetClass.defaultFee || 0);
-
-        // Check if email or NFC exists
-        const existingUser = await prisma.user.findUnique({ where: { email } });
-        if (existingUser) return res.status(409).json({ message: "Email already exists." });
 
         if (nfcTagId) {
             const existingNfc = await prisma.student.findUnique({ where: { nfc_card_id: nfcTagId } });
             if (existingNfc) return res.status(409).json({ message: "NFC Tag ID already exists." });
         }
 
-        // --- TRANSACTION START ---
-        // Atomic creation of Parent (if needed), Student User, Student Profile, and Enrollment
+        // --- TRANSACTION ---
         const result = await prisma.$transaction(async (prisma) => {
 
-            // 1. Lookup or Create Parent
-            let parentUser = await prisma.user.findFirst({
-                where: {
+            // 1. Parent User (Try to find existing by name? No, safer to create new for this simulation or match by email if provided)
+            // For this flow, we auto-create.
+            const parentUser = await prisma.user.create({
+                data: {
                     fullName: parentName,
-                    role: UserRole.parent
+                    email: generatedParentEmail,
+                    password_hash: defaultPasswordHash,
+                    role: UserRole.parent,
+                    schoolId,
+                    isActive: true,
+                    emailVerified: true
                 }
             });
 
-            if (!parentUser) {
-                // Generate email
-                const emailPrefix = parts.length >= 2
-                    ? `${parts[1].toLowerCase()}.${parts[parts.length - 1].toLowerCase()}`
-                    : `parent.${fullName.replace(/\s+/g, '.').toLowerCase()}`;
-
-                const parentEmail = `${emailPrefix}_${Date.now()}@parent.peak`;
-                const parentHash = await bcrypt.hash('password123', 10);
-
-                parentUser = await prisma.user.create({
-                    data: {
-                        fullName: parentName,
-                        email: parentEmail,
-                        password_hash: parentHash,
-                        role: UserRole.parent,
-                        schoolId,
-                        isActive: true,
-                        emailVerified: true
-                    }
-                });
-                logger.info({ parentId: parentUser.id, parentName }, "Auto-created parent user");
-            }
-
-            // 2. Create Student User
-            const hashedPassword = await bcrypt.hash(password, 10);
-            const newUser = await prisma.user.create({
+            // 2. Student User
+            const newStudentUser = await prisma.user.create({
                 data: {
                     fullName,
-                    email,
-                    password_hash: hashedPassword,
-                    role: 'student',
+                    email: studentEmail,
+                    password_hash: defaultPasswordHash, // Students get login too
+                    role: UserRole.STUDENT,
                     schoolId,
-                    isActive: true
+                    isActive: true,
+                    emailVerified: true
                 }
             });
 
-            // 3. Create Student Profile
+            // 3. Student Profile
             const newStudent = await prisma.student.create({
                 data: {
-                    fullName,
-                    schoolId,
+                    userId: newStudentUser.id,
                     parentId: parentUser.id,
-                    userId: newUser.id,
-                    nfc_card_id: nfcTagId,
-                    date_of_birth: date_of_birth ? new Date(date_of_birth) : undefined,
+                    schoolId: schoolId,
+                    fullName: fullName,
+                    nfc_card_id: nfcTagId || undefined,
+                    dob: birthDateValue,
+                    date_of_birth: birthDateValue, // Sync
+                    gender: gender || 'Not Specified',
                     totalFee: studentFee,
-                    paid: 0,
-                    balance: studentFee
+                    balance: studentFee,
+                    paid: 0
                 }
             });
 
-            // 4. Enroll
+            // 4. Enrollment
             await prisma.studentEnrollment.create({
                 data: {
                     studentId: newStudent.id,
@@ -203,15 +205,19 @@ const createStudent = async (req, res) => {
                 }
             });
 
-            return { newUser, newStudent };
+            return { newStudentUser, newStudent, parentUser };
         });
 
-        logger.info({ studentId: result.newStudent.id, userId: result.newUser.id, schoolId }, "Student created successfully (Transaction)");
-        res.status(201).json({ user: result.newUser, student: result.newStudent });
+        res.status(201).json({
+            student: result.newStudent,
+            user: result.newStudentUser,
+            parent: result.parentUser,
+            message: "Student created successfully."
+        });
 
     } catch (error) {
-        logger.error({ error, schoolId, email }, "Error creating student");
-        res.status(500).json({ message: "Failed to create student." });
+        logger.error({ error, schoolId }, "Error creating student");
+        res.status(500).json({ message: "Failed to create student. " + (error.message || "") });
     }
 };
 
@@ -422,7 +428,7 @@ const exportStudentsToCsv = async (req, res) => {
         }));
 
         const json2csvParser = new Parser();
-        const csv = json2csvParser.parse(formattedStudents);
+        const csv = json22csvParser.parse(formattedStudents);
 
         res.header('Content-Type', 'text/csv');
         res.attachment("students-report.csv");
@@ -474,34 +480,33 @@ const deleteStudent = async (req, res) => {
 const getAllTeachers = async (req, res) => {
     const schoolId = req.user.schoolId;
     try {
+        // Updated to use Assignments to fetch classes (since teacherProfile doesn't exist on User directly)
         const teachers = await prisma.user.findMany({
             where: { schoolId, role: UserRole.teacher, isActive: true },
             select: {
                 id: true,
                 fullName: true,
-                email: true
+                email: true,
+                // Include assignments to get classes
+                teacherAssignments: {
+                    include: {
+                        class: { select: { name: true } }
+                    }
+                }
             }
         });
 
-        if (!teachers || teachers.length === 0) {
-            return res.status(200).json([]);
-        }
-
-        const teacherIds = teachers.map(t => t.id);
-        const assignments = await prisma.teacherSubjectAssignment.findMany({
-            where: { teacherId: { in: teacherIds } },
-            include: { subject: { select: { name: true } } }
-        });
-
-        const result = teachers.map(teacher => {
-            const teacherAssignments = assignments.filter(a => a.teacherId === teacher.id);
-            const subjects = [...new Set(teacherAssignments.map(a => a.subject.name))].join(', ');
+        // Map to flat format
+        const result = teachers.map(t => {
+            const classNames = t.teacherAssignments.map(ta => ta.class?.name).filter(Boolean);
+            const uniqueClasses = [...new Set(classNames)]; // removing duplicates
 
             return {
-                id: teacher.id,
-                fullName: teacher.fullName, // Changed to fullName as requested
-                email: teacher.email,
-                subject: subjects || 'N/A',
+                id: t.id,
+                fullName: t.fullName,
+                email: t.email,
+                classes: uniqueClasses, // Returning array of class names strings
+                subject: uniqueClasses.length > 0 ? "Mapped via Classes" : "N/A", // Deprecated/Fallback field
                 phone: 'N/A'
             };
         });
@@ -515,19 +520,47 @@ const getAllTeachers = async (req, res) => {
 
 const getAllClasses = async (req, res) => {
     const schoolId = req.user.schoolId;
-    try {
-        const classes = await prisma.class.findMany({
-            where: { academicYear: { schoolId } },
-            include: { academicYear: { select: { name: true, current: true } } }
-        });
+    const userId = req.user.id;
+    const role = req.user.role;
 
-        // Ensure struct: { id, name, academicYear: { name } }
+    try {
+        let classes;
+
+        if (role === UserRole.teacher || role === 'TEACHER') {
+            // TEACHER: Get classes from Assignments
+            const assignments = await prisma.teacherSubjectAssignment.findMany({
+                where: { teacherId: userId },
+                include: { class: { include: { academicYear: { select: { name: true, current: true } } } } }
+            });
+
+            // Map to dedup classes
+            const classMap = new Map();
+            assignments.forEach(a => {
+                if (a.class) {
+                    classMap.set(a.class.id, a.class);
+                }
+            });
+            classes = Array.from(classMap.values());
+
+        } else {
+            // ADMIN/OTHERS: Get All Classes
+            // CRITICAL CHECK: Ensure we don't have stray filters
+            classes = await prisma.class.findMany({
+                where: { academicYear: { schoolId } }, // Scoped to school
+                include: { academicYear: { select: { name: true, current: true } } },
+                orderBy: { name: 'asc' }
+            });
+        }
+
         const formatted = classes.map(c => ({
             id: c.id,
             name: c.name,
-            academicYear: c.academicYear ? { name: c.academicYear.name } : { name: 'N/A' }, // Added safety
-            isCurrent: c.academicYear ? c.academicYear.current : false
+            academicYear: c.academicYear ? c.academicYear.name : 'N/A', // Flattened
+            isCurrent: c.academicYear ? c.academicYear.current : false,
+            // Add defaultFee for frontend reference if needed
+            defaultFee: c.defaultFee
         }));
+
         res.status(200).json(formatted);
     } catch (error) {
         logger.error({ error, schoolId }, "Error fetching classes");

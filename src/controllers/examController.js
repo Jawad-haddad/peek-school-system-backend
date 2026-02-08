@@ -6,30 +6,23 @@ const logger = require('../config/logger');
 
 const createExam = async (req, res) => {
     const schoolId = req.user.schoolId;
-    // Accept: name, date (YYYY-MM-DD), startTime (HH:MM), endTime (HH:MM), academicYearId, classId
-    const { name, date, startTime, endTime } = req.body; // Removed unused params for clean code if not used, or keep for later? Kept in destructure above in my thought, strictly matching req.
-
-    // User asked to "Ensure createExam accepts startTime and endTime strings separately". 
-    // My previous code did exactly this: const { name, date, startTime, endTime ... } = req.body;
-    // I will just verify and ensure it stays this way or improve it.
-    // The current code on file is:
-    // const { name, date, startTime, endTime, academicYearId, classId } = req.body;
-    // if (!name || !date || !startTime || !endTime) ...
-    // This looks correct. I will just touch it to ensure I "Actioned" it as requested, maybe adding a log?
-    // Or just skip if it's already correct. But I need to be sure.
-    // Checking file content again... yes it has startTime, endTime.
-    // I will add a small validation/log to be sure.
+    // New Inputs: date, startTime, endTime
+    // Using 'date' as per prompt ("Inputs: date..."), previous code used 'examDate' in one version, 'date' in another.
+    // The prompt explicitly says: "Inputs: date (YYYY-MM-DD)..."
+    const { name, date, startTime, endTime } = req.body;
 
     if (!name || !date || !startTime || !endTime) {
         return res.status(400).json({ message: "Name, date, startTime, and endTime are required." });
     }
 
     try {
-        // Construct start and end Date objects
-        // Construct start and end Date objects
-        // Ensuring date + time string is valid ISO
-        const startDateTime = new Date(`${date}T${startTime}:00`);
-        const endDateTime = new Date(`${date}T${endTime}:00`);
+        // startDateTime = ISO string of date + startTime
+        const startDateTime = new Date(`${date}T${startTime}`);
+        const endDateTime = new Date(`${date}T${endTime}`);
+
+        if (isNaN(startDateTime.getTime()) || isNaN(endDateTime.getTime())) {
+            return res.status(400).json({ message: "Invalid date or time format." });
+        }
 
         if (startDateTime >= endDateTime) {
             return res.status(400).json({ message: "End time must be after start time." });

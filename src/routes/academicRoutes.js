@@ -17,7 +17,8 @@ const {
   createAcademicYear,
   getAcademicYears,
   createTeacher,
-  getSubjects
+  getSubjects,
+  getMyStudents
 } = require('../controllers/academicController');
 const { createSubject } = require('../controllers/schoolController'); // Imported from schoolController
 const { UserRole } = require('@prisma/client');
@@ -218,6 +219,7 @@ router.post('/attendance', teacherAdminActions, recordAttendance);
 
 // --- Timetable & Schedule ---
 router.get('/my-schedule', [authMiddleware, hasRole([UserRole.teacher]), belongsToSchool], getMySchedule);
+router.get('/my-students', [authMiddleware, hasRole([UserRole.teacher]), belongsToSchool], getMyStudents);
 
 /**
  * @swagger

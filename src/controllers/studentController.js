@@ -103,4 +103,49 @@ const getStudentByNfc = async (req, res) => {
     }
 };
 
-module.exports = { updateStudentNfc, getStudentByNfc };
+/**
+ * Retrieves children for a parent with detailed info.
+ */
+const getChildren = async (req, res) => {
+    const parentId = req.user.id;
+    try {
+        const children = await prisma.student.findMany({
+            where: { parentId },
+            include: {
+                enrollments: {
+                    where: { academicYear: { current: true } },
+                    include: { class: { select: { name: true } } }
+                },
+                attendance: {
+                    orderBy: { date: 'desc' },
+                    take: 5 // Last 5 records for overview
+                },
+                grades: {
+                    orderBy: {
+                        homework: { dueDate: 'desc' }
+                    },
+                    take: 10,
+                    include: {
+                        homework: { include: { subject: { select: { name: true } } } }
+                    }
+                },
+                invoices: {
+                    orderBy: { issueDate: 'desc' },
+                    take: 5
+                },
+                walletTxns: {
+                    orderBy: { createdAt: 'desc' },
+                    take: 5
+                },
+                school: { select: { name: true } }
+            }
+        });
+        res.status(200).json(children);
+    } catch (error) {
+        console.error("Error fetching children:", error);
+        res.status(500).json({ message: "Failed to fetch children." });
+    }
+};
+
+module.exports = { updateStudentNfc, getStudentByNfc, getChildren };
+
