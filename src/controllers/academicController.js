@@ -239,8 +239,8 @@ const getMySchedule = async (req, res) => {
         const assignments = await prisma.teacherSubjectAssignment.findMany({
             where: { teacherId },
             include: {
-                subject: { select: { name: true } },
-                class: { select: { name: true } },
+                subject: { select: { id: true, name: true } },
+                class: { select: { id: true, name: true } },
             },
         });
         res.status(200).json(assignments);
@@ -393,8 +393,8 @@ const getTeacherClasses = async (req, res) => {
         const assignments = await prisma.teacherSubjectAssignment.findMany({
             where: { teacherId: id },
             include: {
-                subject: { select: { name: true } },
-                class: { select: { name: true, academicYearId: true } },
+                subject: { select: { id: true, name: true } },
+                class: { select: { id: true, name: true, academicYearId: true } },
             },
         });
 
