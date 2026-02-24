@@ -7,7 +7,7 @@ const {
   getHomework, // Import new controller
   getHomeworkForStudent,
   addGrade,
-  recordAttendance,
+  // recordAttendance, // DEPRECATED: Use attendanceController.submitClassAttendance instead
   getMySchedule,
   getTeacherClasses,
   getAcademicYears,
@@ -108,6 +108,45 @@ router.post('/', adminActions, createAcademicYear);
 
 // --- Classes ---
 router.get('/classes', [authMiddleware, hasRole([UserRole.teacher, UserRole.school_admin]), belongsToSchool], getAllClasses);
+/**
+ * @swagger
+ * /api/academics/classes/{classId}/students:
+ *   get:
+ *     summary: Get all students enrolled in a class
+ *     tags: [Academics]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: classId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *     responses:
+ *       "200":
+ *         description: Array of students
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id: { type: string, format: uuid }
+ *                   fullName: { type: string }
+ *                   gender: { type: string, nullable: true }
+ *                   dob: { type: string, format: date-time, nullable: true }
+ *                   nfc_card_id: { type: string, nullable: true }
+ *                   is_nfc_active: { type: boolean }
+ *                   wallet_balance: { type: number }
+ *                   parent:
+ *                     type: object
+ *                     properties:
+ *                       id: { type: string, format: uuid }
+ *                       fullName: { type: string }
+ *                       email: { type: string }
+ *       "404":
+ *         description: Class not found in school
+ */
 router.get('/classes/:classId/students', viewActions, getClassStudents);
 
 // --- Teachers ---
@@ -159,7 +198,8 @@ router.post('/timetable', adminActions, createTimeTableEntry);
 
 // --- Grades & Attendance ---
 router.post('/homework/:homeworkId/grades', teacherAdminActions, addGrade);
-router.post('/attendance', teacherAdminActions, recordAttendance);
+// DEPRECATED: Single-record attendance. Use POST /api/attendance/bulk instead.
+// router.post('/attendance', teacherAdminActions, recordAttendance);
 
 // --- Teacher Specific ---
 router.get('/my-schedule', [authMiddleware, hasRole([UserRole.teacher]), belongsToSchool], getMySchedule);

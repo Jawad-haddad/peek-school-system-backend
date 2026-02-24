@@ -126,7 +126,7 @@ const loginUser = async (req, res) => {
             throw new Error("JWT_SECRET missing");
         }
 
-        const token = jwt.sign({ userId: user.id, email: user.email, role: user.role, schoolId: user.schoolId }, process.env.JWT_SECRET, { expiresIn: '24h' });
+        const token = jwt.sign({ userId: user.id, email: user.email, role: frontendRole, schoolId: user.schoolId }, process.env.JWT_SECRET, { expiresIn: '24h' });
 
         logger.info({ userId: user.id }, "User login successful");
 
@@ -135,10 +135,9 @@ const loginUser = async (req, res) => {
             token,
             user: {
                 id: user.id,
-                name: user.fullName,
                 fullName: user.fullName,
                 email: user.email,
-                role: frontendRole, // Mapped to uppercase for frontend
+                role: frontendRole,
                 schoolId: user.schoolId
             },
         });
@@ -181,10 +180,19 @@ const verifyTwoFactorCode = async (req, res) => {
             data: { twoFactorCode: null, twoFactorCodeExpires: null }
         });
 
+        // Helper to map DB role to frontend role
+        const mapRole = (dbRole) => {
+            if (dbRole === 'school_admin') return 'ADMIN';
+            if (dbRole === 'teacher') return 'TEACHER';
+            if (dbRole === 'parent') return 'PARENT';
+            return dbRole.toUpperCase();
+        };
+        const frontendRole = mapRole(user.role);
+
         // Generate the final JWT token — include email for consistency with normal login
-        const token = jwt.sign({ userId: user.id, email: user.email, role: user.role, schoolId: user.schoolId }, process.env.JWT_SECRET, { expiresIn: '24h' });
+        const token = jwt.sign({ userId: user.id, email: user.email, role: frontendRole, schoolId: user.schoolId }, process.env.JWT_SECRET, { expiresIn: '24h' });
         logger.info({ userId: user.id }, "2FA verification successful. User logged in.");
-        res.status(200).json({ token, user: { id: user.id, fullName: user.fullName, email: user.email, role: user.role } });
+        res.status(200).json({ message: 'Logged in successfully!', token, user: { id: user.id, fullName: user.fullName, email: user.email, role: frontendRole, schoolId: user.schoolId } });
 
     } catch (error) {
         logger.error({ error, email }, "Error during 2FA verification");

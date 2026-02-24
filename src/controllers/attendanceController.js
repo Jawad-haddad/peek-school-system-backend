@@ -8,11 +8,60 @@ const logger = require('../config/logger');
  * Sends notifications for absent students.
  */
 const submitClassAttendance = async (req, res) => {
-    const { classId, date, records } = req.body; // records: [{ studentId, status, reason }]
+    const { classId, date, records } = req.body;
     const schoolId = req.user.schoolId;
 
-    if (!classId || !date || !Array.isArray(records)) {
-        return res.status(400).json({ message: "Class ID, date, and records array are required." });
+    // --- Top-level shape validation ---
+    if (!classId || typeof classId !== 'string') {
+        return res.status(400).json({ message: "classId (string) is required." });
+    }
+    if (!date || typeof date !== 'string') {
+        return res.status(400).json({ message: "date (string, YYYY-MM-DD) is required." });
+    }
+    if (!Array.isArray(records) || records.length === 0) {
+        return res.status(400).json({ message: "records (non-empty array) is required." });
+    }
+
+    // --- Date validation ---
+    const attendanceDate = new Date(date);
+    if (isNaN(attendanceDate.getTime())) {
+        return res.status(400).json({ message: "Invalid date format. Use YYYY-MM-DD." });
+    }
+
+    // --- Per-record validation ---
+    const ALLOWED_STATUSES = ['present', 'absent', 'late', 'excused'];
+    const errors = [];
+
+    for (let i = 0; i < records.length; i++) {
+        const record = records[i];
+
+        if (!record.studentId || typeof record.studentId !== 'string') {
+            errors.push({ index: i, field: 'studentId', message: 'studentId (string) is required.' });
+            continue;
+        }
+
+        if (!record.status || typeof record.status !== 'string') {
+            errors.push({ index: i, field: 'status', message: 'status (string) is required.' });
+            continue;
+        }
+
+        // Normalize to lowercase for casing tolerance
+        const normalized = record.status.toLowerCase();
+        if (!ALLOWED_STATUSES.includes(normalized)) {
+            errors.push({
+                index: i,
+                field: 'status',
+                message: `Invalid status "${record.status}". Allowed: ${ALLOWED_STATUSES.join(', ')}`
+            });
+            continue;
+        }
+
+        // Write normalized value back so downstream code uses lowercase
+        record.status = normalized;
+    }
+
+    if (errors.length > 0) {
+        return res.status(400).json({ message: "Validation failed for one or more records.", errors });
     }
 
     try {
@@ -24,7 +73,6 @@ const submitClassAttendance = async (req, res) => {
             return res.status(404).json({ message: "Class not found in your school." });
         }
 
-        const attendanceDate = new Date(date);
         const upsertOperations = [];
         const notificationPromises = [];
 
@@ -33,7 +81,7 @@ const submitClassAttendance = async (req, res) => {
             .filter(r => r.status === 'absent')
             .map(r => r.studentId);
 
-        // M4 FIX: Batch-fetch all absent students in one query (eliminates N+1)
+        // Batch-fetch all absent students in one query (eliminates N+1)
         let absentStudentsMap = new Map();
         if (absentStudentIds.length > 0) {
             const absentStudents = await prisma.student.findMany({
@@ -91,7 +139,7 @@ const submitClassAttendance = async (req, res) => {
         });
 
         logger.info({ classId, date, count: records.length }, "Bulk attendance submitted successfully");
-        res.status(200).json({ message: "Attendance submitted successfully." });
+        res.status(200).json({ savedCount: records.length, date, classId });
 
     } catch (error) {
         logger.error({ error, classId }, "Error submitting bulk attendance");

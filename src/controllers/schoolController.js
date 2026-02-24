@@ -80,26 +80,39 @@ const createSubject = async (req, res) => {
 
 const createClass = async (req, res) => {
     const schoolId = req.user.schoolId;
-    const { name, grade, academicYearId, defaultFee } = req.body; // Added grade and defaultFee
+    const { name, academicYearId, defaultFee } = req.body;
 
-    // If grade is provided but name is not, use grade as name, or combine them? 
-    // Usually "Grade 1" is the name. Let's assume name or grade is required.
-    const className = name || grade;
-
-    if (!className || !academicYearId) { return res.status(400).json({ message: 'Class name (or grade) and academic year ID are required.' }); }
+    if (!name || typeof name !== 'string') {
+        return res.status(400).json({ message: 'name (string) is required.' });
+    }
+    if (!academicYearId || typeof academicYearId !== 'string') {
+        return res.status(400).json({ message: 'academicYearId (string) is required.' });
+    }
 
     try {
         const academicYear = await prisma.academicYear.findFirst({ where: { id: academicYearId, schoolId } });
         if (!academicYear) { return res.status(404).json({ message: 'Academic year not found in your school.' }); }
 
-        const newClass = await prisma.class.create({
+        const created = await prisma.class.create({
             data: {
-                name: className,
+                name: name.trim(),
                 academicYearId,
-                defaultFee: defaultFee ? parseFloat(defaultFee) : 0 // Ensure decimal/float
+                defaultFee: defaultFee != null ? parseFloat(defaultFee) : 0
+            },
+            include: {
+                academicYear: true,
+                _count: { select: { enrollments: true } }
             }
         });
-        res.status(201).json(newClass);
+
+        res.status(201).json({
+            id: created.id,
+            name: created.name,
+            academicYearId: created.academicYearId,
+            academicYear: { id: created.academicYear.id, name: created.academicYear.name },
+            defaultFee: created.defaultFee,
+            _count: { students: created._count?.enrollments || 0 }
+        });
     } catch (error) {
         if (error.code === 'P2002') { return res.status(409).json({ message: 'A class with this name already exists for this academic year.' }); }
         logger.error({ error: error.message }, "Error creating class");
@@ -657,22 +670,40 @@ const updateClass = async (req, res) => {
         const classRecord = await prisma.class.findFirst({
             where: { id: classId, academicYear: { schoolId } }
         });
-
         if (!classRecord) {
-            return res.status(404).json({ message: "Class not found." });
+            return res.status(404).json({ message: "Class not found in your school." });
         }
 
-        const updatedClass = await prisma.class.update({
+        // Build update payload — only include provided fields
+        const data = {};
+        if (name !== undefined) data.name = name.trim();
+        if (academicYearId !== undefined) {
+            // Verify the new academic year also belongs to this school
+            const ay = await prisma.academicYear.findFirst({ where: { id: academicYearId, schoolId } });
+            if (!ay) { return res.status(404).json({ message: 'Academic year not found in your school.' }); }
+            data.academicYearId = academicYearId;
+        }
+        if (defaultFee !== undefined) data.defaultFee = parseFloat(defaultFee);
+
+        const updated = await prisma.class.update({
             where: { id: classId },
-            data: {
-                name,
-                academicYearId: academicYearId || undefined,
-                defaultFee: defaultFee ? parseFloat(defaultFee) : undefined
+            data,
+            include: {
+                academicYear: true,
+                _count: { select: { enrollments: true } }
             }
         });
 
-        res.status(200).json(updatedClass);
+        res.status(200).json({
+            id: updated.id,
+            name: updated.name,
+            academicYearId: updated.academicYearId,
+            academicYear: updated.academicYear ? { id: updated.academicYear.id, name: updated.academicYear.name } : null,
+            defaultFee: updated.defaultFee,
+            _count: { students: updated._count?.enrollments || 0 }
+        });
     } catch (error) {
+        if (error.code === 'P2002') { return res.status(409).json({ message: 'A class with this name already exists for this academic year.' }); }
         logger.error({ error, classId }, "Error updating class");
         res.status(500).json({ message: "Failed to update class." });
     }
@@ -912,7 +943,7 @@ const getAllClasses = async (req, res) => {
                     class: {
                         include: {
                             academicYear: true,
-                            _count: { select: { students: true } }
+                            _count: { select: { enrollments: true } }
                         }
                     }
                 }
