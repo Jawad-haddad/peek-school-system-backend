@@ -4,31 +4,33 @@ const prisma = require('../prismaClient');
 const { WalletTxnType, POSOrderStatus } = require('@prisma/client');
 const { sendNotification } = require('../services/notificationService');
 const logger = require('../config/logger');
-const { processTransaction } = require('./financeController'); // Import shared logic
-
-// ... (previous imports)
+const { processTransaction } = require('./financeController');
+const { ok, fail } = require('../utils/response');
+const { getTenant, tenantWhere, assertTenantEntity } = require('../utils/tenant');
 
 // --- Helper Functions for createPosOrder ---
 
 /**
  * Fetches and validates the student and items for a POS order.
+ * Uses tenantWhere for school-scoped lookups.
  * @throws {Error} If student or items are not valid.
  */
-async function validateOrderPrerequisites(studentId, itemIds, schoolId) {
+async function validateOrderPrerequisites(req, studentId, itemIds) {
     const studentPromise = prisma.student.findFirst({
-        where: { id: studentId, schoolId },
+        where: tenantWhere(req, { id: studentId }),
         select: {
             id: true,
             wallet_balance: true,
             parentId: true,
             fullName: true,
             schoolId: true,
-            daily_spending_limit: true // Include daily limit
+            daily_spending_limit: true
         }
     });
 
+    // Items must also belong to the same school and be available
     const itemsContentPromise = prisma.canteenItem.findMany({
-        where: { id: { in: itemIds.map(i => i.id) }, schoolId, isAvailable: true }
+        where: tenantWhere(req, { id: { in: itemIds.map(i => i.id) }, isAvailable: true })
     });
 
     const [student, itemsFromDb] = await Promise.all([studentPromise, itemsContentPromise]);
@@ -39,8 +41,8 @@ async function validateOrderPrerequisites(studentId, itemIds, schoolId) {
         throw err;
     }
     if (itemsFromDb.length !== itemIds.length) {
-        const err = new Error('One or more items are invalid or unavailable.');
-        err.statusCode = 400;
+        const err = new Error('One or more items are invalid, unavailable, or belong to another school.');
+        err.statusCode = 404;
         throw err;
     }
 
@@ -76,7 +78,7 @@ async function getDailySpend(studentId, schoolId) {
                 gte: startOfDay,
                 lte: endOfDay
             },
-            status: POSOrderStatus.completed // Only count completed orders
+            status: POSOrderStatus.completed
         },
         select: { total: true }
     });
@@ -89,34 +91,30 @@ async function getDailySpend(studentId, schoolId) {
 
 const createPosOrder = async (req, res) => {
     const { studentId, itemIds } = req.body;
-    const schoolId = req.user.schoolId;
+    // Force schoolId from tenant — ignore any client-supplied schoolId
+    const { schoolId } = getTenant(req);
 
     try {
-        // Step 1: Validate prerequisites (student, items)
-        const { student, itemsFromDb } = await validateOrderPrerequisites(studentId, itemIds, schoolId);
+        // Step 1: Validate prerequisites (student + items in same school)
+        const { student, itemsFromDb } = await validateOrderPrerequisites(req, studentId, itemIds);
 
         // Step 2: Calculate total
         const total = calculateOrderTotal(itemIds, itemsFromDb);
 
         // Step 3: Atomic Transaction via Finance Controller
         const result = await prisma.$transaction(async (tx) => {
-            // Use the shared processTransaction logic which handles:
-            // - Balance checks
-            // - Daily limits
-            // - Creating the WalletTransaction
-            // - Updating Student balance
             const { transaction: walletTxn } = await processTransaction(tx, {
                 studentId,
-                schoolId,
-                amount: -total, // Negative amount for deduction
+                schoolId: student.schoolId, // Use the student's actual schoolId (verified by tenantWhere)
+                amount: -total,
                 type: WalletTxnType.purchase,
                 description: `Canteen Purchase`
             });
 
-            // Create POS Order linked to the Wallet Transaction
+            // Create POS Order
             const order = await tx.pOSOrder.create({
                 data: {
-                    schoolId,
+                    schoolId: student.schoolId,
                     studentId,
                     total,
                     status: POSOrderStatus.completed,
@@ -159,72 +157,73 @@ const createPosOrder = async (req, res) => {
             });
         }
 
-        res.status(201).json(finalOrder);
+        ok(res, finalOrder, null, 201);
 
     } catch (error) {
         logger.error({ error: error.message }, "Error creating POS order");
-        // Map common errors from processTransaction
         if (error.message.includes("Insufficient wallet balance")) {
-            return res.status(402).json({ message: error.message });
+            return fail(res, 402, error.message, 'INSUFFICIENT_BALANCE');
         }
         if (error.message.includes("Daily spending limit")) {
-            return res.status(403).json({ message: error.message });
+            return fail(res, 403, error.message, 'DAILY_LIMIT_EXCEEDED');
         }
         if (error.statusCode) {
-            return res.status(error.statusCode).json({ message: error.message });
+            return fail(res, error.statusCode, error.message, 'NOT_FOUND');
         }
-        res.status(500).json({ message: 'Something went wrong during the transaction.' });
+        fail(res, 500, 'Something went wrong during the transaction.', 'SERVER_ERROR');
     }
 };
 
 const getCanteenItems = async (req, res) => {
-    const schoolId = req.user.schoolId;
     try {
         const items = await prisma.canteenItem.findMany({
-            where: { schoolId },
+            where: tenantWhere(req),
             orderBy: { name: 'asc' }
         });
-        res.json(items);
+        ok(res, items);
     } catch (error) {
         logger.error({ error: error.message }, "Error fetching canteen items");
-        res.status(500).json({ message: "Failed to fetch canteen items." });
+        fail(res, 500, 'Failed to fetch canteen items.', 'SERVER_ERROR');
     }
 };
 
 const addCanteenItem = async (req, res) => {
-    const schoolId = req.user.schoolId;
+    // Force schoolId from tenant — ignore any client-supplied schoolId
+    const { schoolId } = getTenant(req);
     const { name, price, category } = req.body;
 
     if (!name || price === undefined || !category) {
-        return res.status(400).json({ message: 'Item name, price, and category are required.' });
+        return fail(res, 400, 'Item name, price, and category are required.', 'VALIDATION_ERROR');
     }
     if (typeof price !== 'number' || price < 0) {
-        return res.status(400).json({ message: 'Price must be a non-negative number.' });
+        return fail(res, 400, 'Price must be a non-negative number.', 'VALIDATION_ERROR');
     }
 
     try {
         const newItem = await prisma.canteenItem.create({
             data: { name, price, category, schoolId }
         });
-        res.status(201).json(newItem);
+        ok(res, newItem, null, 201);
     } catch (error) {
         if (error.code === 'P2002') {
-            return res.status(409).json({ message: `An item with the name "${name}" already exists in your school's canteen.` });
+            return fail(res, 409, `An item with the name "${name}" already exists in your school's canteen.`, 'DUPLICATE_ITEM');
         }
         logger.error({ error: error.message }, "Error adding canteen item");
-        res.status(500).json({ message: "Failed to add item to canteen." });
+        fail(res, 500, 'Failed to add item to canteen.', 'SERVER_ERROR');
     }
 };
 
 const updateCanteenItem = async (req, res) => {
     const { id } = req.params;
-    const schoolId = req.user.schoolId;
     const { name, price, category, isAvailable } = req.body;
 
     try {
-        // Ensure item belongs to school
-        const item = await prisma.canteenItem.findFirst({ where: { id, schoolId } });
-        if (!item) return res.status(404).json({ message: "Item not found." });
+        // Tenant-scoped lookup
+        const item = await prisma.canteenItem.findFirst({ where: tenantWhere(req, { id }) });
+        if (!item) return fail(res, 404, 'Item not found.', 'NOT_FOUND');
+
+        // Defense-in-depth: explicit tenant check before mutation
+        if (assertTenantEntity(req, res, item.schoolId)) return;
 
         const updatedItem = await prisma.canteenItem.update({
             where: { id },
@@ -235,36 +234,39 @@ const updateCanteenItem = async (req, res) => {
                 isAvailable: isAvailable !== undefined ? isAvailable : undefined
             }
         });
-        res.json(updatedItem);
+        ok(res, updatedItem);
     } catch (error) {
         logger.error({ error: error.message }, "Error updating canteen item");
-        res.status(500).json({ message: "Failed to update item." });
+        fail(res, 500, 'Failed to update item.', 'SERVER_ERROR');
     }
 };
 
 const deleteCanteenItem = async (req, res) => {
     const { id } = req.params;
-    const schoolId = req.user.schoolId;
 
     try {
-        const item = await prisma.canteenItem.findFirst({ where: { id, schoolId } });
-        if (!item) return res.status(404).json({ message: "Item not found." });
+        // Tenant-scoped lookup
+        const item = await prisma.canteenItem.findFirst({ where: tenantWhere(req, { id }) });
+        if (!item) return fail(res, 404, 'Item not found.', 'NOT_FOUND');
+
+        // Defense-in-depth: explicit tenant check before mutation
+        if (assertTenantEntity(req, res, item.schoolId)) return;
 
         await prisma.canteenItem.delete({ where: { id } });
-        res.json({ message: "Item deleted successfully." });
+        ok(res, { message: 'Item deleted successfully.' });
     } catch (error) {
         logger.error({ error: error.message }, "Error deleting canteen item");
-        res.status(500).json({ message: "Failed to delete item." });
+        fail(res, 500, 'Failed to delete item.', 'SERVER_ERROR');
     }
 };
 
 const verifyCard = async (req, res) => {
     const { nfcId } = req.params;
-    const schoolId = req.user.schoolId;
 
     try {
+        // Tenant-scoped: card must belong to this school
         const student = await prisma.student.findFirst({
-            where: { nfc_card_id: nfcId, schoolId },
+            where: tenantWhere(req, { nfc_card_id: nfcId }),
             select: {
                 id: true,
                 fullName: true,
@@ -275,22 +277,18 @@ const verifyCard = async (req, res) => {
         });
 
         if (!student) {
-            // Either card doesn't exist OR belongs to another school
-            return res.status(404).json({ message: "Card not valid for this school." });
+            return fail(res, 404, 'Card not valid for this school.', 'NOT_FOUND');
         }
 
         if (!student.is_nfc_active) {
-            return res.status(403).json({ message: "Card is frozen by parent." });
+            return fail(res, 403, 'Card is frozen by parent.', 'CARD_FROZEN');
         }
 
-        return res.status(200).json({
-            message: "Card Verified",
-            student
-        });
+        ok(res, { message: 'Card Verified', student });
 
     } catch (error) {
         logger.error({ error: error.message }, "Error verifying card");
-        res.status(500).json({ message: "Verification failed." });
+        fail(res, 500, 'Verification failed.', 'SERVER_ERROR');
     }
 };
 

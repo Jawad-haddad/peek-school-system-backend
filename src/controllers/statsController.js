@@ -1,15 +1,15 @@
 const prisma = require('../prismaClient');
 const logger = require('../config/logger');
+const { ok, fail } = require('../utils/response');
+const { tenantWhere } = require('../utils/tenant');
 
 const getFeeStats = async (req, res) => {
-    const schoolId = req.user.schoolId;
-
     try {
-        // Level 1: School Level Total
-        const totalStudents = await prisma.student.count({ where: { schoolId } });
+        // Level 1: School Level Total — tenant-scoped
+        const totalStudents = await prisma.student.count({ where: tenantWhere(req) });
 
         const totalOutstanding = await prisma.student.aggregate({
-            where: { schoolId },
+            where: tenantWhere(req),
             _sum: {
                 balance: true,
                 totalFee: true,
@@ -17,9 +17,9 @@ const getFeeStats = async (req, res) => {
             }
         });
 
-        // Level 2: By Class
+        // Level 2: By Class — tenant-scoped
         const students = await prisma.student.findMany({
-            where: { schoolId },
+            where: tenantWhere(req),
             select: {
                 totalFee: true,
                 paid: true,
@@ -45,7 +45,7 @@ const getFeeStats = async (req, res) => {
                     className,
                     totalFee: 0,
                     paid: 0,
-                    outstandingAmount: 0 // balance
+                    outstandingAmount: 0
                 });
             }
 
@@ -57,9 +57,7 @@ const getFeeStats = async (req, res) => {
 
         const classBreakdown = Array.from(classStatsMap.values());
 
-
-
-        res.status(200).json({
+        ok(res, {
             schoolSummary: {
                 totalStudents: totalStudents || 0,
                 totalOutstanding: totalOutstanding._sum.balance || 0,
@@ -70,26 +68,24 @@ const getFeeStats = async (req, res) => {
         });
 
     } catch (error) {
-        logger.error({ error, schoolId }, "Error fetching fee stats");
-        res.status(500).json({ message: "Failed to fetch fee statistics." });
+        logger.error({ error }, "Error fetching fee stats");
+        fail(res, 500, 'Failed to fetch fee statistics.', 'SERVER_ERROR');
     }
 };
 
 const getStudentFees = async (req, res) => {
-    const schoolId = req.user.schoolId;
     const { classId } = req.params;
 
     try {
         const students = await prisma.student.findMany({
-            where: {
-                schoolId,
+            where: tenantWhere(req, {
                 enrollments: {
                     some: {
                         classId: classId,
                         academicYear: { current: true }
                     }
                 }
-            },
+            }),
             select: {
                 id: true,
                 fullName: true,
@@ -98,15 +94,15 @@ const getStudentFees = async (req, res) => {
                 balance: true
             },
             orderBy: {
-                balance: 'desc' // Sort by balance descending
+                balance: 'desc'
             }
         });
 
-        res.status(200).json(students);
+        ok(res, students);
 
     } catch (error) {
-        logger.error({ error, schoolId, classId }, "Error fetching student fees");
-        res.status(500).json({ message: "Failed to fetch student fees." });
+        logger.error({ error, classId }, "Error fetching student fees");
+        fail(res, 500, 'Failed to fetch student fees.', 'SERVER_ERROR');
     }
 };
 

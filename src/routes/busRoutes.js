@@ -15,7 +15,7 @@ const { UserRole } = require('@prisma/client');
 // Middleware for bus supervisors or admins
 const busActions = [
   authMiddleware,
-  hasRole([UserRole.bus_supervisor, UserRole.school_admin]),
+  hasRole([UserRole.super_admin, UserRole.school_admin, UserRole.bus_supervisor]),
   belongsToSchool
 ];
 

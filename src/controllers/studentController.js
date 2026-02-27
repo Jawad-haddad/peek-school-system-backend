@@ -1,5 +1,7 @@
 const prisma = require('../prismaClient');
 const logger = require('../config/logger');
+const { ok, fail } = require('../utils/response');
+const { tenantWhere } = require('../utils/tenant');
 
 /**
  * Updates a student's NFC card ID.
@@ -11,7 +13,7 @@ const updateStudentNfc = async (req, res) => {
     const schoolId = req.user.schoolId;
 
     if (!nfc_card_id) {
-        return res.status(400).json({ message: "nfc_card_id is required." });
+        return fail(res, 400, 'nfc_card_id is required.', 'VALIDATION_ERROR');
     }
 
     try {
@@ -22,7 +24,7 @@ const updateStudentNfc = async (req, res) => {
         });
 
         if (existing && existing.id !== id) {
-            return res.status(409).json({ message: "This NFC card is already assigned to another student in your school." });
+            return fail(res, 409, 'This NFC card is already assigned to another student in your school.', 'NFC_CONFLICT');
         }
 
         // Verify student belongs to the school
@@ -31,7 +33,7 @@ const updateStudentNfc = async (req, res) => {
         });
 
         if (!student) {
-            return res.status(404).json({ message: "Student not found in your school." });
+            return fail(res, 404, 'Student not found in your school.', 'NOT_FOUND');
         }
 
         const updatedStudent = await prisma.student.update({
@@ -39,8 +41,7 @@ const updateStudentNfc = async (req, res) => {
             data: { nfc_card_id, is_nfc_active: true }
         });
 
-        res.status(200).json({
-            message: "Student NFC card updated successfully.",
+        ok(res, {
             student: { id: updatedStudent.id, nfc_card_id: updatedStudent.nfc_card_id }
         });
 
@@ -48,9 +49,9 @@ const updateStudentNfc = async (req, res) => {
         logger.error({ error: error.message }, "Error updating NFC card");
         // Fallback for race condition on unique constraint
         if (error.code === 'P2002') {
-            return res.status(409).json({ message: "This NFC card is already assigned to another student." });
+            return fail(res, 409, 'This NFC card is already assigned to another student.', 'NFC_CONFLICT');
         }
-        res.status(500).json({ message: "Failed to update NFC card." });
+        fail(res, 500, 'Failed to update NFC card.', 'SERVER_ERROR');
     }
 };
 
@@ -76,18 +77,18 @@ const getStudentByNfc = async (req, res) => {
         });
 
         if (!student) {
-            return res.status(404).json({ message: "Card not registered or student not in this school." });
+            return fail(res, 404, 'Card not registered or student not in this school.', 'NOT_FOUND');
         }
 
         if (!student.is_nfc_active) {
-            return res.status(403).json({ message: "This NFC card is deactivated." });
+            return fail(res, 403, 'This NFC card is deactivated.', 'NFC_DEACTIVATED');
         }
 
-        res.status(200).json(student);
+        ok(res, student);
 
     } catch (error) {
         logger.error({ error: error.message }, "Error fetching student by NFC");
-        res.status(500).json({ message: "Failed to fetch student." });
+        fail(res, 500, 'Failed to fetch student.', 'SERVER_ERROR');
     }
 };
 
@@ -135,20 +136,19 @@ const getChildren = async (req, res) => {
                 school: { select: { name: true } }
             }
         });
-        res.status(200).json(children);
+        ok(res, children);
     } catch (error) {
         logger.error({ error: error.message }, "Error fetching children");
-        res.status(500).json({ message: "Failed to fetch children." });
+        fail(res, 500, 'Failed to fetch children.', 'SERVER_ERROR');
     }
 };
 
 const getStudentById = async (req, res) => {
     const { studentId } = req.params;
-    const schoolId = req.user.schoolId;
 
     try {
         const student = await prisma.student.findFirst({
-            where: { id: studentId, schoolId },
+            where: tenantWhere(req, { id: studentId }),
             include: {
                 parent: { select: { id: true, fullName: true, email: true, phoneNumber: true } },
                 enrollments: {
@@ -159,13 +159,13 @@ const getStudentById = async (req, res) => {
         });
 
         if (!student) {
-            return res.status(404).json({ message: "Student not found." });
+            return fail(res, 404, 'Student not found.', 'NOT_FOUND');
         }
 
-        res.status(200).json(student);
+        ok(res, student);
     } catch (error) {
         logger.error({ error: error.message, studentId }, "Error fetching student details");
-        res.status(500).json({ message: "Failed to fetch student details." });
+        fail(res, 500, 'Failed to fetch student details.', 'SERVER_ERROR');
     }
 };
 
@@ -178,7 +178,7 @@ const toggleStudentNfc = async (req, res) => {
     const schoolId = req.user.schoolId;
 
     if (typeof is_nfc_active !== 'boolean') {
-        return res.status(400).json({ message: "is_nfc_active must be a boolean." });
+        return fail(res, 400, 'is_nfc_active must be a boolean.', 'VALIDATION_ERROR');
     }
 
     try {
@@ -187,7 +187,7 @@ const toggleStudentNfc = async (req, res) => {
         });
 
         if (!student) {
-            return res.status(404).json({ message: "Student not found in your school." });
+            return fail(res, 404, 'Student not found in your school.', 'NOT_FOUND');
         }
 
         const updatedStudent = await prisma.student.update({
@@ -195,14 +195,11 @@ const toggleStudentNfc = async (req, res) => {
             data: { is_nfc_active }
         });
 
-        res.status(200).json({
-            message: `Student NFC ${is_nfc_active ? 'activated' : 'deactivated'} successfully.`,
-            student: updatedStudent
-        });
+        ok(res, { student: updatedStudent });
 
     } catch (error) {
         logger.error({ error: error.message }, "Error toggling NFC status");
-        res.status(500).json({ message: "Failed to toggle NFC status." });
+        fail(res, 500, 'Failed to toggle NFC status.', 'SERVER_ERROR');
     }
 };
 

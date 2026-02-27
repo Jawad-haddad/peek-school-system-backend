@@ -1,41 +1,44 @@
 const prisma = require('../prismaClient');
 const { UserRole, InvoiceStatus, PaymentMethod, WalletTxnType } = require('@prisma/client');
 const logger = require('../config/logger');
+const { ok, fail } = require('../utils/response');
+const { getTenant, tenantWhere, assertTenantEntity } = require('../utils/tenant');
 
 // === FINANCE & ADMIN CONTROLLERS ===
 
 const createFeeStructure = async (req, res) => {
-    // Logic for creating fee structures
-    const schoolId = req.user.schoolId;
+    const { schoolId } = getTenant(req);
     const { name, totalAmount, academicYearId } = req.body;
     if (!name || totalAmount === undefined || !academicYearId) {
-        return res.status(400).json({ message: 'Name, totalAmount, and academicYearId are required.' });
+        return fail(res, 400, 'Name, totalAmount, and academicYearId are required.', 'VALIDATION_ERROR');
     }
     try {
-        const academicYear = await prisma.academicYear.findFirst({ where: { id: academicYearId, schoolId } });
-        if (!academicYear) { return res.status(404).json({ message: 'Academic Year not found in your school.' }); }
+        const academicYear = await prisma.academicYear.findFirst({ where: tenantWhere(req, { id: academicYearId }) });
+        if (!academicYear) { return fail(res, 404, 'Academic Year not found in your school.', 'NOT_FOUND'); }
 
         const feeStructure = await prisma.feeStructure.create({
             data: { name, totalAmount, academicYearId },
         });
-        res.status(201).json(feeStructure);
+        ok(res, feeStructure, null, 201);
     } catch (error) {
         logger.error({ error: error.message }, "Error creating fee structure");
-        res.status(500).json({ message: 'Something went wrong.' });
+        fail(res, 500, 'Something went wrong.', 'SERVER_ERROR');
     }
 };
 
 const issueInvoice = async (req, res) => {
-    // Logic for issuing invoices
-    const schoolId = req.user.schoolId;
+    const { schoolId } = getTenant(req);
     const { studentId, feeStructureId, dueDate } = req.body;
     if (!studentId || !feeStructureId || !dueDate) {
-        return res.status(400).json({ message: 'Student ID, fee structure ID, and due date are required.' });
+        return fail(res, 400, 'Student ID, fee structure ID, and due date are required.', 'VALIDATION_ERROR');
     }
     try {
-        const student = await prisma.student.findFirst({ where: { id: studentId, schoolId } });
-        const feeStructure = await prisma.feeStructure.findFirst({ where: { id: feeStructureId, academicYear: { schoolId } } });
-        if (!student || !feeStructure) { return res.status(404).json({ message: 'Student or Fee Structure not found in your school.' }); }
+        // Tenant-scoped lookups — student and fee structure must belong to same school
+        const student = await prisma.student.findFirst({ where: tenantWhere(req, { id: studentId }) });
+        const feeStructure = await prisma.feeStructure.findFirst({
+            where: { id: feeStructureId, academicYear: tenantWhere(req) }
+        });
+        if (!student || !feeStructure) { return fail(res, 404, 'Student or Fee Structure not found in your school.', 'NOT_FOUND'); }
 
         const newInvoice = await prisma.invoice.create({
             data: {
@@ -43,36 +46,42 @@ const issueInvoice = async (req, res) => {
                 totalAmount: feeStructure.totalAmount, status: InvoiceStatus.issued
             }
         });
-        res.status(201).json(newInvoice);
+        ok(res, newInvoice, null, 201);
     } catch (error) {
         logger.error({ error: error.message }, "Error issuing invoice");
-        res.status(500).json({ message: 'Something went wrong.' });
+        fail(res, 500, 'Something went wrong.', 'SERVER_ERROR');
     }
 };
 
 const recordPayment = async (req, res) => {
-    // Logic for recording a payment
     const { invoiceId } = req.params;
-    const { amount, method } = req.body; // Corrected from paymentMethod
+    const { amount, method } = req.body;
 
     if (!amount || amount <= 0 || !method || !Object.values(PaymentMethod).includes(method)) {
-        return res.status(400).json({ message: "A positive amount and a valid payment method are required." });
+        return fail(res, 400, 'A positive amount and a valid payment method are required.', 'VALIDATION_ERROR');
     }
 
     try {
+        // Pre-flight: fetch invoice with student to check tenant ownership
+        const invoiceCheck = await prisma.invoice.findUnique({
+            where: { id: invoiceId },
+            include: { student: { select: { schoolId: true } } }
+        });
+
+        if (!invoiceCheck) {
+            return fail(res, 404, 'Invoice not found.', 'NOT_FOUND');
+        }
+
+        // Defense-in-depth: explicit tenant check before mutation
+        if (assertTenantEntity(req, res, invoiceCheck.student.schoolId)) return;
+
         const updatedInvoice = await prisma.$transaction(async (tx) => {
-            // Include student to check schoolId
             const invoice = await tx.invoice.findUnique({
                 where: { id: invoiceId },
                 include: { student: true }
             });
 
             if (!invoice) { throw new Error("Invoice not found."); }
-
-            // Enforce Multi-Tenancy
-            if (req.user.schoolId && invoice.student.schoolId !== req.user.schoolId) {
-                throw new Error("Invoice not found in your school.");
-            }
 
             if (invoice.status === InvoiceStatus.paid || invoice.status === InvoiceStatus.cancelled) {
                 throw new Error(`Invoice is already ${invoice.status}.`);
@@ -115,13 +124,13 @@ const recordPayment = async (req, res) => {
             });
         });
 
-        res.status(200).json({ message: "Payment recorded successfully.", invoice: updatedInvoice });
+        ok(res, { invoice: updatedInvoice });
 
     } catch (error) {
         logger.error({ error: error.message }, "Error recording payment");
-        if (error.message.includes("Invoice not found")) { return res.status(404).json({ message: error.message }); }
-        if (error.message.includes("Invoice is already")) { return res.status(409).json({ message: error.message }); }
-        res.status(500).json({ message: "Failed to record payment." });
+        if (error.message.includes("Invoice not found")) { return fail(res, 404, error.message, 'NOT_FOUND'); }
+        if (error.message.includes("Invoice is already")) { return fail(res, 409, error.message, 'CONFLICT'); }
+        fail(res, 500, 'Failed to record payment.', 'SERVER_ERROR');
     }
 };
 
@@ -134,21 +143,17 @@ const topUpWallet = async (req, res) => {
 
     const parsedAmount = Number(amount);
     if (!studentId || isNaN(parsedAmount) || parsedAmount <= 0) {
-        return res.status(400).json({ message: 'Student ID and a positive numeric amount are required.' });
+        return fail(res, 400, 'Student ID and a positive numeric amount are required.', 'VALIDATION_ERROR');
     }
 
     try {
-        const where = { id: studentId, parentId: parentId };
-        if (req.user.schoolId) {
-            where.schoolId = req.user.schoolId;
-        }
-
+        // Tenant-scoped: student must belong to user's school AND be user's child
         const student = await prisma.student.findFirst({
-            where
+            where: tenantWhere(req, { id: studentId, parentId: parentId })
         });
 
         if (!student) {
-            return res.status(403).json({ message: 'Forbidden: You are not the parent of this student or student not in your school scope.' });
+            return fail(res, 403, 'Forbidden: You are not the parent of this student or student not in your school scope.', 'TENANT_FORBIDDEN');
         }
 
         const transaction = await prisma.$transaction(async (tx) => {
@@ -178,10 +183,10 @@ const topUpWallet = async (req, res) => {
 
             return walletTxn;
         });
-        res.status(200).json({ message: 'Wallet topped up successfully.', transaction });
+        ok(res, { transaction });
     } catch (error) {
         logger.error({ error: error.message }, "Error topping up wallet");
-        res.status(500).json({ message: 'Failed to top up wallet.' });
+        fail(res, 500, 'Failed to top up wallet.', 'SERVER_ERROR');
     }
 };
 
@@ -192,48 +197,43 @@ const getWalletHistory = async (req, res) => {
     const user = req.user;
 
     try {
-        // 1. Fetch student to verify existence and school scope
-        const student = await prisma.student.findUnique({
-            where: { id: studentId },
+        // 1. Tenant-scoped fetch: only find student within caller's school
+        const student = await prisma.student.findFirst({
+            where: tenantWhere(req, { id: studentId }),
             select: { id: true, schoolId: true, parentId: true }
         });
 
         if (!student) {
-            return res.status(404).json({ message: "Student not found." });
+            return fail(res, 404, 'Student not found.', 'NOT_FOUND');
         }
 
-        // 2. Strict Multi-Tenancy & Authorization Logic
+        // 2. Defense-in-depth: explicit tenant check
+        if (assertTenantEntity(req, res, student.schoolId)) return;
+
+        // 3. Role-based authorization (parent can only see own child)
         if (user.role === UserRole.parent) {
-            // Parent can only see their OWN child
             if (student.parentId !== user.id) {
-                return res.status(403).json({ message: "Access denied. Not your child." });
+                return fail(res, 403, 'Access denied. Not your child.', 'FORBIDDEN');
             }
-        } else if ([UserRole.school_admin, UserRole.finance].includes(user.role)) {
-            // Staff can only see students in THEIR school
-            if (student.schoolId !== user.schoolId) {
-                return res.status(403).json({ message: "Access denied. Student belongs to another school." });
-            }
-        } else {
-            // Other roles (like teacher, bus_supervisor) usually don't access wallet history directly here,
-            // unless allowed by policy. For now, restrict.
-            return res.status(403).json({ message: "Access denied." });
+        } else if (![UserRole.school_admin, UserRole.finance, UserRole.super_admin].includes(user.role)) {
+            return fail(res, 403, 'Access denied.', 'FORBIDDEN');
         }
 
-        // 3. Fetch History
+        // 4. Fetch History
         const history = await prisma.walletTransaction.findMany({
             where: { studentId },
             orderBy: { createdAt: 'desc' },
             include: {
-                payment: { select: { invoice: { select: { feeStructure: { select: { name: true } } } } } }, // To show what was paid for
-                posOrder: { select: { total: true } } // To show order details if needed
+                payment: { select: { invoice: { select: { feeStructure: { select: { name: true } } } } } },
+                posOrder: { select: { total: true } }
             }
         });
 
-        res.json(history);
+        ok(res, history);
 
     } catch (error) {
         logger.error({ error: error.message }, "Error fetching wallet history");
-        res.status(500).json({ message: "Failed to fetch wallet history." });
+        fail(res, 500, 'Failed to fetch wallet history.', 'SERVER_ERROR');
     }
 };
 
@@ -262,7 +262,7 @@ const processTransaction = async (tx, { studentId, schoolId, amount, type, descr
         const dailyTxns = await tx.walletTransaction.findMany({
             where: {
                 studentId,
-                type: WalletTxnType.purchase, // Verify if we only track purchases
+                type: WalletTxnType.purchase,
                 createdAt: { gte: startOfDay, lte: endOfDay }
             }
         });

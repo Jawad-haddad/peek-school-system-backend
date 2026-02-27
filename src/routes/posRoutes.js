@@ -11,6 +11,11 @@ const {
   verifyCard
 } = require('../controllers/posController');
 const { UserRole } = require('@prisma/client');
+const { validate, validateParams } = require('../validators/userValidator');
+const {
+  createItemSchema, updateItemSchema, orderSchema,
+  idParamSchema, nfcIdParamSchema
+} = require('../validators/pos.validator');
 
 /**
  * @swagger
@@ -73,7 +78,7 @@ const viewItemsActions = [
  */
 router.get('/items', viewItemsActions, getCanteenItems);
 router.get('/products', viewItemsActions, getCanteenItems); // Alias for Frontend consistency
-router.post('/items', adminActions, addCanteenItem);
+router.post('/items', adminActions, validate(createItemSchema), addCanteenItem);
 
 /**
  * @swagger
@@ -121,8 +126,8 @@ router.post('/items', adminActions, addCanteenItem);
  *       "200":
  *         description: Item deleted successfully
  */
-router.put('/items/:id', adminActions, updateCanteenItem);
-router.delete('/items/:id', adminActions, deleteCanteenItem);
+router.put('/items/:id', adminActions, validateParams(idParamSchema), validate(updateItemSchema), updateCanteenItem);
+router.delete('/items/:id', adminActions, validateParams(idParamSchema), deleteCanteenItem);
 
 /**
  * @swagger
@@ -161,7 +166,7 @@ router.delete('/items/:id', adminActions, deleteCanteenItem);
  *       "404":
  *         description: Student not found
  */
-router.post('/orders', staffActions, createPosOrder);
+router.post('/orders', staffActions, validate(orderSchema), createPosOrder);
 
 /**
  * @swagger
@@ -185,6 +190,6 @@ router.post('/orders', staffActions, createPosOrder);
  *       "404":
  *         description: Card not found or not in school
  */
-router.get('/verify-card/:nfcId', staffActions, verifyCard);
+router.get('/verify-card/:nfcId', staffActions, validateParams(nfcIdParamSchema), verifyCard);
 
 module.exports = router;

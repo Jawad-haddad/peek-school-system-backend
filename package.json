@@ -7,7 +7,9 @@
     "test": "jest",
     "test:smoke": "jest __tests__/mvp-smoke.test.js --globalSetup=./jest.setup.js --forceExit --detectOpenHandles",
     "start": "node server.js",
+    "start:check": "node -e \"require('dotenv').config(); require('./src/config/envValidator')(); console.log('Env Check Passed');\"",
     "dev": "npx nodemon server.js",
+    "demo:reset": "npx prisma migrate reset --force",
     "check:contract": "node scripts/check-mvp-contract.js",
     "swagger:export": "node -e \"require('dotenv').config(); const s = require('./src/config/swaggerConfig'); console.log(JSON.stringify(s, null, 2))\""
   },

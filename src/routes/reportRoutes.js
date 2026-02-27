@@ -4,7 +4,7 @@ const { authMiddleware, hasRole, belongsToSchool } = require('../middleware/auth
 const { getFeeStats, getStudentFees } = require('../controllers/statsController');
 const { UserRole } = require('@prisma/client');
 
-const adminActions = [authMiddleware, hasRole([UserRole.school_admin, UserRole.super_admin]), belongsToSchool];
+const adminActions = [authMiddleware, hasRole([UserRole.super_admin, UserRole.school_admin, UserRole.finance]), belongsToSchool];
 
 router.get('/overview', adminActions, getFeeStats); // Frontend calls /api/school/reports/overview
 router.get('/stats/fees', adminActions, getFeeStats);

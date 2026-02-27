@@ -2,13 +2,9 @@
 require('dotenv').config();
 const logger = require('./src/config/logger');
 
-// Validate critical environment variables at startup
-const requiredEnvVars = ['DATABASE_URL', 'JWT_SECRET'];
-const missing = requiredEnvVars.filter(v => !process.env[v]);
-if (missing.length > 0) {
-  logger.fatal(`Missing required environment variables: ${missing.join(', ')}`);
-  process.exit(1);
-}
+// Validate environment variables at startup
+const validateEnv = require('./src/config/envValidator');
+validateEnv();
 
 const app = require('./index');
 

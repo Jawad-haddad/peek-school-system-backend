@@ -1,0 +1,1032 @@
+{
+  "routes": [
+    {
+      "module": "academic",
+      "method": "POST",
+      "path": "/homework",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "academic",
+      "method": "GET",
+      "path": "/homework",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "academic",
+      "method": "GET",
+      "path": "/academic-years",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "academic",
+      "method": "GET",
+      "path": "/subjects",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "academic",
+      "method": "GET",
+      "path": "/",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "academic",
+      "method": "POST",
+      "path": "/",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "academic",
+      "method": "GET",
+      "path": "/classes",
+      "hasAuth": true,
+      "hasTenant": true,
+      "allowedRoles": [
+        "teacher",
+        "school_admin"
+      ],
+      "issues": []
+    },
+    {
+      "module": "academic",
+      "method": "GET",
+      "path": "/classes/:classId/students",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "academic",
+      "method": "GET",
+      "path": "/teachers",
+      "hasAuth": true,
+      "hasTenant": true,
+      "allowedRoles": [
+        "teacher",
+        "school_admin"
+      ],
+      "issues": []
+    },
+    {
+      "module": "academic",
+      "method": "POST",
+      "path": "/teachers",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "academic",
+      "method": "POST",
+      "path": "/timetable",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "academic",
+      "method": "POST",
+      "path": "/homework/:homeworkId/grades",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "academic",
+      "method": "POST",
+      "path": "/attendance",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "academic",
+      "method": "GET",
+      "path": "/my-schedule",
+      "hasAuth": true,
+      "hasTenant": true,
+      "allowedRoles": [
+        "teacher"
+      ],
+      "issues": []
+    },
+    {
+      "module": "academic",
+      "method": "GET",
+      "path": "/my-students",
+      "hasAuth": true,
+      "hasTenant": true,
+      "allowedRoles": [
+        "teacher"
+      ],
+      "issues": []
+    },
+    {
+      "module": "academic",
+      "method": "GET",
+      "path": "/teachers/:id/classes",
+      "hasAuth": true,
+      "hasTenant": true,
+      "allowedRoles": [
+        "school_admin",
+        "teacher"
+      ],
+      "issues": []
+    },
+    {
+      "module": "academic",
+      "method": "GET",
+      "path": "/students/:studentId/homework",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [
+        "parent"
+      ],
+      "issues": []
+    },
+    {
+      "module": "academic",
+      "method": "POST",
+      "path": "/subjects",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "attendance",
+      "method": "POST",
+      "path": "/bulk",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "attendance",
+      "method": "GET",
+      "path": "/:classId",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "bus",
+      "method": "POST",
+      "path": "/trips",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "bus",
+      "method": "GET",
+      "path": "/routes",
+      "hasAuth": true,
+      "hasTenant": true,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "bus",
+      "method": "PATCH",
+      "path": "/entry/:studentId",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "bus",
+      "method": "GET",
+      "path": "/live/:studentId",
+      "hasAuth": true,
+      "hasTenant": true,
+      "allowedRoles": [
+        "parent"
+      ],
+      "issues": []
+    },
+    {
+      "module": "bus",
+      "method": "POST",
+      "path": "/trip/start",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "bus",
+      "method": "POST",
+      "path": "/trip/end",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "bus",
+      "method": "GET",
+      "path": "/trips/:tripId",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "chat",
+      "method": "POST",
+      "path": "/send",
+      "hasAuth": true,
+      "hasTenant": true,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "chat",
+      "method": "GET",
+      "path": "/conversation/:contactId",
+      "hasAuth": true,
+      "hasTenant": true,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "chat",
+      "method": "GET",
+      "path": "/contacts",
+      "hasAuth": true,
+      "hasTenant": true,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "communication",
+      "method": "POST",
+      "path": "/announcements",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "communication",
+      "method": "GET",
+      "path": "/announcements",
+      "hasAuth": true,
+      "hasTenant": true,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "communication",
+      "method": "POST",
+      "path": "/broadcast",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "dashboard",
+      "method": "GET",
+      "path": "/admin-stats",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "exam",
+      "method": "GET",
+      "path": "/",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "exam",
+      "method": "GET",
+      "path": "/:examId/schedules",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "exam",
+      "method": "PUT",
+      "path": "/:examId",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "exam",
+      "method": "DELETE",
+      "path": "/:examId",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "exam",
+      "method": "POST",
+      "path": "/",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "exam",
+      "method": "POST",
+      "path": "/schedule",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "exam",
+      "method": "POST",
+      "path": "/schedules/:scheduleId/marks",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "exam",
+      "method": "GET",
+      "path": "/students/:studentId/grades",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "finance",
+      "method": "POST",
+      "path": "/fee-structures",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "finance",
+      "method": "POST",
+      "path": "/invoices",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "finance",
+      "method": "POST",
+      "path": "/invoices/:invoiceId/payments",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "finance",
+      "method": "POST",
+      "path": "/wallet/topup",
+      "hasAuth": true,
+      "hasTenant": true,
+      "allowedRoles": [
+        "parent",
+        "school_admin"
+      ],
+      "issues": []
+    },
+    {
+      "module": "finance",
+      "method": "GET",
+      "path": "/wallet/:studentId/history",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [
+        "parent",
+        "school_admin",
+        "finance"
+      ],
+      "issues": []
+    },
+    {
+      "module": "health",
+      "method": "GET",
+      "path": "/",
+      "hasAuth": false,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "AUTH_MISSING"
+      ]
+    },
+    {
+      "module": "main",
+      "method": "GET",
+      "path": "/",
+      "hasAuth": false,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "AUTH_MISSING"
+      ]
+    },
+    {
+      "module": "pos",
+      "method": "GET",
+      "path": "/items",
+      "hasAuth": true,
+      "hasTenant": true,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "pos",
+      "method": "GET",
+      "path": "/products",
+      "hasAuth": true,
+      "hasTenant": true,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "pos",
+      "method": "POST",
+      "path": "/items",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "pos",
+      "method": "PUT",
+      "path": "/items/:id",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "pos",
+      "method": "DELETE",
+      "path": "/items/:id",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "pos",
+      "method": "POST",
+      "path": "/orders",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "pos",
+      "method": "GET",
+      "path": "/verify-card/:nfcId",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "report",
+      "method": "GET",
+      "path": "/overview",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "report",
+      "method": "GET",
+      "path": "/stats/fees",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "report",
+      "method": "GET",
+      "path": "/stats/fees/class/:classId",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "school",
+      "method": "POST",
+      "path": "/",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [
+        "super_admin"
+      ],
+      "issues": []
+    },
+    {
+      "module": "school",
+      "method": "POST",
+      "path": "/academic-years",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "school",
+      "method": "POST",
+      "path": "/subjects",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "school",
+      "method": "POST",
+      "path": "/classes",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "school",
+      "method": "POST",
+      "path": "/students",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "school",
+      "method": "POST",
+      "path": "/students",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "school",
+      "method": "POST",
+      "path": "/teachers",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "school",
+      "method": "POST",
+      "path": "/enrollments",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "school",
+      "method": "GET",
+      "path": "/students/export",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "school",
+      "method": "GET",
+      "path": "/teachers",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "school",
+      "method": "GET",
+      "path": "/classes",
+      "hasAuth": true,
+      "hasTenant": true,
+      "allowedRoles": [
+        "school_admin",
+        "teacher"
+      ],
+      "issues": []
+    },
+    {
+      "module": "school",
+      "method": "GET",
+      "path": "/students",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "school",
+      "method": "GET",
+      "path": "/exams",
+      "hasAuth": true,
+      "hasTenant": true,
+      "allowedRoles": [
+        "school_admin",
+        "teacher"
+      ],
+      "issues": []
+    },
+    {
+      "module": "school",
+      "method": "GET",
+      "path": "/stats/fees",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "school",
+      "method": "GET",
+      "path": "/classes/:classId/timetable",
+      "hasAuth": true,
+      "hasTenant": true,
+      "allowedRoles": [
+        "school_admin",
+        "teacher"
+      ],
+      "issues": []
+    },
+    {
+      "module": "school",
+      "method": "PUT",
+      "path": "/students/:studentId",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "school",
+      "method": "PATCH",
+      "path": "/students/:studentId/nfc-status",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "school",
+      "method": "DELETE",
+      "path": "/students/:studentId",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "school",
+      "method": "PUT",
+      "path": "/teachers/:teacherId",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "school",
+      "method": "DELETE",
+      "path": "/teachers/:teacherId",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "school",
+      "method": "DELETE",
+      "path": "/classes/:classId",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "school",
+      "method": "PUT",
+      "path": "/classes/:classId",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "stats",
+      "method": "GET",
+      "path": "/fees",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "student",
+      "method": "PATCH",
+      "path": "/:id/nfc",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "student",
+      "method": "GET",
+      "path": "/nfc/:cardId",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "student",
+      "method": "GET",
+      "path": "/my-children",
+      "hasAuth": true,
+      "hasTenant": true,
+      "allowedRoles": [
+        "parent"
+      ],
+      "issues": []
+    },
+    {
+      "module": "student",
+      "method": "GET",
+      "path": "/:studentId",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "user",
+      "method": "POST",
+      "path": "/register",
+      "hasAuth": false,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": []
+    },
+    {
+      "module": "user",
+      "method": "POST",
+      "path": "/login",
+      "hasAuth": false,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": []
+    },
+    {
+      "module": "user",
+      "method": "POST",
+      "path": "/login/verify",
+      "hasAuth": false,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "AUTH_MISSING"
+      ]
+    },
+    {
+      "module": "user",
+      "method": "POST",
+      "path": "/forgot-password",
+      "hasAuth": false,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "AUTH_MISSING"
+      ]
+    },
+    {
+      "module": "user",
+      "method": "POST",
+      "path": "/reset-password",
+      "hasAuth": false,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "AUTH_MISSING"
+      ]
+    },
+    {
+      "module": "user",
+      "method": "GET",
+      "path": "/me",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    },
+    {
+      "module": "user",
+      "method": "POST",
+      "path": "/register-device",
+      "hasAuth": true,
+      "hasTenant": false,
+      "allowedRoles": [],
+      "issues": [
+        "ROLE_GUARD_MISSING"
+      ]
+    }
+  ]
+}

@@ -2,17 +2,19 @@ const { Parser } = require('json2csv');
 const prisma = require('../prismaClient');
 const logger = require('../config/logger');
 const { UserRole } = require('@prisma/client');
+const { ok, fail } = require('../utils/response');
+const { tenantWhere, assertTenantEntity } = require('../utils/tenant');
 // === SUPER ADMIN CONTROLLERS ===
 const createSchool = async (req, res) => {
     const { name, address } = req.body;
-    if (!name) { return res.status(400).json({ message: 'School name is required.' }); }
+    if (!name) { return fail(res, 400, 'School name is required.', 'VALIDATION_ERROR'); }
     try {
         const newSchool = await prisma.school.create({ data: { name, address } });
-        res.status(201).json(newSchool);
+        ok(res, newSchool, null, 201);
     } catch (error) {
-        if (error.code === 'P2002') { return res.status(409).json({ message: 'A school with this name already exists.' }); }
+        if (error.code === 'P2002') { return fail(res, 409, 'A school with this name already exists.', 'DUPLICATE_SCHOOL'); }
         logger.error({ error: error.message }, "Error creating school");
-        res.status(500).json({ message: 'Something went wrong.' });
+        fail(res, 500, 'Something went wrong.', 'SERVER_ERROR');
     }
 };
 
@@ -20,15 +22,15 @@ const createSchool = async (req, res) => {
 const createAcademicYear = async (req, res) => {
     const schoolId = req.user.schoolId;
     const { name, startDate, endDate } = req.body;
-    if (!name || !startDate || !endDate) { return res.status(400).json({ message: 'Name, start date, and end date are required.' }); }
+    if (!name || !startDate || !endDate) { return fail(res, 400, 'Name, start date, and end date are required.', 'VALIDATION_ERROR'); }
 
     try {
         const newYear = await prisma.academicYear.create({ data: { name, startDate: new Date(startDate), endDate: new Date(endDate), schoolId } });
-        res.status(201).json(newYear);
+        ok(res, newYear, null, 201);
     } catch (error) {
-        if (error.code === 'P2002') { return res.status(409).json({ message: 'An academic year with this name already exists for your school.' }); }
+        if (error.code === 'P2002') { return fail(res, 409, 'An academic year with this name already exists for your school.', 'DUPLICATE_ACADEMIC_YEAR'); }
         logger.error({ error: error.message }, "Error creating academic year");
-        res.status(500).json({ message: 'Something went wrong.' });
+        fail(res, 500, 'Something went wrong.', 'SERVER_ERROR');
     }
 };
 
@@ -36,7 +38,7 @@ const createSubject = async (req, res) => {
     const schoolId = req.user.schoolId;
     const { name, teacherId, classId } = req.body;
 
-    if (!name || !classId) { return res.status(400).json({ message: 'Subject name and Class ID are required.' }); }
+    if (!name || !classId) { return fail(res, 400, 'Subject name and Class ID are required.', 'VALIDATION_ERROR'); }
 
     try {
         // Validate class belongs to school (FIX-5: Unprotected createSubject)
@@ -44,7 +46,7 @@ const createSubject = async (req, res) => {
             where: { id: classId, academicYear: { schoolId } }
         });
         if (!classRecord) {
-            return res.status(404).json({ message: 'Class not found in your school.' });
+            return fail(res, 404, 'Class not found in your school.', 'NOT_FOUND');
         }
 
         const result = await prisma.$transaction(async (prisma) => {
@@ -70,28 +72,29 @@ const createSubject = async (req, res) => {
             return newSubject;
         });
 
-        res.status(201).json(result);
+        ok(res, result, null, 201);
     } catch (error) {
-        if (error.code === 'P2002') { return res.status(409).json({ message: 'A subject with this name already exists for this class.' }); }
+        if (error.code === 'P2002') { return fail(res, 409, 'A subject with this name already exists for this class.', 'DUPLICATE_SUBJECT'); }
         logger.error({ error: error.message }, "Error creating subject");
-        res.status(500).json({ message: 'Something went wrong.' });
+        fail(res, 500, 'Something went wrong.', 'SERVER_ERROR');
     }
 };
 
 const createClass = async (req, res) => {
-    const schoolId = req.user.schoolId;
+    // Force schoolId from tenant — ignore any client-supplied schoolId
+    const { schoolId } = getTenant(req);
     const { name, academicYearId, defaultFee } = req.body;
 
     if (!name || typeof name !== 'string') {
-        return res.status(400).json({ message: 'name (string) is required.' });
+        return fail(res, 400, 'name (string) is required.', 'VALIDATION_ERROR');
     }
     if (!academicYearId || typeof academicYearId !== 'string') {
-        return res.status(400).json({ message: 'academicYearId (string) is required.' });
+        return fail(res, 400, 'academicYearId (string) is required.', 'VALIDATION_ERROR');
     }
 
     try {
-        const academicYear = await prisma.academicYear.findFirst({ where: { id: academicYearId, schoolId } });
-        if (!academicYear) { return res.status(404).json({ message: 'Academic year not found in your school.' }); }
+        const academicYear = await prisma.academicYear.findFirst({ where: tenantWhere(req, { id: academicYearId }) });
+        if (!academicYear) { return fail(res, 404, 'Academic year not found in your school.', 'NOT_FOUND'); }
 
         const created = await prisma.class.create({
             data: {
@@ -105,18 +108,20 @@ const createClass = async (req, res) => {
             }
         });
 
-        res.status(201).json({
+        logger.info({ classId: created.id, schoolId, userId: req.user.id, audit: true, action: 'CLASS_CREATED' }, "Class created successfully.");
+
+        ok(res, {
             id: created.id,
             name: created.name,
             academicYearId: created.academicYearId,
             academicYear: { id: created.academicYear.id, name: created.academicYear.name },
             defaultFee: created.defaultFee,
             _count: { students: created._count?.enrollments || 0 }
-        });
+        }, null, 201);
     } catch (error) {
-        if (error.code === 'P2002') { return res.status(409).json({ message: 'A class with this name already exists for this academic year.' }); }
+        if (error.code === 'P2002') { return fail(res, 409, 'A class with this name already exists for this academic year.', 'DUPLICATE_CLASS'); }
         logger.error({ error: error.message }, "Error creating class");
-        res.status(500).json({ message: 'Something went wrong.' });
+        fail(res, 500, 'Something went wrong.', 'SERVER_ERROR');
     }
 };
 
@@ -132,10 +137,10 @@ const createStudent = async (req, res) => {
 
     // Validate Required Fields
     if (!classId) {
-        return res.status(400).json({ message: "Class ID is required." });
+        return fail(res, 400, 'Class ID is required.', 'VALIDATION_ERROR');
     }
     if (!fullName) {
-        return res.status(400).json({ message: "Student Name is required." });
+        return fail(res, 400, 'Student Name is required.', 'VALIDATION_ERROR');
     }
 
     // Safe Date Parsing
@@ -156,14 +161,14 @@ const createStudent = async (req, res) => {
     try {
         const targetClass = await prisma.class.findUnique({ where: { id: classId } });
         if (!targetClass) {
-            return res.status(404).json({ message: "Class not found." });
+            return fail(res, 404, 'Class not found.', 'NOT_FOUND');
         }
 
         const studentFee = fee ? parseFloat(fee) : parseFloat(targetClass.defaultFee || 0);
 
         if (nfcTagId) {
             const existingNfc = await prisma.student.findFirst({ where: { nfc_card_id: nfcTagId } });
-            if (existingNfc) return res.status(409).json({ message: "NFC Tag ID already exists." });
+            if (existingNfc) return fail(res, 409, 'NFC Tag ID already exists.', 'NFC_CONFLICT');
         }
 
         // --- PARENT LOGIC ---
@@ -218,20 +223,11 @@ const createStudent = async (req, res) => {
             let finalParentUser = parentUser;
 
             if (isNewParent) {
-                // Check if email taken by non-parent or parent in another context (though we scoped by school above, email is unique global usually)
-                // actually email is @unique in schema. So strictly unique.
                 const checkEmail = await prisma.user.findUnique({ where: { email: parentUser.email } });
                 if (checkEmail) {
-                    // If we are here, it means we didn't find a parent with this email in THIS school (from findFirst above),
-                    // BUT it exists globally (or maybe we didn't search properly). 
-                    // Or user passed an email that exists but is not a parent role?
-                    // Verify role.
                     if (checkEmail.role !== UserRole.parent) {
                         throw new Error(`Email ${parentUser.email} is already is use by a non-parent user.`);
                     }
-                    // If it exists and IS a parent, maybe they are in another school?
-                    // If so, we might want to link global parent? Schema allows User.schoolId to be nullable or specific.
-                    // For now, if exact email match exists, let's use it.
                     finalParentId = checkEmail.id;
                     finalParentUser = checkEmail;
                 } else {
@@ -281,18 +277,17 @@ const createStudent = async (req, res) => {
             return { newStudent, parentUser: finalParentUser };
         });
 
-        res.status(201).json({
+        ok(res, {
             student: result.newStudent,
             parent: result.parentUser,
-            message: "Student created successfully."
-        });
+        }, null, 201);
 
     } catch (error) {
         logger.error({ error, schoolId }, "Error creating student");
         if (error.code === 'P2002') {
-            return res.status(409).json({ message: "Unique constraint failed (Email or NFC or ID)." });
+            return fail(res, 409, 'Unique constraint failed (Email or NFC or ID).', 'UNIQUE_CONSTRAINT');
         }
-        res.status(500).json({ message: "Failed to create student. " + (error.message || "") });
+        fail(res, 500, 'Failed to create student. ' + (error.message || ''), 'SERVER_ERROR');
     }
 };
 
@@ -313,29 +308,24 @@ const createTeacher = async (req, res) => {
     // assignments expectation: [{ classId: '...', subjects: ['Math', 'Physics'] }, { classId: '...', subjects: ['Biology'] }]
 
     if (!fullName || !email) {
-        return res.status(400).json({ message: "Full name and email are required." });
+        return fail(res, 400, 'Full name and email are required.', 'VALIDATION_ERROR');
     }
 
     try {
         const existingUser = await prisma.user.findUnique({ where: { email } });
-        if (existingUser) return res.status(409).json({ message: "Email already exists." });
+        if (existingUser) return fail(res, 409, 'Email already exists.', 'EMAIL_ALREADY_EXISTS');
 
         // Password Logic: If missing, generate defaults
         let finalPassword = password;
         if (!finalPassword) {
-            // Generate random password or default
-            // const randomString = Math.random().toString(36).slice(-8);
             finalPassword = "Teacher@123"; // Simplistic default or random
         }
         const hashedPassword = await bcrypt.hash(finalPassword, 10);
 
         // NFC Check
         if (nfc_card_id) {
-            // Check if NFC used by another USER in this school (or global? Schema unique on school+nfc for Student, but User is global-ish)
-            // Schema added nfc_card_id to User, not unique constraint there yet in my plan, but ideally should be.
-            // Let's check manually to avoid P2002 if we added unique.
             const existingNfc = await prisma.user.findFirst({ where: { nfc_card_id, schoolId } });
-            if (existingNfc) return res.status(409).json({ message: "NFC Card ID already assigned to another user." });
+            if (existingNfc) return fail(res, 409, 'NFC Card ID already assigned to another user.', 'NFC_CONFLICT');
         }
 
         // Transaction to ensure User creation and assignments all succeed
@@ -469,11 +459,11 @@ const createTeacher = async (req, res) => {
         });
 
         logger.info({ teacherId: result.id, schoolId }, "Teacher created with assignments");
-        res.status(201).json(result);
+        ok(res, result, null, 201);
 
     } catch (error) {
         logger.error({ error, schoolId, email }, "Error creating teacher");
-        res.status(500).json({ message: "Failed to create teacher." });
+        fail(res, 500, 'Failed to create teacher.', 'SERVER_ERROR');
     }
 };
 
@@ -497,13 +487,13 @@ const updateTeacher = async (req, res) => {
         // Verify teacher belongs to this school
         const existingTeacher = await prisma.user.findFirst({ where: { id: teacherId, schoolId } });
         if (!existingTeacher) {
-            return res.status(404).json({ message: "Teacher not found in your school." });
+            return fail(res, 404, 'Teacher not found in your school.', 'NOT_FOUND');
         }
 
         // NFC Uniqueness Check (if changed)
         if (nfc_card_id && nfc_card_id !== existingTeacher.nfc_card_id) {
             const existingNfc = await prisma.user.findFirst({ where: { nfc_card_id, schoolId } });
-            if (existingNfc) return res.status(409).json({ message: "NFC Card ID already assigned to another user." });
+            if (existingNfc) return fail(res, 409, 'NFC Card ID already assigned to another user.', 'NFC_CONFLICT');
         }
 
         // Update User Profile
@@ -598,10 +588,10 @@ const updateTeacher = async (req, res) => {
             }
         }
 
-        res.status(200).json(updatedTeacher);
+        ok(res, updatedTeacher);
     } catch (error) {
         logger.error({ error, teacherId }, "Error updating teacher");
-        res.status(500).json({ message: "Failed to update teacher." });
+        fail(res, 500, 'Failed to update teacher.', 'SERVER_ERROR');
     }
 };
 
@@ -611,7 +601,7 @@ const deleteTeacher = async (req, res) => {
     try {
         const teacher = await prisma.user.findFirst({ where: { id: teacherId, schoolId } });
         if (!teacher) {
-            return res.status(404).json({ message: "Teacher not found in your school." });
+            return fail(res, 404, 'Teacher not found in your school.', 'NOT_FOUND');
         }
         await prisma.user.delete({ where: { id: teacherId } });
 
@@ -628,7 +618,7 @@ const deleteTeacher = async (req, res) => {
         res.status(204).send();
     } catch (error) {
         logger.error({ error, teacherId }, "Error deleting teacher");
-        res.status(500).json({ message: "Failed to delete teacher." });
+        fail(res, 500, 'Failed to delete teacher.', 'SERVER_ERROR');
     }
 };
 
@@ -640,7 +630,7 @@ const deleteClass = async (req, res) => {
             where: { id: classId, academicYear: { schoolId } }
         });
         if (!classRecord) {
-            return res.status(404).json({ message: "Class not found in your school." });
+            return fail(res, 404, 'Class not found in your school.', 'NOT_FOUND');
         }
         await prisma.class.delete({ where: { id: classId } });
 
@@ -654,10 +644,12 @@ const deleteClass = async (req, res) => {
             schoolId
         });
 
+        logger.info({ classId, schoolId, userId: req.user.id, audit: true, action: 'CLASS_DELETED' }, "Class deleted successfully.");
+
         res.status(204).send();
     } catch (error) {
         logger.error({ error, classId }, "Error deleting class");
-        res.status(500).json({ message: "Failed to delete class." });
+        fail(res, 500, 'Failed to delete class.', 'SERVER_ERROR');
     }
 };
 
@@ -671,7 +663,7 @@ const updateClass = async (req, res) => {
             where: { id: classId, academicYear: { schoolId } }
         });
         if (!classRecord) {
-            return res.status(404).json({ message: "Class not found in your school." });
+            return fail(res, 404, 'Class not found in your school.', 'NOT_FOUND');
         }
 
         // Build update payload — only include provided fields
@@ -680,7 +672,7 @@ const updateClass = async (req, res) => {
         if (academicYearId !== undefined) {
             // Verify the new academic year also belongs to this school
             const ay = await prisma.academicYear.findFirst({ where: { id: academicYearId, schoolId } });
-            if (!ay) { return res.status(404).json({ message: 'Academic year not found in your school.' }); }
+            if (!ay) { return fail(res, 404, 'Academic year not found in your school.', 'NOT_FOUND'); }
             data.academicYearId = academicYearId;
         }
         if (defaultFee !== undefined) data.defaultFee = parseFloat(defaultFee);
@@ -694,7 +686,7 @@ const updateClass = async (req, res) => {
             }
         });
 
-        res.status(200).json({
+        ok(res, {
             id: updated.id,
             name: updated.name,
             academicYearId: updated.academicYearId,
@@ -702,17 +694,19 @@ const updateClass = async (req, res) => {
             defaultFee: updated.defaultFee,
             _count: { students: updated._count?.enrollments || 0 }
         });
+
+        logger.info({ classId: updated.id, schoolId, userId: req.user.id, audit: true, action: 'CLASS_UPDATED' }, "Class updated successfully.");
     } catch (error) {
-        if (error.code === 'P2002') { return res.status(409).json({ message: 'A class with this name already exists for this academic year.' }); }
+        if (error.code === 'P2002') { return fail(res, 409, 'A class with this name already exists for this academic year.', 'DUPLICATE_CLASS'); }
         logger.error({ error, classId }, "Error updating class");
-        res.status(500).json({ message: "Failed to update class." });
+        fail(res, 500, 'Failed to update class.', 'SERVER_ERROR');
     }
 };
 
 const enrollStudentInClass = async (req, res) => {
     const schoolId = req.user.schoolId;
     const { studentId, classId } = req.body;
-    if (!studentId || !classId) { return res.status(400).json({ message: 'Student ID and class ID are required.' }); }
+    if (!studentId || !classId) { return fail(res, 400, 'Student ID and class ID are required.', 'VALIDATION_ERROR'); }
 
     try {
         const student = await prisma.student.findFirst({ where: { id: studentId, schoolId } });
@@ -720,14 +714,14 @@ const enrollStudentInClass = async (req, res) => {
             where: { id: classId, academicYear: { schoolId: schoolId, current: true } }
         });
 
-        if (!student || !classToEnroll) { return res.status(404).json({ message: 'Student or active class not found in your school.' }); }
+        if (!student || !classToEnroll) { return fail(res, 404, 'Student or active class not found in your school.', 'NOT_FOUND'); }
 
         const enrollment = await prisma.studentEnrollment.create({ data: { studentId, classId, academicYearId: classToEnroll.academicYearId } });
-        res.status(200).json({ message: 'Student enrolled successfully.', enrollment });
+        ok(res, { enrollment });
     } catch (error) {
-        if (error.code === 'P2002') { return res.status(409).json({ message: 'Student is already enrolled for this academic year.' }); }
+        if (error.code === 'P2002') { return fail(res, 409, 'Student is already enrolled for this academic year.', 'DUPLICATE_ENROLLMENT'); }
         logger.error({ error: error.message }, "Error enrolling student");
-        res.status(500).json({ message: 'Something went wrong.' });
+        fail(res, 500, 'Something went wrong.', 'SERVER_ERROR');
     }
 };
 const exportStudentsToCsv = async (req, res) => {
@@ -771,26 +765,28 @@ const exportStudentsToCsv = async (req, res) => {
 
     } catch (error) {
         logger.error({ error: error.message }, "Error exporting students");
-        res.status(500).json({ message: "Failed to export students." });
+        fail(res, 500, 'Failed to export students.', 'SERVER_ERROR');
     }
 };
 
 const updateStudent = async (req, res) => {
     const { studentId } = req.params;
-    const schoolId = req.user.schoolId;
 
     // 1. Strict Sanitization (Only allow these fields)
     const { fullName, gender, dob, nfc_card_id, classId, date_of_birth } = req.body;
 
     try {
         const student = await prisma.student.findFirst({
-            where: { id: studentId, schoolId },
+            where: tenantWhere(req, { id: studentId }),
             include: { enrollments: { where: { academicYear: { current: true } } } }
         });
 
         if (!student) {
-            return res.status(404).json({ message: "Student not found in your school." });
+            return fail(res, 404, 'Student not found in your school.', 'NOT_FOUND');
         }
+
+        // Tenant guard: block cross-school mutation
+        if (assertTenantEntity(req, res, student.schoolId)) return;
 
         const dataToUpdate = {};
         if (fullName) dataToUpdate.fullName = fullName;
@@ -827,9 +823,6 @@ const updateStudent = async (req, res) => {
                     });
 
                     if (targetClass) {
-                        // If an enrollment exists for this year, we must delete it first (or update it) due to Unique constraint.
-                        // The prompt asks to "create a new StudentEnrollment".
-                        // To clear the unique constraint for the *same* year, we delete the old one.
                         if (currentEnrollment) {
                             await tx.studentEnrollment.delete({ where: { id: currentEnrollment.id } });
                         }
@@ -850,14 +843,14 @@ const updateStudent = async (req, res) => {
         });
 
         logger.info({ studentId: result.id, schoolId }, "Student updated successfully");
-        res.status(200).json(result);
+        ok(res, result);
 
     } catch (error) {
         logger.error({ error, studentId }, "Error updating student");
         if (error.code === 'P2002') {
-            return res.status(409).json({ message: "NFC ID already in use." });
+            return fail(res, 409, 'NFC ID already in use.', 'NFC_CONFLICT');
         }
-        res.status(500).json({ message: "Failed to update student information." });
+        fail(res, 500, 'Failed to update student information.', 'SERVER_ERROR');
     }
 };
 
@@ -867,14 +860,14 @@ const deleteStudent = async (req, res) => {
     try {
         const student = await prisma.student.findFirst({ where: { id: studentId, schoolId } });
         if (!student) {
-            return res.status(404).json({ message: "Student not found in your school." });
+            return fail(res, 404, 'Student not found in your school.', 'NOT_FOUND');
         }
         await prisma.student.delete({ where: { id: studentId } });
         logger.info({ studentId, schoolId }, "Student deleted successfully");
         res.status(204).send();
     } catch (error) {
         logger.error({ error, studentId }, "Error deleting student");
-        res.status(500).json({ message: "Failed to delete student." });
+        fail(res, 500, 'Failed to delete student.', 'SERVER_ERROR');
     }
 };
 
@@ -917,16 +910,15 @@ const getAllTeachers = async (req, res) => {
             };
         });
 
-        res.status(200).json(result);
+        ok(res, result);
     } catch (error) {
         logger.error({ error, schoolId }, "Error fetching teachers");
-        res.status(500).json({ message: "Failed to fetch teachers." });
+        fail(res, 500, 'Failed to fetch teachers.', 'SERVER_ERROR');
     }
 };
 
 const getAllClasses = async (req, res) => {
-    const schoolId = req.user.schoolId;
-    const userId = req.user.id;
+    const { schoolId, userId, isSuperAdmin } = getTenant(req);
     const role = req.user.role;
 
 
@@ -960,13 +952,13 @@ const getAllClasses = async (req, res) => {
 
 
         } else {
-            // ADMIN/OTHERS: Get All Classes
+            // ADMIN/OTHERS: Get All Classes — tenant-scoped
 
             classes = await prisma.class.findMany({
-                where: { academicYear: { schoolId } }, // Scoped to school
+                where: { academicYear: tenantWhere(req) },
                 include: {
                     academicYear: true,
-                    _count: { select: { enrollments: true } } // Fetch student count from ENROLLMENTS
+                    _count: { select: { enrollments: true } }
                 },
                 orderBy: { name: 'asc' }
             });
@@ -986,10 +978,10 @@ const getAllClasses = async (req, res) => {
             }
         }));
 
-        res.status(200).json(formatted);
+        ok(res, formatted);
     } catch (error) {
         logger.error({ error, schoolId }, "Error fetching classes");
-        res.status(500).json({ message: "Failed to fetch classes." });
+        fail(res, 500, 'Failed to fetch classes.', 'SERVER_ERROR');
     }
 };
 
@@ -1001,8 +993,6 @@ const getStudents = async (req, res) => {
         const whereClause = { schoolId };
 
         if (classId) {
-            // Filter by students enrolled in this class for the *current* academic year likely?
-            // Or just any enrollment history? Usually current.
             whereClause.enrollments = {
                 some: {
                     classId: classId,
@@ -1039,10 +1029,10 @@ const getStudents = async (req, res) => {
             parentEmail: s.parent?.email
         }));
 
-        res.status(200).json(formatted);
+        ok(res, formatted);
     } catch (error) {
         logger.error({ error, schoolId }, "Error fetching students");
-        res.status(500).json({ message: "Failed to fetch students." });
+        fail(res, 500, 'Failed to fetch students.', 'SERVER_ERROR');
     }
 };
 

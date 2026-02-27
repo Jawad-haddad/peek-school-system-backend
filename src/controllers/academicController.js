@@ -3,6 +3,8 @@ const { sendNotification } = require('../services/notificationService');
 const logger = require('../config/logger');
 const { UserRole } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
+const { ok, fail } = require('../utils/response');
+const { getTenant, tenantWhere } = require('../utils/tenant');
 
 // --- TEACHER & ADMIN CONTROLLERS ---
 
@@ -409,12 +411,13 @@ const getTeacherClasses = async (req, res) => {
 
 // --- SCHOOL ADMIN CONTROLLERS MOVED HERE ---
 const createAcademicYear = async (req, res) => {
-    const schoolId = req.user.schoolId;
+    // Force schoolId from tenant — ignore any client-supplied schoolId
+    const { schoolId } = getTenant(req);
     let { startYear, endYear, current } = req.body;
 
     // Validate inputs
     if (!startYear || !endYear) {
-        return res.status(400).json({ message: 'Start year and end year are required.' });
+        return fail(res, 400, 'Start year and end year are required.', 'VALIDATION_ERROR');
     }
 
     // Ensure Integers
@@ -429,10 +432,10 @@ const createAcademicYear = async (req, res) => {
     const endDate = new Date(`${endYear}-06-30`);
 
     try {
-        // If setting as current, unset others
+        // If setting as current, unset others (scoped to tenant)
         if (current) {
             await prisma.academicYear.updateMany({
-                where: { schoolId, current: true },
+                where: tenantWhere(req, { current: true }),
                 data: { current: false }
             });
         }
@@ -446,13 +449,13 @@ const createAcademicYear = async (req, res) => {
                 current: current || false
             }
         });
-        res.status(201).json(newYear);
+        ok(res, newYear, null, 201);
     } catch (error) {
         if (error.code === 'P2002') {
-            return res.status(409).json({ message: 'An academic year with this name already exists for your school.' });
+            return fail(res, 409, 'An academic year with this name already exists for your school.', 'DUPLICATE_ACADEMIC_YEAR');
         }
         logger.error({ error: error.message }, "Error in academic controller");
-        res.status(500).json({ message: 'Something went wrong.' });
+        fail(res, 500, 'Something went wrong.', 'SERVER_ERROR');
     }
 };
 
@@ -501,19 +504,18 @@ const deleteAcademicYear = async (req, res) => {
 };
 
 const getAcademicYears = async (req, res) => {
-    const schoolId = req.user.schoolId;
     try {
         const years = await prisma.academicYear.findMany({
-            where: { schoolId },
+            where: tenantWhere(req),
             orderBy: [
                 { current: 'desc' }, // true first
                 { startDate: 'desc' }
             ]
         });
-        res.status(200).json(years);
+        ok(res, years);
     } catch (error) {
-        logger.error({ error, schoolId }, "Error fetching academic years");
-        res.status(500).json({ message: "Failed to fetch academic years." });
+        logger.error({ error }, "Error fetching academic years");
+        fail(res, 500, 'Failed to fetch academic years.', 'SERVER_ERROR');
     }
 };
 

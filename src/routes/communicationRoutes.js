@@ -5,7 +5,7 @@ const { createAnnouncement, getAnnouncements, sendBroadcast } = require('../cont
 const { UserRole } = require('@prisma/client');
 
 // Middleware sets
-const adminActions = [authMiddleware, hasRole([UserRole.school_admin]), belongsToSchool];
+const adminActions = [authMiddleware, hasRole([UserRole.super_admin, UserRole.school_admin]), belongsToSchool];
 const viewActions = [authMiddleware, belongsToSchool];
 
 /**

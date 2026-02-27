@@ -316,8 +316,8 @@ describe('Flow 3: Teacher Attendance', () => {
         expect(res.body).toHaveProperty('classId', seedClassId);
     });
 
-    // ── POST bulk attendance (casing tolerance) ─
-    it('Uppercase status "ABSENT" is accepted (normalized)', async () => {
+    // ── POST bulk attendance (casing tolerance + reason) ─
+    it('Uppercase status "ABSENT" with reason is accepted (normalized)', async () => {
         const today = new Date().toISOString().slice(0, 10);
         const res = await request(app)
             .post('/api/attendance/bulk')
@@ -326,14 +326,30 @@ describe('Flow 3: Teacher Attendance', () => {
                 classId: seedClassId,
                 date: today,
                 records: [
-                    { studentId: seedStudentId, status: 'ABSENT' },
+                    { studentId: seedStudentId, status: 'ABSENT', reason: 'Doctors Note' },
                 ],
             });
         expect(res.status).toBe(200);
         expect(res.body.savedCount).toBe(1);
     });
 
-    // ── POST bulk attendance (invalid status → 400) ──
+    // ── POST bulk attendance (Invalid Date Format → 400) ───
+    it('Non-ISO date format returns 400', async () => {
+        const res = await request(app)
+            .post('/api/attendance/bulk')
+            .set('Authorization', `Bearer ${teacherToken}`)
+            .send({
+                classId: seedClassId,
+                date: '10/24/2026', // Specifically invalid format
+                records: [
+                    { studentId: seedStudentId, status: 'present' },
+                ],
+            });
+        expect(res.status).toBe(400);
+        expect(res.body.code).toBe('VALIDATION_ERROR');
+    });
+
+    // ── POST bulk attendance (Invalid status → 400) ──
     it('Invalid status "here" returns 400', async () => {
         const today = new Date().toISOString().slice(0, 10);
         const res = await request(app)
@@ -351,8 +367,8 @@ describe('Flow 3: Teacher Attendance', () => {
         expect(res.body.errors[0].field).toBe('status');
     });
 
-    // ── POST bulk attendance (bad date → 400) ───
-    it('Invalid date format returns 400', async () => {
+    // ── POST bulk attendance (bad string → 400) ───
+    it('Invalid alphanumeric date returns 400', async () => {
         const res = await request(app)
             .post('/api/attendance/bulk')
             .set('Authorization', `Bearer ${teacherToken}`)
@@ -395,21 +411,25 @@ describe('Flow 3: Teacher Attendance', () => {
         expect(res.body.errors[0].field).toBe('studentId');
     });
 
-    // ── Readback: GET attendance ────────────────
-    it('TEACHER can read back attendance via GET /api/attendance/:classId', async () => {
+    // ── Readback: GET attendance shows UPSERTED values ─────────
+    it('TEACHER can read back attendance ensuring UPSERT caught the ABSENT overwrite', async () => {
         expect(seedClassId).toBeDefined();
         const today = new Date().toISOString().slice(0, 10);
+
+        // At the start of the tests, we submitted PRESENT. Then we submitted ABSENT with reason 'Doctors Note'.
+        // It should ONLY show absent because of the UPSERT correctly blocking duplicate inserts.
         const res = await request(app)
             .get(`/api/attendance/${seedClassId}?date=${today}`)
             .set('Authorization', `Bearer ${teacherToken}`);
+
         expect(res.status).toBe(200);
         expect(Array.isArray(res.body)).toBe(true);
-        // Should contain at least the student we submitted for
-        if (res.body.length > 0) {
-            const record = res.body.find(r => r.studentId === seedStudentId || r.id === seedStudentId);
-            // The exact response shape depends on the controller implementation
-            // At minimum it should be an array
-        }
+        expect(res.body.length).toBeGreaterThan(0);
+
+        const record = res.body.find(r => r.studentId === seedStudentId || r.id === seedStudentId);
+        expect(record).toBeDefined();
+        expect(record.status).toBe('absent'); // the casing normalizer forced it down
+        expect(record.reason).toBe('Doctors Note');
     });
 
     // ── PARENT forbidden on attendance submit ───

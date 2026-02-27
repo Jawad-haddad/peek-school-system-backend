@@ -1,5 +1,6 @@
 // src/validators/userValidator.js
 const { z } = require('zod');
+const { fail } = require('../utils/response');
 
 const registerUserSchema = z.object({
     fullName: z.string()
@@ -22,20 +23,47 @@ const validate = (schema) => (req, res, next) => {
         schema.parse(req.body);
         next();
     } catch (e) {
-        // M6 FIX: Guard against non-Zod errors
         if (e instanceof z.ZodError) {
-            const errors = e.issues.map(issue => ({
+            const details = e.issues.map(issue => ({
                 field: issue.path.join('.'),
                 message: issue.message,
             }));
-            return res.status(400).json({
-                message: 'Validation failed',
-                errors,
-            });
+            return fail(res, 400, 'Validation failed', 'VALIDATION_ERROR', details);
         }
-        // Re-throw unexpected errors to the global error handler
         next(e);
     }
 };
 
-module.exports = { validate, registerUserSchema };
+const validateQuery = (schema) => (req, res, next) => {
+    try {
+        schema.parse(req.query);
+        next();
+    } catch (e) {
+        if (e instanceof z.ZodError) {
+            const details = e.issues.map(issue => ({
+                field: issue.path.join('.'),
+                message: issue.message,
+            }));
+            return fail(res, 400, 'Validation failed', 'VALIDATION_ERROR', details);
+        }
+        next(e);
+    }
+};
+
+const validateParams = (schema) => (req, res, next) => {
+    try {
+        schema.parse(req.params);
+        next();
+    } catch (e) {
+        if (e instanceof z.ZodError) {
+            const details = e.issues.map(issue => ({
+                field: issue.path.join('.'),
+                message: issue.message,
+            }));
+            return fail(res, 400, 'Validation failed', 'VALIDATION_ERROR', details);
+        }
+        next(e);
+    }
+};
+
+module.exports = { validate, validateQuery, validateParams, registerUserSchema };

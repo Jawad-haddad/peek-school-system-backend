@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { authMiddleware, hasRole, belongsToSchool } = require('../middleware/authMiddleware');
 const { submitClassAttendance, getClassAttendance } = require('../controllers/attendanceController');
+const { validate } = require('../validators/userValidator');
+const { bulkAttendanceSchema } = require('../validators/attendance.validator');
 const { UserRole } = require('@prisma/client');
 
 /**
@@ -11,7 +13,7 @@ const { UserRole } = require('@prisma/client');
  *     description: Attendance management
  */
 
-const teacherAdminActions = [authMiddleware, hasRole([UserRole.teacher, UserRole.school_admin]), belongsToSchool];
+const teacherAdminActions = [authMiddleware, hasRole([UserRole.super_admin, UserRole.school_admin, UserRole.teacher]), belongsToSchool];
 
 /**
  * @swagger
@@ -57,7 +59,7 @@ const teacherAdminActions = [authMiddleware, hasRole([UserRole.teacher, UserRole
  *       "404":
  *         description: Class not found
  */
-router.post('/bulk', teacherAdminActions, submitClassAttendance);
+router.post('/bulk', teacherAdminActions, validate(bulkAttendanceSchema), submitClassAttendance);
 
 /**
  * @swagger

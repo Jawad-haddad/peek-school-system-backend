@@ -2,7 +2,8 @@
 
 const jwt = require('jsonwebtoken');
 const prisma = require('../prismaClient');
-const logger = require('../config/logger'); // Import the professional logger
+const logger = require('../config/logger');
+const { fail } = require('../utils/response');
 
 const authMiddleware = async (req, res, next) => {
     let token;
@@ -16,11 +17,12 @@ const authMiddleware = async (req, res, next) => {
                 select: { id: true, email: true, fullName: true, role: true, schoolId: true, isActive: true }
             });
 
-            // RBAC debug removed for production safety
-
+            // Note: RBAC/authorization natively relies on `req.user.role` hydrated securely 
+            // directly from the live DB record using standard `select`, ignoring the JWT role payload. 
+            // Passwords, 2FA tokens, etc., are explicitly excluded from this payload format.
             if (!req.user || !req.user.isActive) {
                 logger.warn({ userId: decoded.userId }, "Auth Middleware: User not found or is inactive.");
-                return res.status(401).json({ message: 'User not found or disabled.' });
+                return fail(res, 401, 'User not found or disabled.', 'UNAUTHORIZED');
             }
 
             // If everything is fine, proceed to the next middleware/controller
@@ -29,23 +31,24 @@ const authMiddleware = async (req, res, next) => {
         } catch (error) {
             if (error instanceof jwt.TokenExpiredError) {
                 logger.warn("Auth Middleware: Expired token received.");
-                return res.status(401).json({ message: 'Not authorized, token expired.' });
+                return fail(res, 401, 'Not authorized, token expired.', 'UNAUTHORIZED');
             }
             logger.error({ error: error.message }, "Auth Middleware: Token verification failed.");
-            return res.status(401).json({ message: 'Not authorized, token failed.' });
+            return fail(res, 401, 'Not authorized, token failed.', 'UNAUTHORIZED');
         }
     }
 
     if (!token) {
         logger.warn({ path: req.originalUrl }, "Auth Middleware: No token provided in request.");
-        return res.status(401).json({ message: 'Not authorized, no token.' });
+        return fail(res, 401, 'Not authorized, no token.', 'UNAUTHORIZED');
     }
 };
 
 const hasRole = (roles) => (req, res, next) => {
+    // Permission validation explicitly checking the database hydrated role object `req.user.role`.
     if (!req.user || !roles.includes(req.user.role)) {
         logger.warn({ userId: req.user?.id, requiredRoles: roles, userRole: req.user?.role }, "Forbidden: Insufficient role permissions.");
-        return res.status(403).json({ message: `Forbidden: Access is restricted to the following roles: ${roles.join(', ')}` });
+        return fail(res, 403, `Forbidden: Access is restricted to permitted roles.`, 'FORBIDDEN_ROLE');
     }
     next();
 };
@@ -53,10 +56,7 @@ const hasRole = (roles) => (req, res, next) => {
 const belongsToSchool = (req, res, next) => {
     if (req.user.role !== 'super_admin' && !req.user.schoolId) {
         logger.warn({ userId: req.user.id }, "Forbidden: User is not assigned to a school.");
-        return res.status(403).json({
-            message: 'Forbidden: You are not assigned to a school.',
-            schoolId: null
-        });
+        return fail(res, 403, 'Forbidden: You are not assigned to a school.', 'FORBIDDEN');
     }
     next();
 }

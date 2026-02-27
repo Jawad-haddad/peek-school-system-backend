@@ -12,7 +12,7 @@ const {
 } = require('../controllers/userController');
 const { authMiddleware } = require('../middleware/authMiddleware');
 const { validate, registerUserSchema } = require('../validators/userValidator');
-const { loginSchema, verify2FASchema } = require('../validators/mvpValidator');
+const { loginSchema, verify2FASchema } = require('../validators/auth.validator');
 const { loginLimiter } = require('../middleware/rateLimiter');
 
 // Auth routes

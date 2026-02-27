@@ -2,6 +2,11 @@
 const express = require('express');
 const router = express.Router();
 const { authMiddleware, hasRole, belongsToSchool } = require('../middleware/authMiddleware');
+const { validate, validateQuery, validateParams } = require('../validators/userValidator');
+const {
+    topUpWalletSchema, walletHistoryQuerySchema, issueInvoiceSchema,
+    recordPaymentSchema, invoiceIdParamSchema
+} = require('../validators/finance.validator');
 const {
     createFeeStructure, issueInvoice, recordPayment, topUpWallet
 } = require('../controllers/financeController');
@@ -77,7 +82,7 @@ router.post('/fee-structures', financeAdminActions, createFeeStructure);
  *       "201":
  *         description: Invoice issued successfully
  */
-router.post('/invoices', financeAdminActions, issueInvoice);
+router.post('/invoices', financeAdminActions, validate(issueInvoiceSchema), issueInvoice);
 
 /**
  * @swagger
@@ -109,7 +114,7 @@ router.post('/invoices', financeAdminActions, issueInvoice);
  *       "201":
  *         description: Payment recorded successfully
  */
-router.post('/invoices/:invoiceId/payments', financeAdminActions, recordPayment);
+router.post('/invoices/:invoiceId/payments', financeAdminActions, validateParams(invoiceIdParamSchema), validate(recordPaymentSchema), recordPayment);
 
 /**
  * @swagger
@@ -134,7 +139,7 @@ router.post('/invoices/:invoiceId/payments', financeAdminActions, recordPayment)
  *       "200":
  *         description: Wallet topped up successfully
  */
-router.post('/wallet/topup', [authMiddleware, hasRole([UserRole.parent, UserRole.school_admin]), belongsToSchool], topUpWallet);
+router.post('/wallet/topup', [authMiddleware, hasRole([UserRole.parent, UserRole.school_admin]), belongsToSchool], validate(topUpWalletSchema), topUpWallet);
 
 /**
  * @swagger
@@ -156,6 +161,6 @@ router.post('/wallet/topup', [authMiddleware, hasRole([UserRole.parent, UserRole
  *       "403":
  *         description: Access denied
  */
-router.get('/wallet/:studentId/history', [authMiddleware, hasRole([UserRole.parent, UserRole.school_admin, UserRole.finance])], require('../controllers/financeController').getWalletHistory);
+router.get('/wallet/:studentId/history', [authMiddleware, hasRole([UserRole.parent, UserRole.school_admin, UserRole.finance])], validateQuery(walletHistoryQuerySchema), require('../controllers/financeController').getWalletHistory);
 
 module.exports = router;

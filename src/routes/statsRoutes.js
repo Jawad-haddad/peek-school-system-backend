@@ -12,7 +12,7 @@ const { UserRole } = require('@prisma/client');
  */
 
 // Admin only actions
-const adminActions = [authMiddleware, hasRole([UserRole.school_admin]), belongsToSchool];
+const adminActions = [authMiddleware, hasRole([UserRole.super_admin, UserRole.school_admin, UserRole.finance]), belongsToSchool];
 
 /**
  * @swagger

@@ -11,8 +11,8 @@ const { UserRole } = require('@prisma/client');
  *     description: Examination management
  */
 
-const adminActions = [authMiddleware, hasRole([UserRole.school_admin]), belongsToSchool];
-const teacherAdminActions = [authMiddleware, hasRole([UserRole.school_admin, UserRole.teacher]), belongsToSchool];
+const adminActions = [authMiddleware, hasRole([UserRole.super_admin, UserRole.school_admin]), belongsToSchool];
+const teacherAdminActions = [authMiddleware, hasRole([UserRole.super_admin, UserRole.school_admin, UserRole.teacher]), belongsToSchool];
 const parentActions = [authMiddleware, hasRole([UserRole.parent])]; // Student ID check is usually inside controller or middleware
 
 /**

@@ -1,6 +1,8 @@
 const prisma = require('../prismaClient');
 const { sendNotification } = require('../services/notificationService');
 const logger = require('../config/logger');
+const { ok, fail } = require('../utils/response');
+const { getTenant, tenantWhere } = require('../utils/tenant');
 
 /**
  * Submits attendance for a whole class in bulk.
@@ -9,23 +11,28 @@ const logger = require('../config/logger');
  */
 const submitClassAttendance = async (req, res) => {
     const { classId, date, records } = req.body;
-    const schoolId = req.user.schoolId;
+    // Force schoolId from tenant — ignore any client-supplied schoolId
+    const { schoolId } = getTenant(req);
 
     // --- Top-level shape validation ---
     if (!classId || typeof classId !== 'string') {
-        return res.status(400).json({ message: "classId (string) is required." });
+        return fail(res, 400, 'classId (string) is required.', 'VALIDATION_ERROR');
     }
     if (!date || typeof date !== 'string') {
-        return res.status(400).json({ message: "date (string, YYYY-MM-DD) is required." });
+        return fail(res, 400, 'date (string, YYYY-MM-DD) is required.', 'VALIDATION_ERROR');
     }
     if (!Array.isArray(records) || records.length === 0) {
-        return res.status(400).json({ message: "records (non-empty array) is required." });
+        return fail(res, 400, 'records (non-empty array) is required.', 'VALIDATION_ERROR');
     }
 
-    // --- Date validation ---
-    const attendanceDate = new Date(date);
+    // --- Date validation (Strict YYYY-MM-DD + UTC Force) ---
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateRegex.test(date)) {
+        return fail(res, 400, 'Invalid date format. Strictly use YYYY-MM-DD.', 'VALIDATION_ERROR');
+    }
+    const attendanceDate = new Date(`${date}T00:00:00.000Z`);
     if (isNaN(attendanceDate.getTime())) {
-        return res.status(400).json({ message: "Invalid date format. Use YYYY-MM-DD." });
+        return fail(res, 400, 'Invalid date value.', 'VALIDATION_ERROR');
     }
 
     // --- Per-record validation ---
@@ -61,16 +68,16 @@ const submitClassAttendance = async (req, res) => {
     }
 
     if (errors.length > 0) {
-        return res.status(400).json({ message: "Validation failed for one or more records.", errors });
+        return fail(res, 400, 'Validation failed for one or more records.', 'VALIDATION_ERROR', errors);
     }
 
     try {
-        // 1. Validate Class
+        // 1. Validate Class belongs to tenant's school
         const classExists = await prisma.class.findFirst({
-            where: { id: classId, academicYear: { schoolId } }
+            where: { id: classId, academicYear: tenantWhere(req) }
         });
         if (!classExists) {
-            return res.status(404).json({ message: "Class not found in your school." });
+            return fail(res, 404, 'Class not found in your school.', 'NOT_FOUND');
         }
 
         const upsertOperations = [];
@@ -138,12 +145,12 @@ const submitClassAttendance = async (req, res) => {
             });
         });
 
-        logger.info({ classId, date, count: records.length }, "Bulk attendance submitted successfully");
-        res.status(200).json({ savedCount: records.length, date, classId });
+        logger.info({ classId, date, count: records.length, userId: req.user.id, schoolId, audit: true, action: 'ATTENDANCE_BULK_SUBMIT' }, "Bulk attendance submitted successfully");
+        ok(res, { savedCount: records.length, date, classId });
 
     } catch (error) {
         logger.error({ error, classId }, "Error submitting bulk attendance");
-        res.status(500).json({ message: "Failed to submit attendance." });
+        fail(res, 500, 'Failed to submit attendance.', 'SERVER_ERROR');
     }
 };
 
@@ -153,26 +160,28 @@ const submitClassAttendance = async (req, res) => {
 const getClassAttendance = async (req, res) => {
     const { classId } = req.params;
     const { date } = req.query;
-    const schoolId = req.user.schoolId;
 
     if (!classId || !date) {
-        return res.status(400).json({ message: "Class ID and date query parameter are required." });
+        return fail(res, 400, 'Class ID and date query parameter are required.', 'VALIDATION_ERROR');
     }
 
     try {
-        const attendanceDate = new Date(date);
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(date)) {
+            return fail(res, 400, 'Invalid date format. Strictly use YYYY-MM-DD.', 'VALIDATION_ERROR');
+        }
+        const attendanceDate = new Date(`${date}T00:00:00.000Z`);
+        if (isNaN(attendanceDate.getTime())) {
+            return fail(res, 400, 'Invalid date value.', 'VALIDATION_ERROR');
+        }
 
-        // 1. Fetch all students enrolled in the class (Active Academic Year assumed or current state)
-        // We want to return the list of students + their attendance status (if any).
-        // This gives the frontend the full "Grid" to view.
-
+        // Tenant-scoped student query: only students from this school enrolled in this class
         const students = await prisma.student.findMany({
-            where: {
-                schoolId,
+            where: tenantWhere(req, {
                 enrollments: {
                     some: { classId }
                 }
-            },
+            }),
             select: {
                 id: true,
                 fullName: true,
@@ -184,8 +193,7 @@ const getClassAttendance = async (req, res) => {
             orderBy: { fullName: 'asc' }
         });
 
-        // 2. Transform Data
-        // Flatten the structure: { id, name, status: 'present' | 'absent' | null, ... }
+        // Transform Data
         const result = students.map(student => {
             const record = student.attendance[0]; // Should be at most one due to unique constraint
             return {
@@ -196,11 +204,11 @@ const getClassAttendance = async (req, res) => {
             };
         });
 
-        res.status(200).json(result);
+        ok(res, result);
 
     } catch (error) {
         logger.error({ error, classId }, "Error fetching class attendance");
-        res.status(500).json({ message: "Failed to fetch attendance." });
+        fail(res, 500, 'Failed to fetch attendance.', 'SERVER_ERROR');
     }
 };
 

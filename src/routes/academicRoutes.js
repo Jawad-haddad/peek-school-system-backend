@@ -20,6 +20,8 @@ const {
 
 } = require('../controllers/academicController');
 const { getAllClasses, getAllTeachers, createSubject } = require('../controllers/schoolController'); // Re-imported for backward compatibility
+const { validate } = require('../validators/userValidator');
+const { createSubjectSchema } = require('../validators/academics.validator');
 const { UserRole } = require('@prisma/client');
 
 /**
@@ -30,9 +32,9 @@ const { UserRole } = require('@prisma/client');
  */
 
 // Middleware sets
-const teacherAdminActions = [authMiddleware, hasRole([UserRole.teacher, UserRole.school_admin]), belongsToSchool];
-const adminActions = [authMiddleware, hasRole([UserRole.school_admin]), belongsToSchool];
-const viewActions = [authMiddleware, hasRole([UserRole.teacher, UserRole.school_admin, UserRole.parent]), belongsToSchool]; // Restricted view access
+const teacherAdminActions = [authMiddleware, hasRole([UserRole.super_admin, UserRole.school_admin, UserRole.teacher]), belongsToSchool];
+const adminActions = [authMiddleware, hasRole([UserRole.super_admin, UserRole.school_admin]), belongsToSchool];
+const viewActions = [authMiddleware, hasRole([UserRole.super_admin, UserRole.school_admin, UserRole.teacher, UserRole.parent]), belongsToSchool]; // Restricted view access
 
 /**
  * @swagger
@@ -229,6 +231,6 @@ router.get('/teachers/:id/classes', [authMiddleware, hasRole([UserRole.school_ad
 router.get('/students/:studentId/homework', [authMiddleware, hasRole([UserRole.parent])], getHomeworkForStudent);
 
 // Fix 404 for /api/academics/subjects
-router.post('/subjects', adminActions, createSubject);
+router.post('/subjects', adminActions, validate(createSubjectSchema), createSubject);
 
 module.exports = router;

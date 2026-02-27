@@ -190,11 +190,20 @@ async function main() {
   });
 
   console.log('--- Seeding Completed Successfully ---');
-  console.log('Credentials (Password: password123):');
-  console.log(`Admin:   admin@peek.com`);
-  console.log(`Teacher: teacher@peek.com`);
-  console.log(`Parent:  parent@peek.com`);
-  console.log(`Student: Leo Messi (NFC: A1B2C3D4E5)`);
+  console.log('\n=== PEEK MVP DEMO DATA MAP ===');
+  console.log(`School:       ${school.name} (ID: ${school.id})`);
+  console.log(`Academy Year: ${academicYear.name} (ID: ${academicYear.id})`);
+  console.log(`Class:        ${classStars.name} (ID: ${classStars.id})`);
+  console.log(`Subject 1:    ${subjectMath.name} (ID: ${subjectMath.id})`);
+  console.log(`Subject 2:    ${subjectArt.name} (ID: ${subjectArt.id})`);
+  console.log(`Student:      ${student.fullName} (ID: ${student.id} | NFC: ${student.nfc_card_id})`);
+
+  console.log('\n=== DEMO LOGIN CREDENTIALS ===');
+  console.log('All Passwords: password123');
+  console.log(`ADMIN   (School Admin): admin@peek.com`);
+  console.log(`TEACHER (Assigned):     teacher@peek.com`);
+  console.log(`PARENT  (1 Student):    parent@peek.com`);
+  console.log('===================================\n');
 }
 
 main()

@@ -9,7 +9,7 @@ describe('Authentication Endpoints', () => {
 
     afterAll(async () => {
         if (createdUserId) {
-            await prisma.user.delete({ where: { id: createdUserId } }).catch(e => {});
+            await prisma.user.delete({ where: { id: createdUserId } }).catch(e => { });
         }
     });
 
@@ -19,6 +19,8 @@ describe('Authentication Endpoints', () => {
                 .post('/api/users/login')
                 .send({ email: 'jawad.parent@email.com', password: 'wrongpassword' });
             expect(response.statusCode).toBe(401);
+            expect(response.body.success).toBe(false);
+            expect(response.body.error).toHaveProperty('message');
         });
 
         it('should log in successfully with correct credentials', async () => {
@@ -26,7 +28,8 @@ describe('Authentication Endpoints', () => {
                 .post('/api/users/login')
                 .send({ email: 'jawad.parent@email.com', password: 'parentpassword' });
             expect(response.statusCode).toBe(200);
-            expect(response.body).toHaveProperty('token');
+            expect(response.body.success).toBe(true);
+            expect(response.body.data).toHaveProperty('token');
         });
     });
 
@@ -37,7 +40,8 @@ describe('Authentication Endpoints', () => {
                 .post('/api/users/register')
                 .send({ fullName: "Test User", email: uniqueEmail, password: "password123", role: "parent" });
             expect(response.statusCode).toBe(201);
-            createdUserId = response.body.user.id;
+            expect(response.body.success).toBe(true);
+            createdUserId = response.body.data.user.id;
         });
 
         it('should fail to register a user with an existing email', async () => {
@@ -45,6 +49,8 @@ describe('Authentication Endpoints', () => {
                 .post('/api/users/register')
                 .send({ fullName: "Another User", email: 'jawad.parent@email.com', password: "password123", role: "parent" });
             expect(response.statusCode).toBe(409);
+            expect(response.body.success).toBe(false);
+            expect(response.body.error).toHaveProperty('message');
         });
     });
 });

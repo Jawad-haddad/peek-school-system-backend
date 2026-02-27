@@ -10,7 +10,15 @@ const { apiLimiter } = require('./src/middleware/rateLimiter');
 
 // Import all the route handlers
 const mainRoutes = require('./src/routes/mainRoutes');
-const healthRoutes = require('./src/routes/healthRoutes');
+// Alias health locally to avoid creating an entirely new router file for one endpoint
+const { ok } = require('./src/utils/response');
+const healthCheck = (req, res) => {
+    ok(res, {
+        status: "ok",
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString()
+    });
+};
 const userRoutes = require('./src/routes/userRoutes');
 const schoolRoutes = require('./src/routes/schoolRoutes');
 const academicRoutes = require('./src/routes/academicRoutes');
@@ -85,8 +93,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // ── Routes ───────────────────────────────────────────────
 app.use('/', mainRoutes);
-app.use('/health', healthRoutes);
-app.use('/api/health', healthRoutes); // Alias for consistency
+app.use('/health', healthCheck);
+app.use('/api/health', healthCheck);
 app.use('/api/users', userRoutes);
 app.use('/api/auth', userRoutes);
 app.use('/api/schools', schoolRoutes);
