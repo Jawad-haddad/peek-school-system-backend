@@ -4,10 +4,13 @@ const router = express.Router();
 const { authMiddleware, hasRole, belongsToSchool } = require('../middleware/authMiddleware');
 const {
   createHomework,
-  getHomework, // Import new controller
+  getHomework,
+  updateHomework,
+  deleteHomework,
+  getHomeworkGrades,
+  submitHomeworkGrades,
   getHomeworkForStudent,
   addGrade,
-  // recordAttendance, // DEPRECATED: Use attendanceController.submitClassAttendance instead
   getMySchedule,
   getTeacherClasses,
   getAcademicYears,
@@ -15,14 +18,21 @@ const {
   getMyStudents,
   getClassStudents,
   createTimeTableEntry,
-  createAcademicYear, // Re-imported for aliasing
-  createTeacher,      // Re-imported for aliasing
-
+  createAcademicYear,
+  createTeacher,
 } = require('../controllers/academicController');
 const { getAllClasses, getAllTeachers, createSubject } = require('../controllers/schoolController'); // Re-imported for backward compatibility
-const { validate } = require('../validators/userValidator');
+const { validate, validateQuery, validateParams } = require('../validators/userValidator');
 const { createSubjectSchema } = require('../validators/academics.validator');
+const {
+  createHomeworkSchema,
+  updateHomeworkSchema,
+  homeworkQuerySchema,
+  homeworkIdParamSchema
+} = require('../validators/homework.validator');
+const { gradeParamsSchema, submitGradesSchema } = require('../validators/homeworkGrades.validator');
 const { UserRole } = require('@prisma/client');
+const { cachePrivate, noCache } = require('../middleware/cacheHeaders');
 
 /**
  * @swagger
@@ -73,7 +83,11 @@ const viewActions = [authMiddleware, hasRole([UserRole.super_admin, UserRole.sch
  *       "201":
  *         description: Homework created successfully
  */
-router.post('/homework', teacherAdminActions, createHomework);
+router.post('/homework', teacherAdminActions, validate(createHomeworkSchema), createHomework);
+
+router.patch('/homework/:homeworkId', teacherAdminActions, validateParams(homeworkIdParamSchema), validate(updateHomeworkSchema), noCache, updateHomework);
+router.put('/homework/:homeworkId', teacherAdminActions, validateParams(homeworkIdParamSchema), validate(updateHomeworkSchema), noCache, updateHomework);
+router.delete('/homework/:homeworkId', teacherAdminActions, validateParams(homeworkIdParamSchema), noCache, deleteHomework);
 
 /**
  * @swagger
@@ -98,18 +112,18 @@ router.post('/homework', teacherAdminActions, createHomework);
  *       "200":
  *         description: List of homework assignments
  */
-router.get('/homework', viewActions, getHomework);
+router.get('/homework', viewActions, validateQuery(homeworkQuerySchema), cachePrivate(30), getHomework);
 
 // --- Academic Years & Subjects (View Only) ---
-router.get('/academic-years', viewActions, getAcademicYears);
-router.get('/subjects', viewActions, getSubjects);
+router.get('/academic-years', viewActions, cachePrivate(30), getAcademicYears);
+router.get('/subjects', viewActions, cachePrivate(30), getSubjects);
 
 // --- Backward Compatibility for /api/academic-years mount ---
 router.get('/', viewActions, getAcademicYears);
 router.post('/', adminActions, createAcademicYear);
 
 // --- Classes ---
-router.get('/classes', [authMiddleware, hasRole([UserRole.teacher, UserRole.school_admin]), belongsToSchool], getAllClasses);
+router.get('/classes', [authMiddleware, hasRole([UserRole.teacher, UserRole.school_admin]), belongsToSchool], cachePrivate(30), getAllClasses);
 /**
  * @swagger
  * /api/academics/classes/{classId}/students:
@@ -149,10 +163,10 @@ router.get('/classes', [authMiddleware, hasRole([UserRole.teacher, UserRole.scho
  *       "404":
  *         description: Class not found in school
  */
-router.get('/classes/:classId/students', viewActions, getClassStudents);
+router.get('/classes/:classId/students', viewActions, cachePrivate(30), getClassStudents);
 
 // --- Teachers ---
-router.get('/teachers', [authMiddleware, hasRole([UserRole.teacher, UserRole.school_admin]), belongsToSchool], getAllTeachers);
+router.get('/teachers', [authMiddleware, hasRole([UserRole.teacher, UserRole.school_admin]), belongsToSchool], cachePrivate(30), getAllTeachers);
 router.post('/teachers', adminActions, createTeacher);
 
 /**
@@ -198,8 +212,11 @@ router.post('/teachers', adminActions, createTeacher);
  */
 router.post('/timetable', adminActions, createTimeTableEntry);
 
-// --- Grades & Attendance ---
-router.post('/homework/:homeworkId/grades', teacherAdminActions, addGrade);
+// --- Grades ---
+// GET  → roster + existing grades
+router.get('/homework/:homeworkId/grades', teacherAdminActions, validateParams(gradeParamsSchema), cachePrivate(30), getHomeworkGrades);
+// POST → bulk upsert
+router.post('/homework/:homeworkId/grades', teacherAdminActions, validateParams(gradeParamsSchema), validate(submitGradesSchema), noCache, submitHomeworkGrades);
 // DEPRECATED: Single-record attendance. Use POST /api/attendance/bulk instead.
 // router.post('/attendance', teacherAdminActions, recordAttendance);
 

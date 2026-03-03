@@ -11,6 +11,7 @@ const {
     createFeeStructure, issueInvoice, recordPayment, topUpWallet
 } = require('../controllers/financeController');
 const { UserRole } = require('@prisma/client');
+const { noCache, cachePrivate } = require('../middleware/cacheHeaders');
 
 /**
  * @swagger
@@ -54,7 +55,7 @@ const financeAdminActions = [authMiddleware, hasRole([UserRole.finance, UserRole
  *       "201":
  *         description: Fee structure created successfully
  */
-router.post('/fee-structures', financeAdminActions, createFeeStructure);
+router.post('/fee-structures', financeAdminActions, noCache, createFeeStructure);
 
 /**
  * @swagger
@@ -82,7 +83,7 @@ router.post('/fee-structures', financeAdminActions, createFeeStructure);
  *       "201":
  *         description: Invoice issued successfully
  */
-router.post('/invoices', financeAdminActions, validate(issueInvoiceSchema), issueInvoice);
+router.post('/invoices', financeAdminActions, noCache, validate(issueInvoiceSchema), issueInvoice);
 
 /**
  * @swagger
@@ -114,7 +115,7 @@ router.post('/invoices', financeAdminActions, validate(issueInvoiceSchema), issu
  *       "201":
  *         description: Payment recorded successfully
  */
-router.post('/invoices/:invoiceId/payments', financeAdminActions, validateParams(invoiceIdParamSchema), validate(recordPaymentSchema), recordPayment);
+router.post('/invoices/:invoiceId/payments', financeAdminActions, noCache, validateParams(invoiceIdParamSchema), validate(recordPaymentSchema), recordPayment);
 
 /**
  * @swagger
@@ -139,7 +140,7 @@ router.post('/invoices/:invoiceId/payments', financeAdminActions, validateParams
  *       "200":
  *         description: Wallet topped up successfully
  */
-router.post('/wallet/topup', [authMiddleware, hasRole([UserRole.parent, UserRole.school_admin]), belongsToSchool], validate(topUpWalletSchema), topUpWallet);
+router.post('/wallet/topup', [authMiddleware, hasRole([UserRole.parent, UserRole.school_admin]), belongsToSchool], noCache, validate(topUpWalletSchema), topUpWallet);
 
 /**
  * @swagger
@@ -161,6 +162,6 @@ router.post('/wallet/topup', [authMiddleware, hasRole([UserRole.parent, UserRole
  *       "403":
  *         description: Access denied
  */
-router.get('/wallet/:studentId/history', [authMiddleware, hasRole([UserRole.parent, UserRole.school_admin, UserRole.finance])], validateQuery(walletHistoryQuerySchema), require('../controllers/financeController').getWalletHistory);
+router.get('/wallet/:studentId/history', [authMiddleware, hasRole([UserRole.parent, UserRole.school_admin, UserRole.finance])], validateQuery(walletHistoryQuerySchema), cachePrivate(30), require('../controllers/financeController').getWalletHistory);
 
 module.exports = router;

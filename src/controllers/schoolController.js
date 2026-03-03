@@ -924,6 +924,8 @@ const getAllClasses = async (req, res) => {
 
 
     try {
+        const { getPaginationParams } = require('../utils/pagination');
+        const { take, skip, meta } = getPaginationParams(req);
         let classes = [];
 
         // Check role case-insensitively
@@ -948,7 +950,7 @@ const getAllClasses = async (req, res) => {
                     classMap.set(a.class.id, a.class);
                 }
             });
-            classes = Array.from(classMap.values());
+            classes = Array.from(classMap.values()).slice(skip, skip + take);
 
 
         } else {
@@ -960,7 +962,9 @@ const getAllClasses = async (req, res) => {
                     academicYear: true,
                     _count: { select: { enrollments: true } }
                 },
-                orderBy: { name: 'asc' }
+                orderBy: { name: 'asc' },
+                take,
+                skip
             });
         }
 
@@ -978,7 +982,7 @@ const getAllClasses = async (req, res) => {
             }
         }));
 
-        ok(res, formatted);
+        ok(res, formatted, meta);
     } catch (error) {
         logger.error({ error, schoolId }, "Error fetching classes");
         fail(res, 500, 'Failed to fetch classes.', 'SERVER_ERROR');
@@ -1001,6 +1005,9 @@ const getStudents = async (req, res) => {
             };
         }
 
+        const { getPaginationParams } = require('../utils/pagination');
+        const { take, skip, meta } = getPaginationParams(req);
+
         const students = await prisma.student.findMany({
             where: whereClause,
             select: {
@@ -1017,7 +1024,9 @@ const getStudents = async (req, res) => {
                     where: { academicYear: { current: true } },
                     include: { class: { select: { name: true } } }
                 }
-            }
+            },
+            take, skip,
+            orderBy: { fullName: 'asc' }
         });
 
         const formatted = students.map(s => ({
@@ -1029,7 +1038,7 @@ const getStudents = async (req, res) => {
             parentEmail: s.parent?.email
         }));
 
-        ok(res, formatted);
+        ok(res, formatted, meta);
     } catch (error) {
         logger.error({ error, schoolId }, "Error fetching students");
         fail(res, 500, 'Failed to fetch students.', 'SERVER_ERROR');

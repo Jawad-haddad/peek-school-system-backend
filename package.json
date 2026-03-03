@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "test": "jest",
+    "test:golden": "jest __tests__/golden-path-admin.test.js --runInBand",
     "test:smoke": "jest __tests__/mvp-smoke.test.js --globalSetup=./jest.setup.js --forceExit --detectOpenHandles",
+    "smoke:test": "node scripts/smoke-test.js",
     "start": "node server.js",
     "start:check": "node -e \"require('dotenv').config(); require('./src/config/envValidator')(); console.log('Env Check Passed');\"",
     "dev": "npx nodemon server.js",
@@ -36,10 +38,12 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@testcontainers/postgresql": "^11.12.0",
     "jest": "^30.2.0",
     "nodemon": "^3.1.4",
     "prisma": "^5.19.1",
-    "supertest": "^7.2.2"
+    "supertest": "^7.2.2",
+    "testcontainers": "^11.12.0"
   },
   "prisma": {
     "seed": "node prisma/seed.js"

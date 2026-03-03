@@ -1,0 +1,475 @@
+[2026-03-03 16:41:05.987 +0300] [33mWARN[39m: [36mTwilio credentials not configured. SMS features disabled.[39m
+[2026-03-03 16:41:06.042 +0300] [32mINFO[39m: [36mLoading Firebase credentials from local file...[39m
+[2026-03-03 16:41:06.076 +0300] [32mINFO[39m: [36mFirebase Admin SDK initialized successfully.[39m
+[2026-03-03 16:41:06.410 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "admin@peek.com"
+[2026-03-03 16:41:06.424 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "admin@peek.com"
+    [35mfound[39m: true
+[2026-03-03 16:41:06.491 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "admin@peek.com"
+    [35mmatch[39m: true
+[2026-03-03 16:41:06.491 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "admin@peek.com"
+    [35mrole[39m: "school_admin"
+    [35mmappedRole[39m: "ADMIN"
+[2026-03-03 16:41:06.493 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "89906271-e7fe-473b-aeb3-2b0c4d4952e1"
+    [35memail[39m: "admin@peek.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-03 16:41:06.495 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 106
+    [35mrequestId[39m: "d05bb118-0849-48f4-98af-87260a3d079c"
+[2026-03-03 16:41:06.503 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "teacher@peek.com"
+[2026-03-03 16:41:06.505 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "teacher@peek.com"
+    [35mfound[39m: true
+[2026-03-03 16:41:06.566 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "teacher@peek.com"
+    [35mmatch[39m: true
+[2026-03-03 16:41:06.566 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "teacher@peek.com"
+    [35mrole[39m: "teacher"
+    [35mmappedRole[39m: "TEACHER"
+[2026-03-03 16:41:06.567 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35memail[39m: "teacher@peek.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-03 16:41:06.567 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 64
+    [35mrequestId[39m: "eacdfbfa-00df-4ce2-8262-5b81968a38ee"
+[2026-03-03 16:41:06.570 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "parent@peek.com"
+[2026-03-03 16:41:06.572 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "parent@peek.com"
+    [35mfound[39m: true
+[2026-03-03 16:41:06.634 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "parent@peek.com"
+    [35mmatch[39m: true
+[2026-03-03 16:41:06.634 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "parent@peek.com"
+    [35mrole[39m: "parent"
+    [35mmappedRole[39m: "PARENT"
+[2026-03-03 16:41:06.634 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "de8e3944-242c-4aba-b1a3-cbe6910c6690"
+    [35memail[39m: "parent@peek.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-03 16:41:06.635 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 65
+    [35mrequestId[39m: "ea52ff80-d541-4811-beab-ff8f3b904df8"
+[2026-03-03 16:41:06.638 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "admin@peek.com"
+[2026-03-03 16:41:06.640 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "admin@peek.com"
+    [35mfound[39m: true
+[2026-03-03 16:41:06.702 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "admin@peek.com"
+    [35mmatch[39m: false
+[2026-03-03 16:41:06.702 +0300] [33mWARN[39m: [36mFailed login attempt: Invalid credentials[39m
+    [35memail[39m: "admin@peek.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_FAILED"
+[2026-03-03 16:41:06.703 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/auth/login"
+    [35mstatus[39m: 401
+    [35mdurationMs[39m: 65
+    [35mrequestId[39m: "f3943a02-5b5f-4503-85f4-c77366201486"
+[2026-03-03 16:41:06.709 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/auth/login"
+    [35mstatus[39m: 400
+    [35mdurationMs[39m: 3
+    [35mrequestId[39m: "0d848592-fbde-40bd-b560-f77eebe94019"
+[2026-03-03 16:41:06.714 +0300] [33mWARN[39m: [36mAuth Middleware: No token provided in request.[39m
+    [35mpath[39m: "/api/school/classes"
+[2026-03-03 16:41:06.714 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35mpath[39m: "/api/school/classes"
+    [35mstatus[39m: 401
+    [35mdurationMs[39m: 1
+    [35mrequestId[39m: "bebf0c0d-fc12-4722-a5b3-953a7150410e"
+[2026-03-03 16:41:16.758 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/school/classes"
+    [35mstatus[39m: 400
+    [35mdurationMs[39m: 3
+    [35mrequestId[39m: "4f67fdcc-79ee-49d8-9b28-32155706fbc4"
+    [35muserId[39m: "89906271-e7fe-473b-aeb3-2b0c4d4952e1"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:41:16.764 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mrequiredRoles[39m: [
+      "super_admin",
+      "school_admin"
+    ]
+    [35muserRole[39m: "teacher"
+[2026-03-03 16:41:16.764 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/school/classes"
+    [35mstatus[39m: 403
+    [35mdurationMs[39m: 3
+    [35mrequestId[39m: "1c5f72fd-304e-4270-a924-a090336a6259"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:41:16.769 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mrequiredRoles[39m: [
+      "super_admin",
+      "school_admin"
+    ]
+    [35muserRole[39m: "teacher"
+[2026-03-03 16:41:16.769 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "PUT"
+    [35mpath[39m: "/api/school/classes/any-uuid"
+    [35mstatus[39m: 403
+    [35mdurationMs[39m: 2
+    [35mrequestId[39m: "c909ac79-d1ad-410a-ae64-bd05c5931867"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:41:16.774 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mrequiredRoles[39m: [
+      "super_admin",
+      "school_admin"
+    ]
+    [35muserRole[39m: "teacher"
+[2026-03-03 16:41:16.774 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "DELETE"
+    [35mpath[39m: "/api/school/classes/any-uuid"
+    [35mstatus[39m: 403
+    [35mdurationMs[39m: 2
+    [35mrequestId[39m: "b368eb78-fb8d-4024-8d0d-b94c5fa0d29c"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:41:16.778 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "de8e3944-242c-4aba-b1a3-cbe6910c6690"
+    [35mrequiredRoles[39m: [
+      "school_admin",
+      "teacher"
+    ]
+    [35muserRole[39m: "parent"
+[2026-03-03 16:41:16.779 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35mpath[39m: "/api/school/classes"
+    [35mstatus[39m: 403
+    [35mdurationMs[39m: 3
+    [35mrequestId[39m: "4aacd4ac-c29d-4c28-9409-1342671fcc00"
+    [35muserId[39m: "de8e3944-242c-4aba-b1a3-cbe6910c6690"
+[2026-03-03 16:41:16.784 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "de8e3944-242c-4aba-b1a3-cbe6910c6690"
+    [35mrequiredRoles[39m: [
+      "super_admin",
+      "school_admin"
+    ]
+    [35muserRole[39m: "parent"
+[2026-03-03 16:41:16.784 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/school/classes"
+    [35mstatus[39m: 403
+    [35mdurationMs[39m: 2
+    [35mrequestId[39m: "46599155-fc95-4e8d-92d4-9950dab48366"
+    [35muserId[39m: "de8e3944-242c-4aba-b1a3-cbe6910c6690"
+[2026-03-03 16:41:16.792 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "PUT"
+    [35mpath[39m: "/api/school/classes/00000000-0000-0000-0000-000000000000"
+    [35mstatus[39m: 404
+    [35mdurationMs[39m: 5
+    [35mrequestId[39m: "132233cf-a01c-48e5-b4a1-e6e8e2bd8c3d"
+    [35muserId[39m: "89906271-e7fe-473b-aeb3-2b0c4d4952e1"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:41:16.799 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "DELETE"
+    [35mpath[39m: "/api/school/classes/00000000-0000-0000-0000-000000000000"
+    [35mstatus[39m: 404
+    [35mdurationMs[39m: 4
+    [35mrequestId[39m: "3658193a-3f01-46d4-8215-fea1f58ded5f"
+    [35muserId[39m: "89906271-e7fe-473b-aeb3-2b0c4d4952e1"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:41:16.814 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35mpath[39m: "/api/academics/classes/5e08fa55-bf22-4678-9ef9-becc417375bd/students"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 9
+    [35mrequestId[39m: "1ace3f23-a613-40e0-9926-2080978aae35"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:41:16.826 +0300] [32mINFO[39m: [36mBulk attendance submitted successfully[39m
+    [35mclassId[39m: "5e08fa55-bf22-4678-9ef9-becc417375bd"
+    [35mdate[39m: "2026-03-03"
+    [35mcount[39m: 1
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+    [35maudit[39m: true
+    [35maction[39m: "ATTENDANCE_BULK_SUBMIT"
+[2026-03-03 16:41:16.826 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/attendance/bulk"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 9
+    [35mrequestId[39m: "d0639b23-0e43-4707-99fb-4ae5b4f5fce5"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:41:16.840 +0300] [34mDEBUG[39m: [36mNo device tokens found. Skipping notification.[39m
+    [35muserId[39m: "de8e3944-242c-4aba-b1a3-cbe6910c6690"
+[2026-03-03 16:41:16.846 +0300] [32mINFO[39m: [36mBulk attendance submitted successfully[39m
+    [35mclassId[39m: "5e08fa55-bf22-4678-9ef9-becc417375bd"
+    [35mdate[39m: "2026-03-03"
+    [35mcount[39m: 1
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+    [35maudit[39m: true
+    [35maction[39m: "ATTENDANCE_BULK_SUBMIT"
+[2026-03-03 16:41:16.847 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/attendance/bulk"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 18
+    [35mrequestId[39m: "35ccc169-5590-47dc-8d77-69fcc3658f95"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:41:16.852 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/attendance/bulk"
+    [35mstatus[39m: 400
+    [35mdurationMs[39m: 3
+    [35mrequestId[39m: "6d9526b6-36fc-464d-8838-893731928ae9"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:41:16.858 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/attendance/bulk"
+    [35mstatus[39m: 400
+    [35mdurationMs[39m: 3
+    [35mrequestId[39m: "3a70ac1e-75df-4b46-a8e5-6a26922eeba9"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:41:16.862 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/attendance/bulk"
+    [35mstatus[39m: 400
+    [35mdurationMs[39m: 2
+    [35mrequestId[39m: "508874c3-2e05-47ef-88d8-3443733d9e35"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:41:16.866 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/attendance/bulk"
+    [35mstatus[39m: 400
+    [35mdurationMs[39m: 2
+    [35mrequestId[39m: "afe90370-64f6-4b1c-a9d1-2e8ab3ffbdd2"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:41:16.871 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/attendance/bulk"
+    [35mstatus[39m: 400
+    [35mdurationMs[39m: 3
+    [35mrequestId[39m: "92f18982-4cf0-4e02-9da9-5ba059f08ac8"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:41:16.885 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35mpath[39m: "/api/attendance/5e08fa55-bf22-4678-9ef9-becc417375bd?date=2026-03-03"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 10
+    [35mrequestId[39m: "4184bfdb-2c8e-44c8-aa8d-3625c73db9ae"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:41:16.890 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "de8e3944-242c-4aba-b1a3-cbe6910c6690"
+    [35mrequiredRoles[39m: [
+      "super_admin",
+      "school_admin",
+      "teacher"
+    ]
+    [35muserRole[39m: "parent"
+[2026-03-03 16:41:16.890 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/attendance/bulk"
+    [35mstatus[39m: 403
+    [35mdurationMs[39m: 2
+    [35mrequestId[39m: "61589884-cbf3-4cd6-ab38-e9ae78ad6de4"
+    [35muserId[39m: "de8e3944-242c-4aba-b1a3-cbe6910c6690"
+\nFAIL __tests__/mvp-smoke.test.js (11.532 s)
+  Flow 1: Auth Login
+    √ ADMIN login returns correct shape and role (122 ms)
+    √ TEACHER login returns correct shape and role (69 ms)
+    √ PARENT login returns correct shape and role (68 ms)
+    √ Invalid credentials return 401 (68 ms)
+    √ Missing fields return 400 (Zod validation) (6 ms)
+    √ No token returns 401 (5 ms)
+  Flow 2: Classes CRUD + RBAC
+    × ADMIN can GET /api/school/classes (5009 ms)
+    × ADMIN can POST /api/school/classes (5010 ms)
+    × ADMIN can PUT /api/school/classes/:classId (1 ms)
+    × ADMIN can DELETE /api/school/classes/:classId
+    √ POST class with missing name returns 400 (7 ms)
+    √ TEACHER cannot POST class (403) (6 ms)
+    √ TEACHER cannot PUT class (403) (5 ms)
+    √ TEACHER cannot DELETE class (403) (5 ms)
+    √ PARENT cannot GET classes (403) (5 ms)
+    √ PARENT cannot POST class (403) (5 ms)
+    √ Non-existent classId returns 404 on PUT (8 ms)
+    √ Non-existent classId returns 404 on DELETE (6 ms)
+  Flow 3: Teacher Attendance
+    × TEACHER can GET /api/academics/classes/:classId/students (11 ms)
+    √ TEACHER can POST /api/attendance/bulk with valid payload (12 ms)
+    √ Uppercase status "ABSENT" with reason is accepted (normalized) (20 ms)
+    √ Non-ISO date format returns 400 (6 ms)
+    √ Invalid status "here" returns 400 (5 ms)
+    √ Invalid alphanumeric date returns 400 (5 ms)
+    √ Empty records array returns 400 (4 ms)
+    √ Missing studentId in record returns 400 (5 ms)
+    √ TEACHER can read back attendance ensuring UPSERT caught the ABSENT overwrite (14 ms)
+    √ PARENT cannot POST /api/attendance/bulk (403) (4 ms)
+
+  ● Flow 2: Classes CRUD + RBAC › ADMIN can GET /api/school/classes
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m 111 |[39m
+     [90m 112 |[39m     [90m// ── ADMIN: GET classes ──────────────────────[39m
+    [31m[1m>[22m[39m[90m 113 |[39m     it([32m'ADMIN can GET /api/school/classes'[39m[33m,[39m [36masync[39m () [33m=>[39m {
+     [90m     |[39m     [31m[1m^[22m[39m
+     [90m 114 |[39m         [36mconst[39m res [33m=[39m [36mawait[39m request(app)
+     [90m 115 |[39m             [33m.[39m[36mget[39m([32m'/api/school/classes'[39m)
+     [90m 116 |[39m             [33m.[39m[36mset[39m([32m'Authorization'[39m[33m,[39m [32m`Bearer ${adminToken}`[39m)[33m;[39m[0m
+
+      at it (__tests__/mvp-smoke.test.js:113:5)
+      at Object.describe (__tests__/mvp-smoke.test.js:85:1)
+
+  ● Flow 2: Classes CRUD + RBAC › ADMIN can GET /api/school/classes
+
+    ReferenceError: getTenant is not defined
+
+    [0m [90m 921 |[39m
+     [90m 922 |[39m [36mconst[39m getAllClasses [33m=[39m [36masync[39m (req[33m,[39m res) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 923 |[39m     [36mconst[39m { schoolId[33m,[39m userId } [33m=[39m getTenant(req)[33m;[39m
+     [90m     |[39m                                  [31m[1m^[22m[39m
+     [90m 924 |[39m     [36mconst[39m role [33m=[39m req[33m.[39muser[33m.[39mrole[33m;[39m
+     [90m 925 |[39m     [36mconst[39m { skip[33m,[39m take[33m,[39m meta } [33m=[39m getPaginationParams(req)[33m;[39m
+     [90m 926 |[39m[0m
+
+      at getTenant (src/controllers/schoolController.js:923:34)
+      at Layer.handle [as handle_request] (node_modules/express/lib/router/layer.js:95:5)
+      at next (node_modules/express/lib/router/route.js:149:13)
+      at next (src/middleware/authMiddleware.js:61:5)
+      at Layer.handle [as handle_request] (node_modules/express/lib/router/layer.js:95:5)
+      at next (node_modules/express/lib/router/route.js:149:13)
+      at next (src/middleware/authMiddleware.js:53:5)
+      at Layer.handle [as handle_request] (node_modules/express/lib/router/layer.js:95:5)
+      at next (node_modules/express/lib/router/route.js:149:13)
+      at next (src/middleware/authMiddleware.js:29:13)
+
+  ● Flow 2: Classes CRUD + RBAC › ADMIN can POST /api/school/classes
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m 135 |[39m
+     [90m 136 |[39m     [90m// ── ADMIN: POST class ───────────────────────[39m
+    [31m[1m>[22m[39m[90m 137 |[39m     it([32m'ADMIN can POST /api/school/classes'[39m[33m,[39m [36masync[39m () [33m=>[39m {
+     [90m     |[39m     [31m[1m^[22m[39m
+     [90m 138 |[39m         expect(schoolAcademicYearId)[33m.[39mtoBeDefined()[33m;[39m
+     [90m 139 |[39m         [36mconst[39m res [33m=[39m [36mawait[39m request(app)
+     [90m 140 |[39m             [33m.[39mpost([32m'/api/school/classes'[39m)[0m
+
+      at it (__tests__/mvp-smoke.test.js:137:5)
+      at Object.describe (__tests__/mvp-smoke.test.js:85:1)
+
+  ● Flow 2: Classes CRUD + RBAC › ADMIN can POST /api/school/classes
+
+    ReferenceError: getTenant is not defined
+
+    [0m [90m 85 |[39m [36mconst[39m createClass [33m=[39m [36masync[39m (req[33m,[39m res) [33m=>[39m {
+     [90m 86 |[39m     [90m// Force schoolId from tenant — ignore any client-supplied schoolId[39m
+    [31m[1m>[22m[39m[90m 87 |[39m     [36mconst[39m { schoolId } [33m=[39m getTenant(req)[33m;[39m
+     [90m    |[39m                          [31m[1m^[22m[39m
+     [90m 88 |[39m     [36mconst[39m { name[33m,[39m academicYearId[33m,[39m defaultFee } [33m=[39m req[33m.[39mbody[33m;[39m
+     [90m 89 |[39m
+     [90m 90 |[39m     [36mif[39m ([33m![39mname [33m||[39m [36mtypeof[39m name [33m!==[39m [32m'string'[39m) {[0m
+
+      at getTenant (src/controllers/schoolController.js:87:26)
+      at Layer.handle [as handle_request] (node_modules/express/lib/router/layer.js:95:5)
+      at next (node_modules/express/lib/router/route.js:149:13)
+      at next (src/validators/userValidator.js:24:9)
+      at Layer.handle [as handle_request] (node_modules/express/lib/router/layer.js:95:5)
+      at next (node_modules/express/lib/router/route.js:149:13)
+      at next (src/middleware/authMiddleware.js:61:5)
+      at Layer.handle [as handle_request] (node_modules/express/lib/router/layer.js:95:5)
+      at next (node_modules/express/lib/router/route.js:149:13)
+      at next (src/middleware/authMiddleware.js:53:5)
+      at Layer.handle [as handle_request] (node_modules/express/lib/router/layer.js:95:5)
+      at next (node_modules/express/lib/router/route.js:149:13)
+      at next (src/middleware/authMiddleware.js:29:13)
+
+  ● Flow 2: Classes CRUD + RBAC › ADMIN can PUT /api/school/classes/:classId
+
+    expect(received).toBeDefined()
+
+    Received: undefined
+
+    [0m [90m 155 |[39m     [90m// ── ADMIN: PUT class ────────────────────────[39m
+     [90m 156 |[39m     it([32m'ADMIN can PUT /api/school/classes/:classId'[39m[33m,[39m [36masync[39m () [33m=>[39m {
+    [31m[1m>[22m[39m[90m 157 |[39m         expect(createdClassId)[33m.[39mtoBeDefined()[33m;[39m
+     [90m     |[39m                                [31m[1m^[22m[39m
+     [90m 158 |[39m         [36mconst[39m res [33m=[39m [36mawait[39m request(app)
+     [90m 159 |[39m             [33m.[39mput([32m`/api/school/classes/${createdClassId}`[39m)
+     [90m 160 |[39m             [33m.[39m[36mset[39m([32m'Authorization'[39m[33m,[39m [32m`Bearer ${adminToken}`[39m)[0m
+
+      at Object.toBeDefined (__tests__/mvp-smoke.test.js:157:32)
+
+  ● Flow 2: Classes CRUD + RBAC › ADMIN can DELETE /api/school/classes/:classId
+
+    expect(received).toBeDefined()
+
+    Received: undefined
+
+    [0m [90m 168 |[39m     [90m// ── ADMIN: DELETE class ─────────────────────[39m
+     [90m 169 |[39m     it([32m'ADMIN can DELETE /api/school/classes/:classId'[39m[33m,[39m [36masync[39m () [33m=>[39m {
+    [31m[1m>[22m[39m[90m 170 |[39m         expect(createdClassId)[33m.[39mtoBeDefined()[33m;[39m
+     [90m     |[39m                                [31m[1m^[22m[39m
+     [90m 171 |[39m         [36mconst[39m res [33m=[39m [36mawait[39m request(app)
+     [90m 172 |[39m             [33m.[39m[36mdelete[39m([32m`/api/school/classes/${createdClassId}`[39m)
+     [90m 173 |[39m             [33m.[39m[36mset[39m([32m'Authorization'[39m[33m,[39m [32m`Bearer ${adminToken}`[39m)[33m;[39m[0m
+
+      at Object.toBeDefined (__tests__/mvp-smoke.test.js:170:32)
+
+  ● Flow 3: Teacher Attendance › TEACHER can GET /api/academics/classes/:classId/students
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+    [0m [90m 286 |[39m             [33m.[39m[36mset[39m([32m'Authorization'[39m[33m,[39m [32m`Bearer ${teacherToken}`[39m)[33m;[39m
+     [90m 287 |[39m         expect(res[33m.[39mstatus)[33m.[39mtoBe([35m200[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 288 |[39m         expect([33mArray[39m[33m.[39misArray(res[33m.[39mbody[33m.[39mdata))[33m.[39mtoBe([36mtrue[39m)[33m;[39m
+     [90m     |[39m                                              [31m[1m^[22m[39m
+     [90m 289 |[39m         [36mif[39m (res[33m.[39mbody[33m.[39mdata[33m.[39mlength [33m>[39m [35m0[39m) {
+     [90m 290 |[39m             [36mconst[39m student [33m=[39m res[33m.[39mbody[33m.[39mdata[[35m0[39m][33m;[39m
+     [90m 291 |[39m             expect(student)[33m.[39mtoHaveProperty([32m'id'[39m)[33m;[39m[0m
+
+      at Object.toBe (__tests__/mvp-smoke.test.js:288:46)
+
+Test Suites: 1 failed, 1 total
+Tests:       5 failed, 23 passed, 28 total
+Snapshots:   0 total
+Time:        11.597 s, estimated 12 s
+Ran all test suites matching __tests__/mvp-smoke.test.js.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

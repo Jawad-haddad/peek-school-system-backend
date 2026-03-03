@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const { authMiddleware, hasRole, belongsToSchool } = require('../middleware/authMiddleware');
-const { validate } = require('../validators/userValidator');
+const { validate, validateQuery } = require('../validators/userValidator');
 const { createClassSchema, updateClassSchema, createAcademicYearSchema } = require('../validators/academics.validator');
 const { createStudentSchema, createTeacherSchema } = require('../validators/school.validator');
+const { paginationSchema } = require('../utils/pagination');
+const { cachePrivate } = require('../middleware/cacheHeaders');
 const {
     createSchool,
     createAcademicYear,
@@ -91,7 +93,7 @@ router.post('/students', schoolAdminActions, validate(createStudentSchema), crea
 router.post('/teachers', schoolAdminActions, validate(createTeacherSchema), createTeacher); // New createTeacher
 router.post('/enrollments', schoolAdminActions, enrollStudentInClass);
 router.get('/students/export', schoolAdminActions, exportStudentsToCsv);
-router.get('/teachers', schoolAdminActions, getAllTeachers);
+router.get('/teachers', schoolAdminActions, cachePrivate(30), getAllTeachers);
 /**
  * @swagger
  * /api/school/classes:
@@ -124,8 +126,8 @@ router.get('/teachers', schoolAdminActions, getAllTeachers);
  *                     properties:
  *                       students: { type: integer }
  */
-router.get('/classes', [authMiddleware, hasRole([UserRole.school_admin, UserRole.teacher]), belongsToSchool], getAllClasses);
-router.get('/students', schoolAdminActions, getStudents);
+router.get('/classes', [authMiddleware, hasRole([UserRole.school_admin, UserRole.teacher]), belongsToSchool], validateQuery(paginationSchema), cachePrivate(30), getAllClasses);
+router.get('/students', schoolAdminActions, validateQuery(paginationSchema), cachePrivate(30), getStudents);
 
 // NEW ROUTES (Fixing 404s)
 router.get('/exams', [authMiddleware, hasRole([UserRole.school_admin, UserRole.teacher]), belongsToSchool], getAllExams); // Deprecated: Use /api/exams

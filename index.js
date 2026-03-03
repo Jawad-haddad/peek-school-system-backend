@@ -7,6 +7,8 @@ const compression = require('compression');
 const httpLogger = require('./src/middleware/loggingMiddleware');
 const errorHandler = require('./src/middleware/errorHandler');
 const { apiLimiter } = require('./src/middleware/rateLimiter');
+const env = require('./src/config/env');
+const requestIdMiddleware = require('./src/middleware/requestId');
 
 // Import all the route handlers
 const mainRoutes = require('./src/routes/mainRoutes');
@@ -33,47 +35,44 @@ const studentRoutes = require('./src/routes/studentRoutes');
 const dashboardRoutes = require('./src/routes/dashboardRoutes');
 const reportRoutes = require('./src/routes/reportRoutes');
 const statsRoutes = require('./src/routes/statsRoutes');
+const platformRoutes = require('./src/routes/platformRoutes');
+const teacherRoutes = require('./src/routes/teacherRoutes');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./src/config/swaggerConfig');
 
 const app = express();
 
 // ── Security & Parsing Middleware ────────────────────────
+app.use(requestIdMiddleware);
 app.use(httpLogger);
+// helmet configures security headers including disabling x-powered-by
 app.use(helmet());
 app.use(compression());
 
 const corsOptions = {
     origin: function (origin, callback) {
-        // Debug logging for CORS using logger
-        if (process.env.NODE_ENV === 'development') {
-            const allowed = process.env.FRONTEND_URL || 'http://localhost:3001';
-            // logger.debug({ origin, allowed }, "CORS Check"); // Optional: uncomment if needed, but avoid spam
-        }
-
         // Allow requests with no origin (like mobile apps or curl requests)
         if (!origin) return callback(null, true);
 
         // In development, allow any localhost origin
-        if (process.env.NODE_ENV === 'development' && origin.match(/^http:\/\/localhost:\d+$/)) {
+        if (env.NODE_ENV === 'development' && origin.match(/^http:\/\/localhost:\d+$/)) {
             return callback(null, true);
         }
 
         // Check allowed origin from env
-        const allowedOrigin = process.env.FRONTEND_URL || 'http://localhost:3001';
+        const allowedOrigins = env.CORS_ORIGIN ? env.CORS_ORIGIN.split(',').map(o => o.trim()) : [];
 
-        // Fail-fast in production if FRONTEND_URL is not set
-        if (process.env.NODE_ENV === 'production' && !process.env.FRONTEND_URL) {
-            const msg = 'CORS Error: FRONTEND_URL not set in production environment.';
+        // Fail-fast in production if CORS_ORIGIN is not set
+        if (env.NODE_ENV === 'production' && allowedOrigins.length === 0) {
+            const msg = 'CORS Error: CORS_ORIGIN not set in production environment.';
             console.error(msg); // Keep console.error for critical startup config issues
             return callback(new Error(msg), false);
         }
 
-        if (origin === allowedOrigin) {
+        if (allowedOrigins.includes(origin)) {
             return callback(null, true);
         }
 
-        // logger.warn({ origin }, "CORS Blocked");
         const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
         return callback(new Error(msg), false);
     },
@@ -115,6 +114,8 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/school/reports', reportRoutes); // Alias: frontend calls /api/school/reports/overview
 app.use('/api/stats', statsRoutes);
+app.use('/api/platform', platformRoutes); // Admin onboarding
+app.use('/api/teacher', teacherRoutes);   // Teacher-scoped endpoints
 
 // ── 404 Catch-All ────────────────────────────────────────
 app.use((req, res, next) => {

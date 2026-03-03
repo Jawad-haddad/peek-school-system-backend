@@ -3,6 +3,7 @@ const { sendNotification } = require('../services/notificationService');
 const logger = require('../config/logger');
 const { ok, fail } = require('../utils/response');
 const { getTenant, tenantWhere } = require('../utils/tenant');
+const { assertTeacherAssignedToClass } = require('../utils/teacherScope');
 
 /**
  * Submits attendance for a whole class in bulk.
@@ -78,6 +79,15 @@ const submitClassAttendance = async (req, res) => {
         });
         if (!classExists) {
             return fail(res, 404, 'Class not found in your school.', 'NOT_FOUND');
+        }
+
+        // Teacher scope guard: teacher may only submit attendance for their assigned classes
+        if (req.user.role === 'teacher') {
+            try {
+                await assertTeacherAssignedToClass(req, classId);
+            } catch (scopeErr) {
+                return fail(res, scopeErr.statusCode || 403, scopeErr.message, scopeErr.code || 'TEACHER_NOT_ASSIGNED');
+            }
         }
 
         const upsertOperations = [];
@@ -166,6 +176,15 @@ const getClassAttendance = async (req, res) => {
     }
 
     try {
+        // Teacher scope guard
+        if (req.user.role === 'teacher') {
+            try {
+                await assertTeacherAssignedToClass(req, classId);
+            } catch (scopeErr) {
+                return fail(res, scopeErr.statusCode || 403, scopeErr.message, scopeErr.code || 'TEACHER_NOT_ASSIGNED');
+            }
+        }
+
         const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
         if (!dateRegex.test(date)) {
             return fail(res, 400, 'Invalid date format. Strictly use YYYY-MM-DD.', 'VALIDATION_ERROR');
@@ -175,6 +194,9 @@ const getClassAttendance = async (req, res) => {
             return fail(res, 400, 'Invalid date value.', 'VALIDATION_ERROR');
         }
 
+        const { getPaginationParams } = require('../utils/pagination');
+        const { take, skip, meta } = getPaginationParams(req);
+
         // Tenant-scoped student query: only students from this school enrolled in this class
         const students = await prisma.student.findMany({
             where: tenantWhere(req, {
@@ -182,6 +204,7 @@ const getClassAttendance = async (req, res) => {
                     some: { classId }
                 }
             }),
+            take, skip,
             select: {
                 id: true,
                 fullName: true,
@@ -204,7 +227,7 @@ const getClassAttendance = async (req, res) => {
             };
         });
 
-        ok(res, result);
+        ok(res, result, meta);
 
     } catch (error) {
         logger.error({ error, classId }, "Error fetching class attendance");
@@ -212,4 +235,93 @@ const getClassAttendance = async (req, res) => {
     }
 };
 
-module.exports = { submitClassAttendance, getClassAttendance };
+/**
+ * GET /api/attendance/:classId/history?from=YYYY-MM-DD&to=YYYY-MM-DD&limit=30
+ * Returns attendance summary per day for the given class within a date range.
+ */
+const getAttendanceHistory = async (req, res) => {
+    const { classId } = req.params;
+    const { from, to, limit: rawLimit } = req.query;
+
+    if (!classId) {
+        return fail(res, 400, 'classId is required.', 'VALIDATION_ERROR');
+    }
+
+    try {
+        // Teacher scope guard
+        if (req.user.role === 'teacher') {
+            try {
+                await assertTeacherAssignedToClass(req, classId);
+            } catch (scopeErr) {
+                return fail(res, scopeErr.statusCode || 403, scopeErr.message, scopeErr.code || 'TEACHER_NOT_ASSIGNED');
+            }
+        }
+
+        // Default date range: last 30 days → today
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        const now = new Date();
+        let fromDate, toDate;
+
+        if (from && dateRegex.test(from)) {
+            fromDate = new Date(`${from}T00:00:00.000Z`);
+        } else {
+            fromDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - 30));
+        }
+        if (to && dateRegex.test(to)) {
+            toDate = new Date(`${to}T23:59:59.999Z`);
+        } else {
+            toDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 23, 59, 59, 999));
+        }
+
+        // Validate range
+        if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
+            return fail(res, 400, 'Invalid date values.', 'VALIDATION_ERROR');
+        }
+
+        const takeLimit = Math.min(Math.max(parseInt(rawLimit, 10) || 30, 1), 200);
+
+        // Fetch attendance records grouped by date
+        const records = await prisma.attendance.findMany({
+            where: {
+                student: {
+                    ...tenantWhere(req),
+                    enrollments: { some: { classId } }
+                },
+                date: { gte: fromDate, lte: toDate }
+            },
+            select: {
+                date: true,
+                status: true
+            },
+            orderBy: { date: 'desc' }
+        });
+
+        // Group by date and count statuses
+        const dayMap = new Map();
+        for (const r of records) {
+            const key = r.date.toISOString().slice(0, 10);
+            if (!dayMap.has(key)) {
+                dayMap.set(key, { date: key, present: 0, absent: 0, late: 0, excused: 0, total: 0 });
+            }
+            const day = dayMap.get(key);
+            day.total++;
+            if (day[r.status] !== undefined) {
+                day[r.status]++;
+            }
+        }
+
+        // Sort descending, apply limit
+        const history = Array.from(dayMap.values())
+            .sort((a, b) => b.date.localeCompare(a.date))
+            .slice(0, takeLimit);
+
+        ok(res, history, { limit: takeLimit, from: fromDate.toISOString().slice(0, 10), to: toDate.toISOString().slice(0, 10) });
+
+    } catch (error) {
+        logger.error({ error, classId }, "Error fetching attendance history");
+        fail(res, 500, 'Failed to fetch attendance history.', 'SERVER_ERROR');
+    }
+};
+
+module.exports = { submitClassAttendance, getClassAttendance, getAttendanceHistory };
+

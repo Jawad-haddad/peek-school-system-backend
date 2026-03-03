@@ -5,6 +5,7 @@ const { UserRole } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
 const { ok, fail } = require('../utils/response');
 const { getTenant, tenantWhere } = require('../utils/tenant');
+const { assertTeacherAssignedToClass, assertTeacherAssignedToHomework } = require('../utils/teacherScope');
 
 // --- TEACHER & ADMIN CONTROLLERS ---
 
@@ -71,29 +72,40 @@ const getMyStudents = async (req, res) => {
 };
 
 const createHomework = async (req, res) => {
-
-    const { title, classId, subjectId, dueDate, description } = req.body;
-
-    // Validate required fields
-    if (!title || !classId || !subjectId || !dueDate) {
-        return res.status(400).json({
-            message: "Missing required fields.",
-            required: { title: !!title, classId: !!classId, subjectId: !!subjectId, dueDate: !!dueDate }
-        });
-    }
+    const { title, classId, subjectId, dueDate, description, maxPoints } = req.body;
 
     try {
+        // Teacher scope guard: teacher must be assigned to classId
+        if (req.user.role === 'teacher') {
+            try {
+                await assertTeacherAssignedToClass(req, classId);
+            } catch (scopeErr) {
+                return fail(res, scopeErr.statusCode || 403, scopeErr.message, scopeErr.code || 'TEACHER_NOT_ASSIGNED');
+            }
+        }
+
         const homework = await prisma.homework.create({
-            data: { title, description, classId, subjectId, dueDate: new Date(dueDate) },
-            include: { subject: { select: { name: true } } }
+            data: {
+                title,
+                description,
+                classId,
+                subjectId,
+                dueDate: new Date(dueDate),
+                ...(maxPoints !== undefined && { maxPoints })
+            },
+            include: {
+                subject: { select: { name: true } },
+                class: { select: { name: true } }
+            }
         });
-        const enrollments = await prisma.studentEnrollment.findMany({
-            where: { classId: classId },
+
+        // Notify parents asynchronously
+        prisma.studentEnrollment.findMany({
+            where: { classId },
             select: { student: { select: { parentId: true } } }
-        });
-        const parentIds = [...new Set(enrollments.map(e => e.student.parentId))];
-        parentIds.forEach(parentId => {
-            if (parentId) {
+        }).then(enrollments => {
+            const parentIds = [...new Set(enrollments.map(e => e.student.parentId).filter(Boolean))];
+            parentIds.forEach(parentId => {
                 sendNotification({
                     userId: parentId,
                     title: `New Homework: ${homework.title}`,
@@ -101,98 +113,312 @@ const createHomework = async (req, res) => {
                     preferenceType: 'academic',
                     data: { homeworkId: homework.id, screen: 'HomeworkDetails' }
                 });
-            }
-        });
-        logger.info({ homeworkId: homework.id, classId, teacherId: req.user.id }, "New homework created");
-        res.status(201).json(homework);
+            });
+        }).catch(() => { });
+
+        logger.info({ homeworkId: homework.id, classId, teacherId: req.user.id }, 'New homework created');
+        ok(res, homework, null, 201);
     } catch (error) {
-        logger.error({ error: error.message, classId, subjectId, teacherId: req.user.id }, "Error creating homework");
+        logger.error({ error: error.message, classId, teacherId: req.user.id }, 'Error creating homework');
         if (error.code === 'P2003') {
-            return res.status(400).json({ message: 'Invalid classId or subjectId provided.' });
+            return fail(res, 400, 'Invalid classId or subjectId provided.', 'VALIDATION_ERROR');
         }
-        res.status(500).json({ message: 'Something went wrong.' });
+        fail(res, 500, 'Something went wrong.', 'SERVER_ERROR');
     }
 };
 
 const getHomework = async (req, res) => {
-    const { classId, studentId } = req.query;
+    const { classId, studentId, from, to, limit: rawLimit } = req.query;
+    const limit = Math.min(Math.max(parseInt(rawLimit, 10) || 50, 1), 200);
 
     try {
-        let targetClassId = classId;
+        const dateWhere = {};
+        if (from) dateWhere.gte = new Date(`${from}T00:00:00.000Z`);
+        if (to) dateWhere.lte = new Date(`${to}T23:59:59.999Z`);
+        const dueDateFilter = Object.keys(dateWhere).length ? { dueDate: dateWhere } : {};
 
-        // NEW LOGIC: Teachers see all (filtered by class if provided)
-        if (req.user.role === UserRole.teacher) {
-            // If classId is provided, filter by it, otherwise return all (or maybe limit/paginate in real world)
-            // For now, if no classId, we might want to return everything or just user's classes?
-            // The request says "Return ALL homework (or filter by classId if provided)".
-            // So if classId is missing, we skip the "targetClassId" block check below that forces 400.
-
-            const whereClause = {
-                class: { academicYear: { schoolId: req.user.schoolId } }
-            };
-            if (targetClassId) {
-                whereClause.classId = targetClassId;
+        // ── TEACHER branch ──
+        if (req.user.role === 'teacher') {
+            if (classId) {
+                // If classId given, scope-check it first
+                try {
+                    await assertTeacherAssignedToClass(req, classId);
+                } catch (scopeErr) {
+                    return fail(res, scopeErr.statusCode || 403, scopeErr.message, scopeErr.code || 'TEACHER_NOT_ASSIGNED');
+                }
+                const homework = await prisma.homework.findMany({
+                    where: { classId, ...dueDateFilter, class: { academicYear: { schoolId: req.user.schoolId } } },
+                    orderBy: { dueDate: 'asc' },
+                    take: limit,
+                    include: { subject: { select: { name: true } }, class: { select: { name: true } } }
+                });
+                return ok(res, homework, { limit });
             }
 
-            // Should properly scope to schoolId? 
-            // Homework -> Class -> AcademicYear -> School.
-            // But usually User can only access their school based on middleware.
-            // However, prisma query needs to ensure we don't leak other schools if we don't filter.
-            // Homework doesn't have schoolId directly usually. 
-            // Let's rely on class linkage.
+            // No classId → return homework for ALL assigned classes
+            const assignments = await prisma.teacherSubjectAssignment.findMany({
+                where: { teacherId: req.user.id, class: { academicYear: { schoolId: req.user.schoolId } } },
+                select: { classId: true }
+            });
+            const assignedIds = [...new Set(assignments.map(a => a.classId))];
+            if (assignedIds.length === 0) return ok(res, [], { limit });
+
+            const homework = await prisma.homework.findMany({
+                where: { classId: { in: assignedIds }, ...dueDateFilter },
+                orderBy: { dueDate: 'asc' },
+                take: limit,
+                include: { subject: { select: { name: true } }, class: { select: { name: true } } }
+            });
+            return ok(res, homework, { limit });
+        }
+
+        // ── ADMIN branch ──
+        if (req.user.role === 'school_admin' || req.user.role === 'super_admin') {
+            const whereClause = { class: { academicYear: { schoolId: req.user.schoolId } }, ...dueDateFilter };
+            if (classId) whereClause.classId = classId;
 
             const homework = await prisma.homework.findMany({
                 where: whereClause,
                 orderBy: { dueDate: 'asc' },
-                include: {
-                    subject: { select: { name: true } },
-                    class: { select: { name: true } } // Include class name as requested
-                }
+                take: limit,
+                include: { subject: { select: { name: true } }, class: { select: { name: true } } }
             });
-
-            // Filter by school if necessary (e.g. if we fetched across schools, but usually classId implies school).
-            // Since we might not filter by classId, let's just return what we find. 
-            // Ideally we filter classes belonging to this school.
-            // But for MVP this is likely fine if we trust inputs/context.
-
-            return res.status(200).json(homework);
+            return ok(res, homework, { limit });
         }
 
-        // If studentId is provided (e.g. by Parent), resolve it to a classId
+        // ── PARENT branch (resolve via studentId) ──
         if (studentId) {
-            // Verify parent ownership if needed, or rely on middleware/query context
             const student = await prisma.student.findFirst({
                 where: { id: studentId },
                 include: { enrollments: { where: { academicYear: { current: true } } } }
             });
             if (!student || student.enrollments.length === 0) {
-                return res.status(404).json({ message: "Student or enrollment not found." });
+                return fail(res, 404, 'Student or enrollment not found.', 'NOT_FOUND');
             }
-            // Optional: Check if req.user.id is parent of studentId (if strict security needed here, though usually done in middleware or redundant check)
-            if (req.user.role === UserRole.parent && student.parentId !== req.user.id) {
-                return res.status(403).json({ message: "Unauthorized access to student data." });
+            if (req.user.role === 'parent' && student.parentId !== req.user.id) {
+                return fail(res, 403, 'Unauthorized access to student data.', 'FORBIDDEN');
             }
-
-            targetClassId = student.enrollments[0].classId;
+            const targetClassId = student.enrollments[0].classId;
+            const homework = await prisma.homework.findMany({
+                where: { classId: targetClassId, ...dueDateFilter },
+                orderBy: { dueDate: 'asc' },
+                take: limit,
+                include: { subject: { select: { name: true } }, class: { select: { name: true } } }
+            });
+            return ok(res, homework, { limit });
         }
 
-        if (!targetClassId) {
-            return res.status(400).json({ message: "Either classId or studentId must be provided." });
+        if (!classId) {
+            return fail(res, 400, 'Either classId or studentId must be provided.', 'VALIDATION_ERROR');
         }
 
         const homework = await prisma.homework.findMany({
-            where: { classId: targetClassId },
+            where: { classId, ...dueDateFilter },
             orderBy: { dueDate: 'asc' },
-            include: {
-                subject: { select: { name: true } },
-                class: { select: { name: true } } // Include class name as requested
-            }
+            take: limit,
+            include: { subject: { select: { name: true } }, class: { select: { name: true } } }
         });
-        res.status(200).json(homework);
+        ok(res, homework, { limit });
 
     } catch (error) {
-        logger.error({ error, classId, studentId }, "Error fetching homework");
-        res.status(500).json({ message: "Failed to fetch homework." });
+        logger.error({ error, classId, studentId }, 'Error fetching homework');
+        fail(res, 500, 'Failed to fetch homework.', 'SERVER_ERROR');
+    }
+};
+
+/**
+ * GET /api/academics/homework/:homeworkId/grades
+ * Returns homework metadata + per-student grade roster.
+ * Teacher-scoped via assertTeacherAssignedToHomework.
+ */
+const getHomeworkGrades = async (req, res) => {
+    const { homeworkId } = req.params;
+    const schoolId = req.user.schoolId;
+
+    try {
+        // Teacher scope guard
+        if (req.user.role === 'teacher') {
+            try {
+                await assertTeacherAssignedToHomework(req, homeworkId);
+            } catch (scopeErr) {
+                return fail(res, scopeErr.statusCode || 403, scopeErr.message, scopeErr.code || 'TEACHER_NOT_ASSIGNED');
+            }
+        }
+
+        // Fetch homework with class info (tenant-safe via class → academicYear → school)
+        const homework = await prisma.homework.findFirst({
+            where: { id: homeworkId, class: { academicYear: { schoolId } } },
+            select: { id: true, title: true, classId: true, maxPoints: true, dueDate: true }
+        });
+        if (!homework) {
+            return fail(res, 404, 'Homework not found.', 'NOT_FOUND');
+        }
+
+        // Fetch all students enrolled in the homework's class
+        const enrollments = await prisma.studentEnrollment.findMany({
+            where: { classId: homework.classId },
+            include: { student: { select: { id: true, fullName: true } } },
+            orderBy: { student: { fullName: 'asc' } }
+        });
+
+        // Fetch existing grades
+        const existingGrades = await prisma.grade.findMany({
+            where: { homeworkId },
+            select: { studentId: true, grade: true, comments: true }
+        });
+        const gradeMap = new Map(existingGrades.map(g => [g.studentId, g]));
+
+        const students = enrollments.map(e => ({
+            id: e.student.id,
+            fullName: e.student.fullName,
+            grade: gradeMap.has(e.student.id) ? Number(gradeMap.get(e.student.id).grade) : null,
+            comment: gradeMap.has(e.student.id) ? gradeMap.get(e.student.id).comments : null
+        }));
+
+        ok(res, { homework, students });
+    } catch (error) {
+        logger.error({ error: error.message, homeworkId }, 'Error fetching homework grades');
+        fail(res, 500, 'Failed to fetch homework grades.', 'SERVER_ERROR');
+    }
+};
+
+/**
+ * POST /api/academics/homework/:homeworkId/grades
+ * Bulk upsert grades for an entire class homework.
+ * Body: { grades: [ { studentId, grade, comment? } ] }
+ */
+const submitHomeworkGrades = async (req, res) => {
+    const { homeworkId } = req.params;
+    const { grades } = req.body;
+    const schoolId = req.user.schoolId;
+
+    try {
+        // Teacher scope guard
+        if (req.user.role === 'teacher') {
+            try {
+                await assertTeacherAssignedToHomework(req, homeworkId);
+            } catch (scopeErr) {
+                return fail(res, scopeErr.statusCode || 403, scopeErr.message, scopeErr.code || 'TEACHER_NOT_ASSIGNED');
+            }
+        }
+
+        // Fetch homework (tenant-safe)
+        const homework = await prisma.homework.findFirst({
+            where: { id: homeworkId, class: { academicYear: { schoolId } } },
+            select: { id: true, classId: true, maxPoints: true }
+        });
+        if (!homework) {
+            return fail(res, 404, 'Homework not found.', 'NOT_FOUND');
+        }
+
+        // maxPoints bound check
+        if (homework.maxPoints !== null && homework.maxPoints !== undefined) {
+            const over = grades.filter(g => g.grade > homework.maxPoints);
+            if (over.length > 0) {
+                return fail(res, 400,
+                    `Grade exceeds maxPoints (${homework.maxPoints}) for students: ${over.map(g => g.studentId).join(', ')}`,
+                    'VALIDATION_ERROR'
+                );
+            }
+        }
+
+        // Roster check: all submitted studentIds must be enrolled in this class
+        const enrollments = await prisma.studentEnrollment.findMany({
+            where: { classId: homework.classId },
+            select: { studentId: true }
+        });
+        const enrolledIds = new Set(enrollments.map(e => e.studentId));
+        const outsiders = grades.filter(g => !enrolledIds.has(g.studentId));
+        if (outsiders.length > 0) {
+            return fail(res, 400,
+                `Students not enrolled in this class: ${outsiders.map(g => g.studentId).join(', ')}`,
+                'VALIDATION_ERROR'
+            );
+        }
+
+        // Bulk upsert in a transaction
+        const upserts = grades.map(g =>
+            prisma.grade.upsert({
+                where: { studentId_homeworkId: { studentId: g.studentId, homeworkId } },
+                update: { grade: g.grade, comments: g.comment ?? null },
+                create: { homeworkId, studentId: g.studentId, grade: g.grade, comments: g.comment ?? null }
+            })
+        );
+        await prisma.$transaction(upserts);
+
+        logger.info({ homeworkId, count: grades.length, teacherId: req.user.id }, 'Homework grades submitted');
+        ok(res, { homeworkId, savedCount: grades.length });
+    } catch (error) {
+        logger.error({ error: error.message, homeworkId }, 'Error submitting homework grades');
+        fail(res, 500, 'Failed to submit grades.', 'SERVER_ERROR');
+    }
+};
+
+const updateHomework = async (req, res) => {
+    const { homeworkId } = req.params;
+    const { title, description, dueDate, maxPoints } = req.body;
+
+    try {
+        // Teacher scope guard
+        if (req.user.role === 'teacher') {
+            try {
+                await assertTeacherAssignedToHomework(req, homeworkId);
+            } catch (scopeErr) {
+                return fail(res, scopeErr.statusCode || 403, scopeErr.message, scopeErr.code || 'TEACHER_NOT_ASSIGNED');
+            }
+        }
+
+        // Build update payload (only include provided fields)
+        const data = {};
+        if (title !== undefined) data.title = title;
+        if (description !== undefined) data.description = description;
+        if (dueDate !== undefined) data.dueDate = new Date(dueDate);
+        if (maxPoints !== undefined) data.maxPoints = maxPoints;
+
+        if (Object.keys(data).length === 0) {
+            return fail(res, 400, 'No fields provided for update.', 'VALIDATION_ERROR');
+        }
+
+        const hw = await prisma.homework.findUnique({ where: { id: homeworkId } });
+        if (!hw) return fail(res, 404, 'Homework not found.', 'NOT_FOUND');
+
+        const updated = await prisma.homework.update({
+            where: { id: homeworkId },
+            data,
+            include: { subject: { select: { name: true } }, class: { select: { name: true } } }
+        });
+
+        logger.info({ homeworkId, teacherId: req.user.id }, 'Homework updated');
+        ok(res, updated);
+    } catch (error) {
+        logger.error({ error: error.message, homeworkId }, 'Error updating homework');
+        fail(res, 500, 'Failed to update homework.', 'SERVER_ERROR');
+    }
+};
+
+const deleteHomework = async (req, res) => {
+    const { homeworkId } = req.params;
+
+    try {
+        // Teacher scope guard
+        if (req.user.role === 'teacher') {
+            try {
+                await assertTeacherAssignedToHomework(req, homeworkId);
+            } catch (scopeErr) {
+                return fail(res, scopeErr.statusCode || 403, scopeErr.message, scopeErr.code || 'TEACHER_NOT_ASSIGNED');
+            }
+        }
+
+        const hw = await prisma.homework.findUnique({ where: { id: homeworkId } });
+        if (!hw) return fail(res, 404, 'Homework not found.', 'NOT_FOUND');
+
+        await prisma.homework.delete({ where: { id: homeworkId } });
+
+        logger.info({ homeworkId, teacherId: req.user.id }, 'Homework deleted');
+        ok(res, { deleted: true });
+    } catch (error) {
+        logger.error({ error: error.message, homeworkId }, 'Error deleting homework');
+        fail(res, 500, 'Failed to delete homework.', 'SERVER_ERROR');
     }
 };
 
@@ -202,6 +428,15 @@ const addGrade = async (req, res) => {
     const { homeworkId } = req.params;
     const { studentId, grade, comments } = req.body;
     try {
+        // Teacher scope guard: only allow if homework is for an assigned class
+        if (req.user.role === 'teacher') {
+            try {
+                await assertTeacherAssignedToHomework(req, homeworkId);
+            } catch (scopeErr) {
+                return res.status(scopeErr.statusCode || 403).json({ success: false, error: { message: scopeErr.message, code: scopeErr.code || 'TEACHER_NOT_ASSIGNED' } });
+            }
+        }
+
         const newGrade = await prisma.grade.create({
             data: { grade, comments, studentId, homeworkId },
         });
@@ -615,6 +850,15 @@ const getClassStudents = async (req, res) => {
             return res.status(404).json({ message: "Class not found in your school." });
         }
 
+        // Teacher scope guard: teacher may only view students for their assigned classes
+        if (req.user.role === 'teacher') {
+            try {
+                await assertTeacherAssignedToClass(req, classId);
+            } catch (scopeErr) {
+                return res.status(scopeErr.statusCode || 403).json({ success: false, error: { message: scopeErr.message, code: scopeErr.code || 'TEACHER_NOT_ASSIGNED' } });
+            }
+        }
+
         const students = await prisma.student.findMany({
             where: {
                 schoolId,
@@ -647,6 +891,10 @@ const getClassStudents = async (req, res) => {
 module.exports = {
     createHomework,
     getHomework,
+    updateHomework,
+    deleteHomework,
+    getHomeworkGrades,
+    submitHomeworkGrades,
     getHomeworkForStudent,
     addGrade,
     recordAttendance,
@@ -656,12 +904,12 @@ module.exports = {
     scheduleExam,
     createTimeTableEntry,
     addExamMarks,
-    createAcademicYear, // Exported
-    deleteAcademicYear, // Exported
-    getAcademicYears,   // Exported
-    createTeacher,      // Exported
-    getSubjects,        // New
-    getMyStudents,       // New
-    getClassTimetable,    // New
+    createAcademicYear,
+    deleteAcademicYear,
+    getAcademicYears,
+    createTeacher,
+    getSubjects,
+    getMyStudents,
+    getClassTimetable,
     getClassStudents
 };

@@ -276,6 +276,7 @@ model Homework {
   title       String
   description String?
   dueDate     DateTime
+  maxPoints   Int?
   classId     String
   subjectId   String
   // Relations

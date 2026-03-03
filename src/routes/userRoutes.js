@@ -14,9 +14,10 @@ const { authMiddleware } = require('../middleware/authMiddleware');
 const { validate, registerUserSchema } = require('../validators/userValidator');
 const { loginSchema, verify2FASchema } = require('../validators/auth.validator');
 const { loginLimiter } = require('../middleware/rateLimiter');
+const { noCache } = require('../middleware/cacheHeaders');
 
 // Auth routes
-router.post('/register', validate(registerUserSchema), registerUser);
+router.post('/register', noCache, validate(registerUserSchema), registerUser);
 
 /**
  * @swagger
@@ -55,7 +56,7 @@ router.post('/register', validate(registerUserSchema), registerUser);
  *       "401":
  *         description: Invalid credentials
  */
-router.post('/login', loginLimiter, validate(loginSchema), loginUser);
+router.post('/login', loginLimiter, noCache, validate(loginSchema), loginUser);
 
 /**
  * @swagger
@@ -94,11 +95,11 @@ router.post('/login', loginLimiter, validate(loginSchema), loginUser);
  *       "400":
  *         description: Invalid or expired verification code
  */
-router.post('/login/verify', loginLimiter, validate(verify2FASchema), verifyTwoFactorCode);
+router.post('/login/verify', loginLimiter, noCache, validate(verify2FASchema), verifyTwoFactorCode);
 
 // Password reset routes
-router.post('/forgot-password', loginLimiter, forgotPassword);
-router.post('/reset-password', loginLimiter, resetPassword);
+router.post('/forgot-password', loginLimiter, noCache, forgotPassword);
+router.post('/reset-password', loginLimiter, noCache, resetPassword);
 
 // Profile route
 router.get('/me', authMiddleware, getUserProfile);

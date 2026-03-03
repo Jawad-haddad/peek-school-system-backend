@@ -1,0 +1,1162 @@
+[2026-03-03 16:44:21.831 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "test-user"
+    [35mrequiredRoles[39m: [
+      "super_admin",
+      "school_admin",
+      "teacher"
+    ]
+    [35muserRole[39m: "parent"
+[2026-03-03 16:44:21.881 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "test-user"
+    [35mrequiredRoles[39m: [
+      "super_admin",
+      "school_admin"
+    ]
+    [35muserRole[39m: "parent"
+[2026-03-03 16:44:21.916 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "test-user"
+    [35mrequiredRoles[39m: [
+      "super_admin",
+      "school_admin"
+    ]
+    [35muserRole[39m: "teacher"
+[2026-03-03 16:44:21.930 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "test-user"
+    [35mrequiredRoles[39m: [
+      "super_admin",
+      "school_admin"
+    ]
+    [35muserRole[39m: "teacher"
+[2026-03-03 16:44:22.045 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "test-user"
+    [35mrequiredRoles[39m: [
+      "super_admin",
+      "school_admin",
+      "bus_supervisor"
+    ]
+    [35muserRole[39m: "parent"
+[2026-03-03 16:44:22.119 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "test-user"
+    [35mrequiredRoles[39m: [
+      "super_admin",
+      "school_admin",
+      "bus_supervisor"
+    ]
+    [35muserRole[39m: "parent"
+[2026-03-03 16:44:22.130 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "test-user"
+    [35mrequiredRoles[39m: [
+      "super_admin",
+      "school_admin"
+    ]
+    [35muserRole[39m: "teacher"
+[2026-03-03 16:44:22.140 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "test-user"
+    [35mrequiredRoles[39m: [
+      "super_admin",
+      "school_admin",
+      "finance"
+    ]
+    [35muserRole[39m: "teacher"
+[2026-03-03 16:44:22.406 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "test-user"
+    [35mrequiredRoles[39m: [
+      "super_admin",
+      "school_admin"
+    ]
+    [35muserRole[39m: "parent"
+[2026-03-03 16:44:22.414 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "test-user"
+    [35mrequiredRoles[39m: [
+      "super_admin",
+      "school_admin"
+    ]
+    [35muserRole[39m: "teacher"
+[2026-03-03 16:44:22.429 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "test-user"
+    [35mrequiredRoles[39m: [
+      "super_admin",
+      "school_admin",
+      "teacher"
+    ]
+    [35muserRole[39m: "parent"
+[2026-03-03 16:44:21.616 +0300] [33mWARN[39m: [36mTwilio credentials not configured. SMS features disabled.[39m
+[2026-03-03 16:44:22.365 +0300] [32mINFO[39m: [36mLoading Firebase credentials from local file...[39m
+[2026-03-03 16:44:22.441 +0300] [32mINFO[39m: [36mFirebase Admin SDK initialized successfully.[39m
+[2026-03-03 16:44:23.260 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "teacher.ahmad@almustaqbal.com"
+[2026-03-03 16:44:23.335 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "teacher.ahmad@almustaqbal.com"
+    [35mfound[39m: false
+[2026-03-03 16:44:23.335 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "teacher.ahmad@almustaqbal.com"
+    [35mmatch[39m: false
+[2026-03-03 16:44:23.335 +0300] [33mWARN[39m: [36mFailed login attempt: Invalid credentials[39m
+    [35memail[39m: "teacher.ahmad@almustaqbal.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_FAILED"
+[2026-03-03 16:44:23.343 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/users/login"
+    [35mstatus[39m: 401
+    [35mdurationMs[39m: 157
+    [35mrequestId[39m: "d96a4532-90fd-4e64-8b16-7155f74d9677"
+[2026-03-03 16:44:21.418 +0300] [33mWARN[39m: [36mTwilio credentials not configured. SMS features disabled.[39m
+[2026-03-03 16:44:22.585 +0300] [32mINFO[39m: [36mLoading Firebase credentials from local file...[39m
+[2026-03-03 16:44:22.659 +0300] [32mINFO[39m: [36mFirebase Admin SDK initialized successfully.[39m
+[2026-03-03 16:44:21.807 +0300] [33mWARN[39m: [36mTwilio credentials not configured. SMS features disabled.[39m
+[2026-03-03 16:44:22.602 +0300] [32mINFO[39m: [36mLoading Firebase credentials from local file...[39m
+[2026-03-03 16:44:22.688 +0300] [32mINFO[39m: [36mFirebase Admin SDK initialized successfully.[39m
+[2026-03-03 16:44:23.437 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35mpath[39m: "/api/health"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 19
+    [35mrequestId[39m: "6d439f23-3ec3-4c4f-b0b4-97a4cf474e5b"
+[2026-03-03 16:44:21.857 +0300] [33mWARN[39m: [36mTwilio credentials not configured. SMS features disabled.[39m
+[2026-03-03 16:44:23.452 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "admin@peek.com"
+[2026-03-03 16:44:22.638 +0300] [32mINFO[39m: [36mLoading Firebase credentials from local file...[39m
+[2026-03-03 16:44:22.731 +0300] [32mINFO[39m: [36mFirebase Admin SDK initialized successfully.[39m
+[2026-03-03 16:44:23.464 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35mpath[39m: "/api/health"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 1
+    [35mrequestId[39m: "edf20ffd-a7af-4891-8a7c-a8ee0581d48b"
+[2026-03-03 16:44:23.481 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "test@example.com"
+[2026-03-03 16:44:21.778 +0300] [33mWARN[39m: [36mTwilio credentials not configured. SMS features disabled.[39m
+[2026-03-03 16:44:22.598 +0300] [32mINFO[39m: [36mLoading Firebase credentials from local file...[39m
+[2026-03-03 16:44:22.699 +0300] [32mINFO[39m: [36mFirebase Admin SDK initialized successfully.[39m
+[2026-03-03 16:44:21.578 +0300] [33mWARN[39m: [36mTwilio credentials not configured. SMS features disabled.[39m
+[2026-03-03 16:44:22.665 +0300] [32mINFO[39m: [36mLoading Firebase credentials from local file...[39m
+[2026-03-03 16:44:22.766 +0300] [32mINFO[39m: [36mFirebase Admin SDK initialized successfully.[39m
+[2026-03-03 16:44:23.517 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "test@example.com"
+    [35mfound[39m: false
+[2026-03-03 16:44:23.517 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "test@example.com"
+    [35mmatch[39m: false
+[2026-03-03 16:44:23.517 +0300] [33mWARN[39m: [36mFailed login attempt: Invalid credentials[39m
+    [35memail[39m: "test@example.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_FAILED"
+[2026-03-03 16:44:23.518 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/auth/login"
+    [35mstatus[39m: 401
+    [35mdurationMs[39m: 49
+    [35mrequestId[39m: "67761948-37f9-46b8-b6b2-a5932bfaada4"
+[2026-03-03 16:44:23.531 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "test@example.com"
+[2026-03-03 16:44:23.534 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "test@example.com"
+    [35mfound[39m: false
+[2026-03-03 16:44:23.534 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "test@example.com"
+    [35mmatch[39m: false
+[2026-03-03 16:44:23.534 +0300] [33mWARN[39m: [36mFailed login attempt: Invalid credentials[39m
+    [35memail[39m: "test@example.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_FAILED"
+[2026-03-03 16:44:23.535 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/auth/login"
+    [35mstatus[39m: 401
+    [35mdurationMs[39m: 9
+    [35mrequestId[39m: "eb1b9d36-9d97-40bc-a75e-479a80fe8d60"
+[2026-03-03 16:44:23.540 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "test@example.com"
+[2026-03-03 16:44:23.540 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "jawad.parent@email.com"
+[2026-03-03 16:44:23.543 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "test@example.com"
+    [35mfound[39m: false
+[2026-03-03 16:44:23.543 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "test@example.com"
+    [35mmatch[39m: false
+[2026-03-03 16:44:23.543 +0300] [33mWARN[39m: [36mFailed login attempt: Invalid credentials[39m
+    [35memail[39m: "test@example.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_FAILED"
+[2026-03-03 16:44:23.544 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/auth/login"
+    [35mstatus[39m: 401
+    [35mdurationMs[39m: 5
+    [35mrequestId[39m: "e60080d7-8b8c-45b3-884e-3f757e99d91f"
+[2026-03-03 16:44:23.551 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "test@example.com"
+[2026-03-03 16:44:23.553 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "test@example.com"
+    [35mfound[39m: false
+[2026-03-03 16:44:23.549 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "jawad.parent@email.com"
+[2026-03-03 16:44:23.553 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "test@example.com"
+    [35mmatch[39m: false
+[2026-03-03 16:44:23.553 +0300] [33mWARN[39m: [36mFailed login attempt: Invalid credentials[39m
+    [35memail[39m: "test@example.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_FAILED"
+[2026-03-03 16:44:23.554 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/auth/login"
+    [35mstatus[39m: 401
+    [35mdurationMs[39m: 4
+    [35mrequestId[39m: "871833e5-9492-4d40-bdcc-5808e06982b8"
+[2026-03-03 16:44:23.558 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "test@example.com"
+[2026-03-03 16:44:23.561 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "test@example.com"
+    [35mfound[39m: false
+[2026-03-03 16:44:23.561 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "test@example.com"
+    [35mmatch[39m: false
+[2026-03-03 16:44:23.561 +0300] [33mWARN[39m: [36mFailed login attempt: Invalid credentials[39m
+    [35memail[39m: "test@example.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_FAILED"
+[2026-03-03 16:44:23.561 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/auth/login"
+    [35mstatus[39m: 401
+    [35mdurationMs[39m: 4
+    [35mrequestId[39m: "0d8d3992-0edc-4d06-a73e-3620283e5091"
+[2026-03-03 16:44:23.566 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/auth/login"
+    [35mstatus[39m: 429
+    [35mdurationMs[39m: 1
+    [35mrequestId[39m: "fcde689e-e579-468a-981e-c2889aa3b2f6"
+[2026-03-03 16:44:23.473 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "admin@peek.com"
+    [35mfound[39m: true
+[2026-03-03 16:44:23.582 +0300] [31mERROR[39m: [36mAuth Middleware: Token verification failed.[39m
+    error: "\nInvalid `prisma.user.findUnique()` invocation in\nC:\\Users\\Pc\\Downloads\\peek-school-system-backend-main\\peek-school-system-backend-main\\src\\middleware\\authMiddleware.js:15:42\n\n  12 token = req.headers.authorization.split(' ')[1];\n  13 const decoded = jwt.verify(token, process.env.JWT_SECRET);\n  14 \n→ 15 req.user = await prisma.user.findUnique({\n       where: {\n         id: undefined,\n     ?   email?: String,\n     ?   passwordResetToken?: String,\n     ?   AND?: UserWhereInput | UserWhereInput[],\n     ?   OR?: UserWhereInput[],\n     ?   NOT?: UserWhereInput | UserWhereInput[],\n     ?   fullName?: StringFilter | String,\n     ?   phoneNumber?: StringNullableFilter | String | Null,\n     ?   nfc_card_id?: StringNullableFilter | String | Null,\n     ?   password_hash?: StringFilter | String,\n     ?   role?: EnumUserRoleFilter | UserRole,\n     ?   isActive?: BoolFilter | Boolean,\n     ?   emailVerified?: BoolFilter | Boolean,\n     ?   createdAt?: DateTimeFilter | DateTime,\n     ?   schoolId?: StringNullableFilter | String | Null,\n     ?   passwordResetExpires?: DateTimeNullableFilter | DateTime | Null,\n     ?   twoFactorCode?: StringNullableFilter | String | Null,\n     ?   twoFactorCodeExpires?: DateTimeNullableFilter | DateTime | Null,\n     ?   school?: SchoolNullableRelationFilter | SchoolWhereInput | Null,\n     ?   students?: StudentListRelationFilter,\n     ?   teacherAssignments?: TeacherSubjectAssignmentListRelationFilter,\n     ?   subjects?: SubjectListRelationFilter,\n     ?   notificationPreference?: NotificationPreferenceNullableRelationFilter | NotificationPreferenceWhereInput | Null,\n     ?   auditLogs?: AuditLogListRelationFilter,\n     ?   busTrips?: BusTripListRelationFilter,\n     ?   deviceTokens?: DeviceTokenListRelationFilter,\n     ?   timeTableEntries?: TimeTableEntryListRelationFilter,\n     ?   sentMessages?: MessageListRelationFilter,\n     ?   receivedMessages?: MessageListRelationFilter\n       },\n       select: {\n         id: true,\n         email: true,\n         fullName: true,\n         role: true,\n         schoolId: true,\n         isActive: true\n       }\n     })\n\nArgument `where` of type UserWhereUniqueInput needs at least one of `id`, `email` or `passwordResetToken` arguments. Available options are marked with ?."
+[2026-03-03 16:44:23.585 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/buses/trip/start"
+    [35mstatus[39m: 401
+    [35mdurationMs[39m: 61
+    [35mrequestId[39m: "11de6626-2ddd-4141-a533-f66d00bec14d"
+[2026-03-03 16:44:23.573 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "admin@peek.com"
+    [35mmatch[39m: true
+[2026-03-03 16:44:23.573 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "admin@peek.com"
+    [35mrole[39m: "school_admin"
+    [35mmappedRole[39m: "ADMIN"
+[2026-03-03 16:44:23.577 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "89906271-e7fe-473b-aeb3-2b0c4d4952e1"
+    [35memail[39m: "admin@peek.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-03 16:44:23.580 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 186
+    [35mrequestId[39m: "d1bc2fb4-5a4a-49c2-a4dd-00bb214fa7f0"
+[2026-03-03 16:44:23.592 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "teacher@peek.com"
+[2026-03-03 16:44:21.699 +0300] [33mWARN[39m: [36mTwilio credentials not configured. SMS features disabled.[39m
+[2026-03-03 16:44:22.810 +0300] [32mINFO[39m: [36mLoading Firebase credentials from local file...[39m
+[2026-03-03 16:44:22.896 +0300] [32mINFO[39m: [36mFirebase Admin SDK initialized successfully.[39m
+[2026-03-03 16:44:23.602 +0300] [31mERROR[39m: [36mAuth Middleware: Token verification failed.[39m
+    error: "\nInvalid `prisma.user.findUnique()` invocation in\nC:\\Users\\Pc\\Downloads\\peek-school-system-backend-main\\peek-school-system-backend-main\\src\\middleware\\authMiddleware.js:15:42\n\n  12 token = req.headers.authorization.split(' ')[1];\n  13 const decoded = jwt.verify(token, process.env.JWT_SECRET);\n  14 \n→ 15 req.user = await prisma.user.findUnique({\n       where: {\n         id: undefined,\n     ?   email?: String,\n     ?   passwordResetToken?: String,\n     ?   AND?: UserWhereInput | UserWhereInput[],\n     ?   OR?: UserWhereInput[],\n     ?   NOT?: UserWhereInput | UserWhereInput[],\n     ?   fullName?: StringFilter | String,\n     ?   phoneNumber?: StringNullableFilter | String | Null,\n     ?   nfc_card_id?: StringNullableFilter | String | Null,\n     ?   password_hash?: StringFilter | String,\n     ?   role?: EnumUserRoleFilter | UserRole,\n     ?   isActive?: BoolFilter | Boolean,\n     ?   emailVerified?: BoolFilter | Boolean,\n     ?   createdAt?: DateTimeFilter | DateTime,\n     ?   schoolId?: StringNullableFilter | String | Null,\n     ?   passwordResetExpires?: DateTimeNullableFilter | DateTime | Null,\n     ?   twoFactorCode?: StringNullableFilter | String | Null,\n     ?   twoFactorCodeExpires?: DateTimeNullableFilter | DateTime | Null,\n     ?   school?: SchoolNullableRelationFilter | SchoolWhereInput | Null,\n     ?   students?: StudentListRelationFilter,\n     ?   teacherAssignments?: TeacherSubjectAssignmentListRelationFilter,\n     ?   subjects?: SubjectListRelationFilter,\n     ?   notificationPreference?: NotificationPreferenceNullableRelationFilter | NotificationPreferenceWhereInput | Null,\n     ?   auditLogs?: AuditLogListRelationFilter,\n     ?   busTrips?: BusTripListRelationFilter,\n     ?   deviceTokens?: DeviceTokenListRelationFilter,\n     ?   timeTableEntries?: TimeTableEntryListRelationFilter,\n     ?   sentMessages?: MessageListRelationFilter,\n     ?   receivedMessages?: MessageListRelationFilter\n       },\n       select: {\n         id: true,\n         email: true,\n         fullName: true,\n         role: true,\n         schoolId: true,\n         isActive: true\n       }\n     })\n\nArgument `where` of type UserWhereUniqueInput needs at least one of `id`, `email` or `passwordResetToken` arguments. Available options are marked with ?."
+[2026-03-03 16:44:23.603 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/buses/trip/start"
+    [35mstatus[39m: 401
+    [35mdurationMs[39m: 7
+    [35mrequestId[39m: "b24f1125-8c3d-4a0c-b737-ba74f7f6146b"
+[2026-03-03 16:44:23.623 +0300] [33mWARN[39m: [36mAuth Middleware: No token provided in request.[39m
+    [35mpath[39m: "/api/platform/onboard-school"
+[2026-03-03 16:44:23.626 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/platform/onboard-school"
+    [35mstatus[39m: 401
+    [35mdurationMs[39m: 30
+    [35mrequestId[39m: "8dc9e0bc-b7e1-406a-b502-0cd0557e6c12"
+[2026-03-03 16:44:23.636 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "2"
+    [35mrequiredRoles[39m: [
+      "super_admin"
+    ]
+    [35muserRole[39m: "teacher"
+[2026-03-03 16:44:23.637 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/platform/onboard-school"
+    [35mstatus[39m: 403
+    [35mdurationMs[39m: 2
+    [35mrequestId[39m: "0f84fc70-aade-48e9-904a-a6d0a539a55b"
+    [35muserId[39m: "2"
+[2026-03-03 16:44:23.646 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/platform/onboard-school"
+    [35mstatus[39m: 400
+    [35mdurationMs[39m: 3
+    [35mrequestId[39m: "41a25ec5-2e7f-40b6-9c0d-8448494871da"
+    [35muserId[39m: "1"
+[2026-03-03 16:44:23.565 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "jawad.parent@email.com"
+    [35mfound[39m: true
+[2026-03-03 16:44:23.650 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "jawad.parent@email.com"
+    [35mmatch[39m: false
+[2026-03-03 16:44:23.650 +0300] [33mWARN[39m: [36mFailed login attempt: Invalid credentials[39m
+    [35memail[39m: "jawad.parent@email.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_FAILED"
+[2026-03-03 16:44:23.653 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/users/login"
+    [35mstatus[39m: 401
+    [35mdurationMs[39m: 161
+    [35mrequestId[39m: "e3b726ae-2c62-44df-8a44-75f2b3f72d9f"
+[2026-03-03 16:44:23.664 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "jawad.parent@email.com"
+[2026-03-03 16:44:23.576 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "jawad.parent@email.com"
+    [35mfound[39m: true
+[2026-03-03 16:44:23.602 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "teacher@peek.com"
+    [35mfound[39m: true
+[2026-03-03 16:44:23.668 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "jawad.parent@email.com"
+    [35mmatch[39m: false
+[2026-03-03 16:44:23.668 +0300] [33mWARN[39m: [36mFailed login attempt: Invalid credentials[39m
+    [35memail[39m: "jawad.parent@email.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_FAILED"
+[2026-03-03 16:44:23.671 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/users/login"
+    [35mstatus[39m: 401
+    [35mdurationMs[39m: 167
+    [35mrequestId[39m: "f911dea4-b777-4b02-b85d-2efaf7c2a0c4"
+[2026-03-03 16:44:23.680 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "teacher@peek.com"
+    [35mmatch[39m: true
+[2026-03-03 16:44:23.685 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "principal@almustaqbal.com"
+[2026-03-03 16:44:23.680 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "teacher@peek.com"
+    [35mrole[39m: "teacher"
+    [35mmappedRole[39m: "TEACHER"
+[2026-03-03 16:44:23.681 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35memail[39m: "teacher@peek.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-03 16:44:23.682 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 91
+    [35mrequestId[39m: "021a724f-a28f-4be2-bc36-8bc26eba8658"
+[2026-03-03 16:44:23.694 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "parent@peek.com"
+[2026-03-03 16:44:23.695 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "principal@almustaqbal.com"
+    [35mfound[39m: false
+[2026-03-03 16:44:23.696 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "principal@almustaqbal.com"
+    [35mmatch[39m: false
+[2026-03-03 16:44:23.696 +0300] [33mWARN[39m: [36mFailed login attempt: Invalid credentials[39m
+    [35memail[39m: "principal@almustaqbal.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_FAILED"
+[2026-03-03 16:44:23.697 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/users/login"
+    [35mstatus[39m: 401
+    [35mdurationMs[39m: 14
+    [35mrequestId[39m: "8676d376-d9d7-4528-b5a6-209f2148b7c9"
+[2026-03-03 16:44:23.666 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "jawad.parent@email.com"
+    [35mfound[39m: true
+[2026-03-03 16:44:23.750 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "jawad.parent@email.com"
+    [35mmatch[39m: false
+[2026-03-03 16:44:23.750 +0300] [33mWARN[39m: [36mFailed login attempt: Invalid credentials[39m
+    [35memail[39m: "jawad.parent@email.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_FAILED"
+[2026-03-03 16:44:23.751 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/users/login"
+    [35mstatus[39m: 401
+    [35mdurationMs[39m: 88
+    [35mrequestId[39m: "fcbb204b-8e01-4c42-8777-0b20dcbfb795"
+[2026-03-03 16:44:23.035 +0300] [33mWARN[39m: [36mTwilio credentials not configured. SMS features disabled.[39m
+[2026-03-03 16:44:23.114 +0300] [32mINFO[39m: [36mLoading Firebase credentials from local file...[39m
+[2026-03-03 16:44:23.223 +0300] [32mINFO[39m: [36mFirebase Admin SDK initialized successfully.[39m
+[2026-03-03 16:44:23.697 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "parent@peek.com"
+    [35mfound[39m: true
+[2026-03-03 16:44:23.786 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "parent@peek.com"
+    [35mmatch[39m: true
+[2026-03-03 16:44:23.786 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "parent@peek.com"
+    [35mrole[39m: "parent"
+    [35mmappedRole[39m: "PARENT"
+[2026-03-03 16:44:23.786 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "de8e3944-242c-4aba-b1a3-cbe6910c6690"
+    [35memail[39m: "parent@peek.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-03 16:44:23.787 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 94
+    [35mrequestId[39m: "8d8bbd78-e224-4cca-8c58-b5d718ab5622"
+[2026-03-03 16:44:23.793 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "admin@peek.com"
+[2026-03-03 16:44:23.848 +0300] [32mINFO[39m: [36mNew user registered successfully[39m
+    [35muserId[39m: "847a1c98-e8a7-40f2-a327-7c85ec0d2e02"
+    [35memail[39m: "testuser-1772545463758@example.com"
+    [35mrole[39m: "parent"
+[2026-03-03 16:44:23.848 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/users/register"
+    [35mstatus[39m: 201
+    [35mdurationMs[39m: 84
+    [35mrequestId[39m: "d9f6f08f-c16a-4dec-abb5-40e5b7484ade"
+[2026-03-03 16:44:23.795 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "admin@peek.com"
+    [35mfound[39m: true
+[2026-03-03 16:44:23.864 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "admin@peek.com"
+    [35mmatch[39m: false
+[2026-03-03 16:44:23.864 +0300] [33mWARN[39m: [36mFailed login attempt: Invalid credentials[39m
+    [35memail[39m: "admin@peek.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_FAILED"
+[2026-03-03 16:44:23.865 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/auth/login"
+    [35mstatus[39m: 401
+    [35mdurationMs[39m: 73
+    [35mrequestId[39m: "5e754104-a080-498e-afa9-7cab956a8163"
+[2026-03-03 16:44:23.871 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/auth/login"
+    [35mstatus[39m: 400
+    [35mdurationMs[39m: 2
+    [35mrequestId[39m: "857350f8-e94d-4565-aa41-9d5ee5c89693"
+[2026-03-03 16:44:23.874 +0300] [33mWARN[39m: [36mAuth Middleware: No token provided in request.[39m
+    [35mpath[39m: "/api/school/classes"
+[2026-03-03 16:44:23.875 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35mpath[39m: "/api/school/classes"
+    [35mstatus[39m: 401
+    [35mdurationMs[39m: 1
+    [35mrequestId[39m: "c93743e0-ca6c-41b1-8007-ed39d273cff1"
+[2026-03-03 16:44:23.902 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35mpath[39m: "/api/school/classes"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 20
+    [35mrequestId[39m: "32c2a1a1-ee07-4753-aa8d-7bc4ef0aa767"
+    [35muserId[39m: "89906271-e7fe-473b-aeb3-2b0c4d4952e1"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:44:23.927 +0300] [32mINFO[39m: [36mClass created successfully.[39m
+    [35mclassId[39m: "d25bb9de-d087-4809-ba4d-f4f7e34db716"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+    [35muserId[39m: "89906271-e7fe-473b-aeb3-2b0c4d4952e1"
+    [35maudit[39m: true
+    [35maction[39m: "CLASS_CREATED"
+[2026-03-03 16:44:23.928 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/school/classes"
+    [35mstatus[39m: 201
+    [35mdurationMs[39m: 21
+    [35mrequestId[39m: "9ef3cc3b-3809-493f-b85e-b0137f86792e"
+    [35muserId[39m: "89906271-e7fe-473b-aeb3-2b0c4d4952e1"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:44:23.942 +0300] [31mERROR[39m: [36mError during user registration[39m
+    [35memail[39m: "jawad.parent@email.com"
+    [35mrole[39m: "parent"
+    error: {
+      "name": "PrismaClientKnownRequestError",
+      "code": "P2002",
+      "clientVersion": "5.19.1",
+      "meta": {
+        "modelName": "User",
+        "target": [
+          "email"
+        ]
+      }
+    }
+[2026-03-03 16:44:23.943 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/users/register"
+    [35mstatus[39m: 409
+    [35mdurationMs[39m: 91
+    [35mrequestId[39m: "6aaee3a4-bc3b-4235-9edd-d7b3068803f6"
+[2026-03-03 16:44:23.950 +0300] [32mINFO[39m: [36mClass updated successfully.[39m
+    [35mclassId[39m: "d25bb9de-d087-4809-ba4d-f4f7e34db716"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+    [35muserId[39m: "89906271-e7fe-473b-aeb3-2b0c4d4952e1"
+    [35maudit[39m: true
+    [35maction[39m: "CLASS_UPDATED"
+[2026-03-03 16:44:23.950 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "PUT"
+    [35mpath[39m: "/api/school/classes/d25bb9de-d087-4809-ba4d-f4f7e34db716"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 16
+    [35mrequestId[39m: "37dbf122-3e00-4a3d-ac42-beb77030dc13"
+    [35muserId[39m: "89906271-e7fe-473b-aeb3-2b0c4d4952e1"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:44:23.976 +0300] [32mINFO[39m: [36mClass deleted successfully.[39m
+    [35mclassId[39m: "d25bb9de-d087-4809-ba4d-f4f7e34db716"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+    [35muserId[39m: "89906271-e7fe-473b-aeb3-2b0c4d4952e1"
+    [35maudit[39m: true
+    [35maction[39m: "CLASS_DELETED"
+[2026-03-03 16:44:23.976 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "DELETE"
+    [35mpath[39m: "/api/school/classes/d25bb9de-d087-4809-ba4d-f4f7e34db716"
+    [35mstatus[39m: 204
+    [35mdurationMs[39m: 22
+    [35mrequestId[39m: "52127884-edcb-45db-879a-5a1c70e56b56"
+    [35muserId[39m: "89906271-e7fe-473b-aeb3-2b0c4d4952e1"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:44:23.982 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/school/classes"
+    [35mstatus[39m: 400
+    [35mdurationMs[39m: 3
+    [35mrequestId[39m: "d5208dbe-653a-40dc-bea1-c9208dc8d311"
+    [35muserId[39m: "89906271-e7fe-473b-aeb3-2b0c4d4952e1"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:44:23.989 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mrequiredRoles[39m: [
+      "super_admin",
+      "school_admin"
+    ]
+    [35muserRole[39m: "teacher"
+[2026-03-03 16:44:23.989 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/school/classes"
+    [35mstatus[39m: 403
+    [35mdurationMs[39m: 4
+    [35mrequestId[39m: "4bc5b130-7aa2-4be3-b8e6-1d396b0b30c0"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:44:23.998 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mrequiredRoles[39m: [
+      "super_admin",
+      "school_admin"
+    ]
+    [35muserRole[39m: "teacher"
+[2026-03-03 16:44:23.998 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "PUT"
+    [35mpath[39m: "/api/school/classes/any-uuid"
+    [35mstatus[39m: 403
+    [35mdurationMs[39m: 3
+    [35mrequestId[39m: "f24cf57c-1936-42d5-a181-380c7828886e"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:44:24.009 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mrequiredRoles[39m: [
+      "super_admin",
+      "school_admin"
+    ]
+    [35muserRole[39m: "teacher"
+[2026-03-03 16:44:24.010 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "DELETE"
+    [35mpath[39m: "/api/school/classes/any-uuid"
+    [35mstatus[39m: 403
+    [35mdurationMs[39m: 6
+    [35mrequestId[39m: "d2ed1f38-d871-4184-ac0a-b4c0cc1a3056"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:44:24.019 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "de8e3944-242c-4aba-b1a3-cbe6910c6690"
+    [35mrequiredRoles[39m: [
+      "school_admin",
+      "teacher"
+    ]
+    [35muserRole[39m: "parent"
+[2026-03-03 16:44:24.020 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35mpath[39m: "/api/school/classes"
+    [35mstatus[39m: 403
+    [35mdurationMs[39m: 4
+    [35mrequestId[39m: "76d24878-cc2f-4f94-a62d-19c58353f1af"
+    [35muserId[39m: "de8e3944-242c-4aba-b1a3-cbe6910c6690"
+[2026-03-03 16:44:24.029 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "de8e3944-242c-4aba-b1a3-cbe6910c6690"
+    [35mrequiredRoles[39m: [
+      "super_admin",
+      "school_admin"
+    ]
+    [35muserRole[39m: "parent"
+[2026-03-03 16:44:24.030 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/school/classes"
+    [35mstatus[39m: 403
+    [35mdurationMs[39m: 5
+    [35mrequestId[39m: "1460f4a1-f418-441c-8d8a-41465467ae82"
+    [35muserId[39m: "de8e3944-242c-4aba-b1a3-cbe6910c6690"
+[2026-03-03 16:44:24.040 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "PUT"
+    [35mpath[39m: "/api/school/classes/00000000-0000-0000-0000-000000000000"
+    [35mstatus[39m: 404
+    [35mdurationMs[39m: 6
+    [35mrequestId[39m: "3e908009-e643-4281-9585-5ff86ce1955b"
+    [35muserId[39m: "89906271-e7fe-473b-aeb3-2b0c4d4952e1"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:44:24.048 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "DELETE"
+    [35mpath[39m: "/api/school/classes/00000000-0000-0000-0000-000000000000"
+    [35mstatus[39m: 404
+    [35mdurationMs[39m: 5
+    [35mrequestId[39m: "f446df61-7f93-4a91-bc4d-d4d6bf743ab3"
+    [35muserId[39m: "89906271-e7fe-473b-aeb3-2b0c4d4952e1"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:44:24.076 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35mpath[39m: "/api/academics/classes/5e08fa55-bf22-4678-9ef9-becc417375bd/students"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 17
+    [35mrequestId[39m: "2da2cf69-ccae-4883-9191-6c7f6e22e130"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:44:24.104 +0300] [32mINFO[39m: [36mBulk attendance submitted successfully[39m
+    [35mclassId[39m: "5e08fa55-bf22-4678-9ef9-becc417375bd"
+    [35mdate[39m: "2026-03-03"
+    [35mcount[39m: 1
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+    [35maudit[39m: true
+    [35maction[39m: "ATTENDANCE_BULK_SUBMIT"
+[2026-03-03 16:44:24.104 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/attendance/bulk"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 21
+    [35mrequestId[39m: "c2a10020-ef84-4786-87bc-b27a8151374b"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:44:24.129 +0300] [34mDEBUG[39m: [36mNo device tokens found. Skipping notification.[39m
+    [35muserId[39m: "de8e3944-242c-4aba-b1a3-cbe6910c6690"
+[2026-03-03 16:44:24.137 +0300] [32mINFO[39m: [36mBulk attendance submitted successfully[39m
+    [35mclassId[39m: "5e08fa55-bf22-4678-9ef9-becc417375bd"
+    [35mdate[39m: "2026-03-03"
+    [35mcount[39m: 1
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+    [35maudit[39m: true
+    [35maction[39m: "ATTENDANCE_BULK_SUBMIT"
+[2026-03-03 16:44:24.137 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/attendance/bulk"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 29
+    [35mrequestId[39m: "296d8e30-a2df-42a9-b5ae-78391e80ba48"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:44:24.146 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/attendance/bulk"
+    [35mstatus[39m: 400
+    [35mdurationMs[39m: 5
+    [35mrequestId[39m: "868f0c11-cda7-472c-9a57-f09d4b39228a"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:44:24.152 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/attendance/bulk"
+    [35mstatus[39m: 400
+    [35mdurationMs[39m: 3
+    [35mrequestId[39m: "0bd970df-71aa-4ca6-a463-a29ba4ad77b3"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:44:24.166 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/attendance/bulk"
+    [35mstatus[39m: 400
+    [35mdurationMs[39m: 9
+    [35mrequestId[39m: "dcd7aca9-5ad6-4019-8230-e6a003c6b6fd"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:44:24.176 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/attendance/bulk"
+    [35mstatus[39m: 400
+    [35mdurationMs[39m: 4
+    [35mrequestId[39m: "3c45dc7c-e5f3-4c9c-b8fd-1b054d9519f7"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:44:24.184 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/attendance/bulk"
+    [35mstatus[39m: 400
+    [35mdurationMs[39m: 3
+    [35mrequestId[39m: "49ef6e22-dd5f-4a3e-88b8-1775757953e0"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:44:24.213 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35mpath[39m: "/api/attendance/5e08fa55-bf22-4678-9ef9-becc417375bd?date=2026-03-03"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 21
+    [35mrequestId[39m: "d762a34c-b2e7-4ed2-8f4f-01712b90d93e"
+    [35muserId[39m: "ef308de6-3ff6-4619-9c88-3020121232e6"
+    [35mschoolId[39m: "6782071e-1bd5-4c47-a63d-46ea455baaf0"
+[2026-03-03 16:44:24.224 +0300] [33mWARN[39m: [36mForbidden: Insufficient role permissions.[39m
+    [35muserId[39m: "de8e3944-242c-4aba-b1a3-cbe6910c6690"
+    [35mrequiredRoles[39m: [
+      "super_admin",
+      "school_admin",
+      "teacher"
+    ]
+    [35muserRole[39m: "parent"
+[2026-03-03 16:44:24.225 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/attendance/bulk"
+    [35mstatus[39m: 403
+    [35mdurationMs[39m: 4
+    [35mrequestId[39m: "df441aff-214d-4195-9535-beaeafc9378a"
+    [35muserId[39m: "de8e3944-242c-4aba-b1a3-cbe6910c6690"
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "school_system", schema "public" at "localhost:32797"
+
+Your database is now in sync with your Prisma schema. Done in 579ms
+
+[2026-03-03 16:44:27.887 +0300] [33mWARN[39m: [36mTwilio credentials not configured. SMS features disabled.[39m
+[2026-03-03 16:44:27.966 +0300] [32mINFO[39m: [36mLoading Firebase credentials from local file...[39m
+[2026-03-03 16:44:28.017 +0300] [32mINFO[39m: [36mFirebase Admin SDK initialized successfully.[39m
+[2026-03-03 16:44:28.453 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "super.golden.1772545462534@test.com"
+[2026-03-03 16:44:28.456 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "super.golden.1772545462534@test.com"
+    [35mfound[39m: true
+[2026-03-03 16:44:28.522 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "super.golden.1772545462534@test.com"
+    [35mmatch[39m: true
+[2026-03-03 16:44:28.523 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "super.golden.1772545462534@test.com"
+    [35mrole[39m: "super_admin"
+    [35mmappedRole[39m: "SUPER_ADMIN"
+[2026-03-03 16:44:28.524 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "39b87288-1243-479e-841b-1413e4647601"
+    [35memail[39m: "super.golden.1772545462534@test.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-03 16:44:28.526 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 85
+    [35mrequestId[39m: "647a1e78-14ff-4a70-8342-ce4d4a75a082"
+[2026-03-03 16:44:28.615 +0300] [32mINFO[39m: [36mSchool successfully onboarded via platform.[39m
+    [35maction[39m: "onboard_school"
+    [35mschoolId[39m: "a9fb753d-e1b0-450e-a1f2-b654554d09b5"
+    [35madminId[39m: "12fdb9a7-67fc-46a8-b5f0-b1882a990179"
+[2026-03-03 16:44:28.615 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/platform/onboard-school"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 84
+    [35mrequestId[39m: "e07a2b04-1785-4d74-8596-169c81c6bed1"
+    [35muserId[39m: "39b87288-1243-479e-841b-1413e4647601"
+[2026-03-03 16:44:28.619 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "admin.1772545462534@goldenschool.com"
+[2026-03-03 16:44:28.621 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "admin.1772545462534@goldenschool.com"
+    [35mfound[39m: true
+[2026-03-03 16:44:28.688 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "admin.1772545462534@goldenschool.com"
+    [35mmatch[39m: true
+[2026-03-03 16:44:28.688 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "admin.1772545462534@goldenschool.com"
+    [35mrole[39m: "school_admin"
+    [35mmappedRole[39m: "ADMIN"
+[2026-03-03 16:44:28.689 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "12fdb9a7-67fc-46a8-b5f0-b1882a990179"
+    [35memail[39m: "admin.1772545462534@goldenschool.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-03 16:44:28.689 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 70
+    [35mrequestId[39m: "a2ac4ff9-618b-4e32-b682-7f54312bde93"
+[2026-03-03 16:44:28.784 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/school/students"
+    [35mstatus[39m: 201
+    [35mdurationMs[39m: 92
+    [35mrequestId[39m: "85156267-a7ce-4df0-9b19-400ffc7f8d34"
+    [35muserId[39m: "12fdb9a7-67fc-46a8-b5f0-b1882a990179"
+    [35mschoolId[39m: "a9fb753d-e1b0-450e-a1f2-b654554d09b5"
+[2026-03-03 16:44:28.799 +0300] [32mINFO[39m: [36mBulk attendance submitted successfully[39m
+    [35mclassId[39m: "f2540de3-7861-469e-a9f6-414e9dcf9a77"
+    [35mdate[39m: "2026-03-03"
+    [35mcount[39m: 1
+    [35muserId[39m: "12fdb9a7-67fc-46a8-b5f0-b1882a990179"
+    [35mschoolId[39m: "a9fb753d-e1b0-450e-a1f2-b654554d09b5"
+    [35maudit[39m: true
+    [35maction[39m: "ATTENDANCE_BULK_SUBMIT"
+[2026-03-03 16:44:28.800 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/attendance/bulk"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 12
+    [35mrequestId[39m: "44a53645-cc0b-4108-a21d-f69fc7abbda7"
+    [35muserId[39m: "12fdb9a7-67fc-46a8-b5f0-b1882a990179"
+    [35mschoolId[39m: "a9fb753d-e1b0-450e-a1f2-b654554d09b5"
+[2026-03-03 16:44:28.816 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35mpath[39m: "/api/school/reports/overview"
+    [35mstatus[39m: 200
+    [35mdurationMs[39m: 13
+    [35mrequestId[39m: "c1892633-2332-4154-9099-362ea9687032"
+    [35muserId[39m: "12fdb9a7-67fc-46a8-b5f0-b1882a990179"
+    [35mschoolId[39m: "a9fb753d-e1b0-450e-a1f2-b654554d09b5"
+[2026-03-03 16:44:28.824 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/pos/items"
+    [35mstatus[39m: 201
+    [35mdurationMs[39m: 6
+    [35mrequestId[39m: "89d6250e-36b4-470a-b76c-379a0d4ab740"
+    [35muserId[39m: "12fdb9a7-67fc-46a8-b5f0-b1882a990179"
+    [35mschoolId[39m: "a9fb753d-e1b0-450e-a1f2-b654554d09b5"
+[2026-03-03 16:44:28.861 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35mpath[39m: "/api/pos/orders"
+    [35mstatus[39m: 201
+    [35mdurationMs[39m: 31
+    [35mrequestId[39m: "61e84190-b5f8-4af9-a6cc-f551e299e103"
+    [35muserId[39m: "12fdb9a7-67fc-46a8-b5f0-b1882a990179"
+    [35mschoolId[39m: "a9fb753d-e1b0-450e-a1f2-b654554d09b5"
+[2026-03-03 16:44:28.896 +0300] [34mDEBUG[39m: [36mNo device tokens found. Skipping notification.[39m
+    [35muserId[39m: "4d31b078-398e-47b4-8d73-3707be0ba35e"
+\nPASS __tests__/validation-4b.test.js
+PASS __tests__/validation-4c.test.js
+PASS __tests__/rbac-attendance-school.test.js
+PASS __tests__/rbac-bus-comm-stats.test.js
+PASS __tests__/validation-4a.test.js
+PASS __tests__/validation-4d.test.js
+PASS __tests__/tenant-academic.test.js
+PASS __tests__/rbac-exams.test.js
+PASS __tests__/tenant-pos.test.js
+PASS __tests__/tenant.test.js
+PASS __tests__/tenant-finance.test.js
+FAIL __tests__/academics.test.js
+  ● Academics Module › should allow a teacher to add a grade to a homework
+
+    TypeError: Cannot read properties of null (reading 'id')
+
+    [0m [90m 14 |[39m         teacherToken [33m=[39m [36mawait[39m getAuthToken([32m'teacher.ahmad@almustaqbal.com'[39m[33m,[39m [32m'teacherpassword'[39m)[33m;[39m
+     [90m 15 |[39m         [36mconst[39m student [33m=[39m [36mawait[39m prisma[33m.[39mstudent[33m.[39mfindFirst({ where[33m:[39m { fullName[33m:[39m [32m"Omar Haddad"[39m } })[33m;[39m
+    [31m[1m>[22m[39m[90m 16 |[39m         studentId [33m=[39m student[33m.[39mid[33m;[39m
+     [90m    |[39m                             [31m[1m^[22m[39m
+     [90m 17 |[39m         [36mconst[39m homework [33m=[39m [36mawait[39m prisma[33m.[39mhomework[33m.[39mfindFirst({ where[33m:[39m { title[33m:[39m [32m"Math Homework Chapter 1"[39m } })[33m;[39m
+     [90m 18 |[39m         homeworkId [33m=[39m homework[33m.[39mid[33m;[39m
+     [90m 19 |[39m     })[33m;[39m[0m
+
+      at Object.id (__tests__/academics.test.js:16:29)
+
+  ● Academics Module › should allow a teacher to record attendance
+
+    TypeError: Cannot read properties of null (reading 'id')
+
+    [0m [90m 14 |[39m         teacherToken [33m=[39m [36mawait[39m getAuthToken([32m'teacher.ahmad@almustaqbal.com'[39m[33m,[39m [32m'teacherpassword'[39m)[33m;[39m
+     [90m 15 |[39m         [36mconst[39m student [33m=[39m [36mawait[39m prisma[33m.[39mstudent[33m.[39mfindFirst({ where[33m:[39m { fullName[33m:[39m [32m"Omar Haddad"[39m } })[33m;[39m
+    [31m[1m>[22m[39m[90m 16 |[39m         studentId [33m=[39m student[33m.[39mid[33m;[39m
+     [90m    |[39m                             [31m[1m^[22m[39m
+     [90m 17 |[39m         [36mconst[39m homework [33m=[39m [36mawait[39m prisma[33m.[39mhomework[33m.[39mfindFirst({ where[33m:[39m { title[33m:[39m [32m"Math Homework Chapter 1"[39m } })[33m;[39m
+     [90m 18 |[39m         homeworkId [33m=[39m homework[33m.[39mid[33m;[39m
+     [90m 19 |[39m     })[33m;[39m[0m
+
+      at Object.id (__tests__/academics.test.js:16:29)
+
+PASS __tests__/observability.test.js
+PASS __tests__/platform-onboarding.test.js
+FAIL src/__tests__/bus_scenario.test.js
+  ● Console
+
+    console.log
+      prisma:error 
+      Invalid `prisma.user.findUnique()` invocation in
+      C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\src\middleware\authMiddleware.js:15:42
+      
+        12 token = req.headers.authorization.split(' ')[1];
+        13 const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        14 
+      → 15 req.user = await prisma.user.findUnique({
+             where: {
+               id: undefined,
+           ?   email?: String,
+           ?   passwordResetToken?: String,
+           ?   AND?: UserWhereInput | UserWhereInput[],
+           ?   OR?: UserWhereInput[],
+           ?   NOT?: UserWhereInput | UserWhereInput[],
+           ?   fullName?: StringFilter | String,
+           ?   phoneNumber?: StringNullableFilter | String | Null,
+           ?   nfc_card_id?: StringNullableFilter | String | Null,
+           ?   password_hash?: StringFilter | String,
+           ?   role?: EnumUserRoleFilter | UserRole,
+           ?   isActive?: BoolFilter | Boolean,
+           ?   emailVerified?: BoolFilter | Boolean,
+           ?   createdAt?: DateTimeFilter | DateTime,
+           ?   schoolId?: StringNullableFilter | String | Null,
+           ?   passwordResetExpires?: DateTimeNullableFilter | DateTime | Null,
+           ?   twoFactorCode?: StringNullableFilter | String | Null,
+           ?   twoFactorCodeExpires?: DateTimeNullableFilter | DateTime | Null,
+           ?   school?: SchoolNullableRelationFilter | SchoolWhereInput | Null,
+           ?   students?: StudentListRelationFilter,
+           ?   teacherAssignments?: TeacherSubjectAssignmentListRelationFilter,
+           ?   subjects?: SubjectListRelationFilter,
+           ?   notificationPreference?: NotificationPreferenceNullableRelationFilter | NotificationPreferenceWhereInput | Null,
+           ?   auditLogs?: AuditLogListRelationFilter,
+           ?   busTrips?: BusTripListRelationFilter,
+           ?   deviceTokens?: DeviceTokenListRelationFilter,
+           ?   timeTableEntries?: TimeTableEntryListRelationFilter,
+           ?   sentMessages?: MessageListRelationFilter,
+           ?   receivedMessages?: MessageListRelationFilter
+             },
+             select: {
+               id: true,
+               email: true,
+               fullName: true,
+               role: true,
+               schoolId: true,
+               isActive: true
+             }
+           })
+      
+      Argument `where` of type UserWhereUniqueInput needs at least one of `id`, `email` or `passwordResetToken` arguments. Available options are marked with ?.
+
+      at Object.rc (node_modules/@prisma/client/runtime/library.js:21:432)
+
+    console.log
+      prisma:error 
+      Invalid `prisma.user.findUnique()` invocation in
+      C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\src\middleware\authMiddleware.js:15:42
+      
+        12 token = req.headers.authorization.split(' ')[1];
+        13 const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        14 
+      → 15 req.user = await prisma.user.findUnique({
+             where: {
+               id: undefined,
+           ?   email?: String,
+           ?   passwordResetToken?: String,
+           ?   AND?: UserWhereInput | UserWhereInput[],
+           ?   OR?: UserWhereInput[],
+           ?   NOT?: UserWhereInput | UserWhereInput[],
+           ?   fullName?: StringFilter | String,
+           ?   phoneNumber?: StringNullableFilter | String | Null,
+           ?   nfc_card_id?: StringNullableFilter | String | Null,
+           ?   password_hash?: StringFilter | String,
+           ?   role?: EnumUserRoleFilter | UserRole,
+           ?   isActive?: BoolFilter | Boolean,
+           ?   emailVerified?: BoolFilter | Boolean,
+           ?   createdAt?: DateTimeFilter | DateTime,
+           ?   schoolId?: StringNullableFilter | String | Null,
+           ?   passwordResetExpires?: DateTimeNullableFilter | DateTime | Null,
+           ?   twoFactorCode?: StringNullableFilter | String | Null,
+           ?   twoFactorCodeExpires?: DateTimeNullableFilter | DateTime | Null,
+           ?   school?: SchoolNullableRelationFilter | SchoolWhereInput | Null,
+           ?   students?: StudentListRelationFilter,
+           ?   teacherAssignments?: TeacherSubjectAssignmentListRelationFilter,
+           ?   subjects?: SubjectListRelationFilter,
+           ?   notificationPreference?: NotificationPreferenceNullableRelationFilter | NotificationPreferenceWhereInput | Null,
+           ?   auditLogs?: AuditLogListRelationFilter,
+           ?   busTrips?: BusTripListRelationFilter,
+           ?   deviceTokens?: DeviceTokenListRelationFilter,
+           ?   timeTableEntries?: TimeTableEntryListRelationFilter,
+           ?   sentMessages?: MessageListRelationFilter,
+           ?   receivedMessages?: MessageListRelationFilter
+             },
+             select: {
+               id: true,
+               email: true,
+               fullName: true,
+               role: true,
+               schoolId: true,
+               isActive: true
+             }
+           })
+      
+      Argument `where` of type UserWhereUniqueInput needs at least one of `id`, `email` or `passwordResetToken` arguments. Available options are marked with ?.
+
+      at Object.rc (node_modules/@prisma/client/runtime/library.js:21:432)
+
+  ● Bus Logistics Integration Test › Full Morning Run Simulation
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 201
+    Received: 401
+
+    [0m [90m 101 |[39m             })[33m;[39m
+     [90m 102 |[39m
+    [31m[1m>[22m[39m[90m 103 |[39m         expect(startRes[33m.[39mstatusCode)[33m.[39mtoBe([35m201[39m)[33m;[39m
+     [90m     |[39m                                     [31m[1m^[22m[39m
+     [90m 104 |[39m         expect(startRes[33m.[39mbody)[33m.[39mtoHaveProperty([32m'id'[39m)[33m;[39m
+     [90m 105 |[39m         expect(startRes[33m.[39mbody[33m.[39mstatus)[33m.[39mtoBe([32m'active'[39m)[33m;[39m
+     [90m 106 |[39m         tripId [33m=[39m startRes[33m.[39mbody[33m.[39mid[33m;[39m[0m
+
+      at Object.toBe (src/__tests__/bus_scenario.test.js:103:37)
+
+  ● Bus Logistics Integration Test › Security Checks: Unauthorized Access
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 403
+    Received: 401
+
+    [0m [90m 169 |[39m             })[33m;[39m
+     [90m 170 |[39m
+    [31m[1m>[22m[39m[90m 171 |[39m         expect(unauthorizedStart[33m.[39mstatusCode)[33m.[39mtoBe([35m403[39m)[33m;[39m
+     [90m     |[39m                                              [31m[1m^[22m[39m
+     [90m 172 |[39m
+     [90m 173 |[39m         [90m// 2. Stranger tries to view student status[39m
+     [90m 174 |[39m         [90m// Create a stranger parent[39m[0m
+
+      at Object.toBe (src/__tests__/bus_scenario.test.js:171:46)
+
+FAIL __tests__/finance.test.js
+  ● Finance & POS Modules › should allow a parent to top up their child wallet
+
+    TypeError: Cannot read properties of null (reading 'id')
+
+    [0m [90m 16 |[39m         adminToken [33m=[39m [36mawait[39m getAuthToken([32m'principal@almustaqbal.com'[39m[33m,[39m [32m'principalpassword'[39m)[33m;[39m
+     [90m 17 |[39m         [36mconst[39m student [33m=[39m [36mawait[39m prisma[33m.[39mstudent[33m.[39mfindFirst({ where[33m:[39m { fullName[33m:[39m [32m"Omar Haddad"[39m } })[33m;[39m
+    [31m[1m>[22m[39m[90m 18 |[39m         studentId [33m=[39m student[33m.[39mid[33m;[39m
+     [90m    |[39m                             [31m[1m^[22m[39m
+     [90m 19 |[39m         [36mconst[39m sandwich [33m=[39m [36mawait[39m prisma[33m.[39mcanteenItem[33m.[39mfindFirst({ where[33m:[39m { name[33m:[39m [32m"Chicken Sandwich"[39m } })[33m;[39m
+     [90m 20 |[39m         sandwichId [33m=[39m sandwich[33m.[39mid[33m;[39m
+     [90m 21 |[39m     })[33m;[39m[0m
+
+      at Object.id (__tests__/finance.test.js:18:29)
+
+  ● Finance & POS Modules › should allow an admin to create a POS order for a student
+
+    TypeError: Cannot read properties of null (reading 'id')
+
+    [0m [90m 16 |[39m         adminToken [33m=[39m [36mawait[39m getAuthToken([32m'principal@almustaqbal.com'[39m[33m,[39m [32m'principalpassword'[39m)[33m;[39m
+     [90m 17 |[39m         [36mconst[39m student [33m=[39m [36mawait[39m prisma[33m.[39mstudent[33m.[39mfindFirst({ where[33m:[39m { fullName[33m:[39m [32m"Omar Haddad"[39m } })[33m;[39m
+    [31m[1m>[22m[39m[90m 18 |[39m         studentId [33m=[39m student[33m.[39mid[33m;[39m
+     [90m    |[39m                             [31m[1m^[22m[39m
+     [90m 19 |[39m         [36mconst[39m sandwich [33m=[39m [36mawait[39m prisma[33m.[39mcanteenItem[33m.[39mfindFirst({ where[33m:[39m { name[33m:[39m [32m"Chicken Sandwich"[39m } })[33m;[39m
+     [90m 20 |[39m         sandwichId [33m=[39m sandwich[33m.[39mid[33m;[39m
+     [90m 21 |[39m     })[33m;[39m[0m
+
+      at Object.id (__tests__/finance.test.js:18:29)
+
+FAIL __tests__/helpers.js
+  ● Test suite failed to run
+
+    Your test suite must contain at least one test.
+
+      at onResult (node_modules/@jest/core/build/index.js:1057:18)
+      at node_modules/@jest/core/build/index.js:1127:165
+      at node_modules/emittery/index.js:363:13
+          at Array.map (<anonymous>)
+      at Emittery.emit (node_modules/emittery/index.js:361:23)
+
+FAIL __tests__/auth.test.js
+  ● Console
+
+    console.log
+      {
+        success: false,
+        error: {
+          message: 'Invalid email or password.',
+          code: 'INVALID_CREDENTIALS'
+        }
+      }
+
+      at Object.log (__tests__/auth.test.js:30:21)
+
+    console.log
+      prisma:error 
+      Invalid `prisma.user.create()` invocation in
+      C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\src\controllers\userController.js:30:43
+      
+        27 const salt = await bcrypt.genSalt(10);
+        28 const hashedPassword = await bcrypt.hash(password, salt);
+        29 
+      → 30 const newUser = await prisma.user.create(
+      Unique constraint failed on the fields: (`email`)
+
+      at Object.rc (node_modules/@prisma/client/runtime/library.js:21:432)
+
+  ● Authentication Endpoints › POST /api/users/login › should log in successfully with correct credentials
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 401
+
+    [0m [90m 28 |[39m                 [33m.[39mpost([32m'/api/users/login'[39m)
+     [90m 29 |[39m                 [33m.[39msend({ email[33m:[39m [32m'jawad.parent@email.com'[39m[33m,[39m password[33m:[39m [32m'parentpassword'[39m })[33m;[39m
+    [31m[1m>[22m[39m[90m 30 |[39m             console[33m.[39mlog(response[33m.[39mbody)[33m;[39m expect(response[33m.[39mstatusCode)[33m.[39mtoBe([35m200[39m)[33m;[39m
+     [90m    |[39m                                                                     [31m[1m^[22m[39m
+     [90m 31 |[39m             expect(response[33m.[39mbody[33m.[39msuccess)[33m.[39mtoBe([36mtrue[39m)[33m;[39m
+     [90m 32 |[39m             expect(response[33m.[39mbody[33m.[39mdata)[33m.[39mtoHaveProperty([32m'token'[39m)[33m;[39m
+     [90m 33 |[39m         })[33m;[39m[0m
+
+      at Object.toBe (__tests__/auth.test.js:30:69)
+
+FAIL __tests__/mvp-smoke.test.js
+  ● Flow 2: Classes CRUD + RBAC › ADMIN can GET /api/school/classes
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+    [0m [90m 116 |[39m             [33m.[39m[36mset[39m([32m'Authorization'[39m[33m,[39m [32m`Bearer ${adminToken}`[39m)[33m;[39m
+     [90m 117 |[39m         expect(res[33m.[39mstatus)[33m.[39mtoBe([35m200[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 118 |[39m         expect([33mArray[39m[33m.[39misArray(res[33m.[39mbody))[33m.[39mtoBe([36mtrue[39m)[33m;[39m
+     [90m     |[39m                                         [31m[1m^[22m[39m
+     [90m 119 |[39m
+     [90m 120 |[39m         [90m// Verify response shape of first class[39m
+     [90m 121 |[39m         [36mif[39m (res[33m.[39mbody[33m.[39mdata[33m.[39mlength [33m>[39m [35m0[39m) {[0m
+
+      at Object.toBe (__tests__/mvp-smoke.test.js:118:41)
+
+  ● Flow 3: Teacher Attendance › TEACHER can GET /api/academics/classes/:classId/students
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+    [0m [90m 286 |[39m             [33m.[39m[36mset[39m([32m'Authorization'[39m[33m,[39m [32m`Bearer ${teacherToken}`[39m)[33m;[39m
+     [90m 287 |[39m         expect(res[33m.[39mstatus)[33m.[39mtoBe([35m200[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 288 |[39m         expect([33mArray[39m[33m.[39misArray(res[33m.[39mbody[33m.[39mdata))[33m.[39mtoBe([36mtrue[39m)[33m;[39m
+     [90m     |[39m                                              [31m[1m^[22m[39m
+     [90m 289 |[39m         [36mif[39m (res[33m.[39mbody[33m.[39mdata[33m.[39mlength [33m>[39m [35m0[39m) {
+     [90m 290 |[39m             [36mconst[39m student [33m=[39m res[33m.[39mbody[33m.[39mdata[[35m0[39m][33m;[39m
+     [90m 291 |[39m             expect(student)[33m.[39mtoHaveProperty([32m'id'[39m)[33m;[39m[0m
+
+      at Object.toBe (__tests__/mvp-smoke.test.js:288:46)
+
+PASS __tests__/golden-path-admin.test.js (8.932 s)
+A worker process has failed to exit gracefully and has been force exited. This is likely caused by tests leaking due to improper teardown. Try running with --detectOpenHandles to find leaks. Active timers can also cause this, ensure that .unref() was called on them.
+
+Test Suites: 6 failed, 14 passed, 20 total
+Tests:       9 failed, 150 passed, 159 total
+Snapshots:   0 total
+Time:        10.192 s, estimated 14 s
+Ran all test suites.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

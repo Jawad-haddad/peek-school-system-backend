@@ -176,11 +176,15 @@ const createPosOrder = async (req, res) => {
 
 const getCanteenItems = async (req, res) => {
     try {
+        const { getPaginationParams } = require('../utils/pagination');
+        const { take, skip, meta } = getPaginationParams(req);
+
         const items = await prisma.canteenItem.findMany({
             where: tenantWhere(req),
+            take, skip,
             orderBy: { name: 'asc' }
         });
-        ok(res, items);
+        ok(res, items, meta);
     } catch (error) {
         logger.error({ error: error.message }, "Error fetching canteen items");
         fail(res, 500, 'Failed to fetch canteen items.', 'SERVER_ERROR');

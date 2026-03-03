@@ -1,6 +1,7 @@
 const prisma = require('../prismaClient');
 const { sendNotification } = require('../services/notificationService');
 const logger = require('../config/logger');
+const { assertTeacherAssignedToSchedule } = require('../utils/teacherScope');
 
 // 1. Exam Management
 
@@ -106,6 +107,15 @@ const submitBulkMarks = async (req, res) => {
 
         if (!schedule) {
             return res.status(404).json({ message: "Exam schedule not found." });
+        }
+
+        // Teacher scope guard: teacher may only submit marks for their assigned class schedules
+        if (req.user && req.user.role === 'teacher') {
+            try {
+                await assertTeacherAssignedToSchedule(req, examScheduleId);
+            } catch (scopeErr) {
+                return res.status(scopeErr.statusCode || 403).json({ success: false, error: { message: scopeErr.message, code: scopeErr.code || 'TEACHER_NOT_ASSIGNED' } });
+            }
         }
 
         const subjectName = schedule.subject.name;

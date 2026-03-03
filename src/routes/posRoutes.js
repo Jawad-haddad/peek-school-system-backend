@@ -11,7 +11,9 @@ const {
   verifyCard
 } = require('../controllers/posController');
 const { UserRole } = require('@prisma/client');
-const { validate, validateParams } = require('../validators/userValidator');
+const { validate, validateQuery, validateParams } = require('../validators/userValidator');
+const { paginationSchema } = require('../utils/pagination');
+const { cachePrivate } = require('../middleware/cacheHeaders');
 const {
   createItemSchema, updateItemSchema, orderSchema,
   idParamSchema, nfcIdParamSchema
@@ -76,8 +78,8 @@ const viewItemsActions = [
  *       "201":
  *         description: Canteen item added successfully
  */
-router.get('/items', viewItemsActions, getCanteenItems);
-router.get('/products', viewItemsActions, getCanteenItems); // Alias for Frontend consistency
+router.get('/items', viewItemsActions, validateQuery(paginationSchema), cachePrivate(30), getCanteenItems);
+router.get('/products', viewItemsActions, validateQuery(paginationSchema), cachePrivate(30), getCanteenItems); // Alias for Frontend consistency
 router.post('/items', adminActions, validate(createItemSchema), addCanteenItem);
 
 /**
