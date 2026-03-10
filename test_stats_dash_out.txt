@@ -1,0 +1,195 @@
+﻿
+Setting up database for the entire test run...
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "school_system", schema "public" at "127.0.0.1:5433"
+
+Applying migration `20250902100144_init`
+Applying migration `20250902231827_add_financial_system`
+Applying migration `20250902235501_add_academic_system`
+Applying migration `20250904141707_add_multitenancy_support`
+Applying migration `20250904142857_fix_schema_relations`
+Applying migration `20250904151253_legendary_blueprint_migration`
+Applying migration `20250905011821_20250905_schema_v2_2`
+Applying migration `20250905161758_legendary_schema_init`
+Applying migration `20250907235246_`
+Applying migration `20250917211023_fix_pos_order_relation_again`
+Applying migration `20250922082644_new_add_phone`
+Applying migration `20250926082318_add_device_tokens`
+Applying migration `20250929051955_add_exams_module`
+Applying migration `20250929060115_add_timetable_module`
+Applying migration `20250929084019_add_2fa_fields`
+Applying migration `20251006061641_add_2fa_fields`
+Applying migration `20260214053318_fix_nfc_multi_tenancy`
+Applying migration `20260224093119_sync_schema_nfc`
+
+Database reset successful
+
+The following migration(s) have been applied:
+
+migrations/
+  ΓööΓöÇ 20250902100144_init/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250902231827_add_financial_system/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250902235501_add_academic_system/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250904141707_add_multitenancy_support/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250904142857_fix_schema_relations/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250904151253_legendary_blueprint_migration/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250905011821_20250905_schema_v2_2/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250905161758_legendary_schema_init/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250907235246_/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250917211023_fix_pos_order_relation_again/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250922082644_new_add_phone/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250926082318_add_device_tokens/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250929051955_add_exams_module/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250929060115_add_timetable_module/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250929084019_add_2fa_fields/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20251006061641_add_2fa_fields/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20260214053318_fix_nfc_multi_tenancy/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20260224093119_sync_schema_nfc/
+    ΓööΓöÇ migration.sql
+
+Running generate... (Use --skip-generate to skip the generators)
+[2K[1A[2K[GRunning generate... - Prisma Client
+[2K[1A[2K[GEPERM: operation not permitted, unlink 
+'C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backen
+d-main\node_modules\.prisma\client\query_engine-windows.dll.node'
+
+Running seed command `node prisma/seed.js` ...
+--- Start Seeding for Peek Demo (Golden Path) ---
+--- Database Cleared ---
+Created School: Peek Kindergarten
+--- Seeding Completed Successfully ---
+
+=== PEEK MVP DEMO DATA MAP ===
+School:       Peek Kindergarten (ID: 25b2e697-6af7-432c-bd43-29994591b2e0)
+Academy Year: 2025-2026 (ID: 1b3d83b7-3661-40b9-8759-cb7f3f49f315)
+Class:        Class A (ID: f467195f-b3fa-450e-b85b-7bd0c19ce82e)
+Subject 1:    Math (ID: 188f1778-5900-4f6d-b472-9012034a8884)
+Subject 2:    Art (ID: 850927fe-413c-47c6-89c5-7e253bbb80d2)
+Student:      Leo Messi (ID: adaec796-a70e-43b2-a9a4-7c2d50bf6b7b | NFC: A1B2C3D4E5)
+
+=== DEMO LOGIN CREDENTIALS ===
+All Passwords: password123
+ADMIN   (School Admin): admin@peek.com
+TEACHER (Assigned):     teacher@peek.com
+PARENT  (1 Student):    parent@peek.com
+===================================
+
+
+The seed command has been executed.
+
+Database setup complete.
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "school_system", schema "public" at "localhost:32773"
+
+Your database is now in sync with your Prisma schema. Done in 551ms
+
+[2026-03-10 03:06:23.768 +0300] [33mWARN[39m: [36mTwilio credentials not configured. SMS features disabled.[39m
+[2026-03-10 03:06:23.835 +0300] [32mINFO[39m: [36mLoading Firebase credentials from local file...[39m
+[2026-03-10 03:06:23.868 +0300] [32mINFO[39m: [36mFirebase Admin SDK initialized successfully.[39m
+[2026-03-10 03:06:24.267 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "super.1773101184133@test.com"
+[2026-03-10 03:06:24.272 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "super.1773101184133@test.com"
+    [35mfound[39m: true
+[2026-03-10 03:06:24.335 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "super.1773101184133@test.com"
+    [35mmatch[39m: true
+[2026-03-10 03:06:24.335 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "super.1773101184133@test.com"
+    [35mrole[39m: "super_admin"
+    [35mmappedRole[39m: "SUPER_ADMIN"
+[2026-03-10 03:06:24.336 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "7d36ab62-9b93-4399-a2d4-b074970eaef5"
+    [35memail[39m: "super.1773101184133@test.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-10 03:06:24.339 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mduration[39m: "85ms"
+[2026-03-10 03:06:24.428 +0300] [32mINFO[39m: [36mSchool successfully onboarded via platform.[39m
+    [35maction[39m: "onboard_school"
+    [35mschoolId[39m: "0ea50882-1664-41fb-87c7-b8cecd62e774"
+    [35madminId[39m: "72e90d00-cb5e-4fd0-ac0c-24070ead6521"
+[2026-03-10 03:06:24.429 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/platform/onboard-school"
+    [35mstatus[39m: 200
+    [35mduration[39m: "83ms"
+[2026-03-10 03:06:24.438 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "admin.stats.1773101179199@test.com"
+[2026-03-10 03:06:24.441 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "admin.stats.1773101179199@test.com"
+    [35mfound[39m: true
+[2026-03-10 03:06:24.506 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "admin.stats.1773101179199@test.com"
+    [35mmatch[39m: true
+[2026-03-10 03:06:24.506 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "admin.stats.1773101179199@test.com"
+    [35mrole[39m: "school_admin"
+    [35mmappedRole[39m: "ADMIN"
+[2026-03-10 03:06:24.506 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "72e90d00-cb5e-4fd0-ac0c-24070ead6521"
+    [35memail[39m: "admin.stats.1773101179199@test.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-10 03:06:24.507 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mduration[39m: "72ms"
+[2026-03-10 03:06:24.609 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/school/students"
+    [35mstatus[39m: 201
+    [35mduration[39m: "96ms"
+[2026-03-10 03:06:24.642 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api/dashboard/admin-stats"
+    [35mstatus[39m: 200
+    [35mduration[39m: "28ms"
+node.exe : PASS 
+__tests__/stats-student-count.test.js 
+(6.774 s)
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" 
+"C:\Users\Pc\AppData\Roaming\npm ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecif 
+   ied: (PASS __tests__/...st.js (6.77  
+  4 s):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCom 
+   mandError
+ 
+  Stats: Student Count Bug
+    ΓêÜ Dashboard stats endpoint should 
+return accurate enrolled student count 
+(135 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        6.835 s, estimated 8 s
+Ran all test suites matching 
+__tests__/stats-student-count.test.js.

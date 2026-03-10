@@ -1,0 +1,2 @@
+STATUS: 400
+BODY: {"success":false,"error":{"message":"Validation failed","code":"VALIDATION_ERROR","details":[{"field":"classId","message":"Invalid basic class format (UUID expected)"}]}}

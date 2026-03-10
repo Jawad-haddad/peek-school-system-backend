@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest",
     "test:golden": "jest __tests__/golden-path-admin.test.js --runInBand",
+    "test:golden:parent": "jest __tests__/golden-path-parent.test.js --runInBand",
     "test:smoke": "jest __tests__/mvp-smoke.test.js --globalSetup=./jest.setup.js --forceExit --detectOpenHandles",
     "smoke:test": "node scripts/smoke-test.js",
     "start": "node server.js",

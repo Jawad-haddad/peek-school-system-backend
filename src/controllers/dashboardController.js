@@ -11,8 +11,12 @@ const getAdminStats = async (req, res) => {
     try {
         // Run all database queries in parallel for maximum efficiency
         const [studentCount, teacherCount, totalRevenue, classCount] = await Promise.all([
-            // Count total students in the school
-            prisma.student.count({ where: { schoolId } }),
+            // Count total students enrolled across active classes in the school
+            prisma.studentEnrollment.findMany({
+                where: { academicYear: { schoolId, current: true } },
+                distinct: ['studentId'],
+                select: { studentId: true }
+            }).then(enrollments => enrollments.length),
 
             // Count total teachers in the school
             prisma.user.count({ where: { schoolId, role: 'teacher' } }),

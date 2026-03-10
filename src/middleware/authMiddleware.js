@@ -56,7 +56,7 @@ const hasRole = (roles) => (req, res, next) => {
 const belongsToSchool = (req, res, next) => {
     if (req.user.role !== 'super_admin' && !req.user.schoolId) {
         logger.warn({ userId: req.user.id }, "Forbidden: User is not assigned to a school.");
-        return fail(res, 403, 'Forbidden: You are not assigned to a school.', 'FORBIDDEN');
+        return fail(res, 403, 'Forbidden: You are not assigned to a school.', 'FORBIDDEN_NO_SCHOOL');
     }
     next();
 }

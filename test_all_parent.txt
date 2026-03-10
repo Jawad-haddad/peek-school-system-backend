@@ -1,0 +1,308 @@
+﻿
+Setting up database for the entire test run...
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "school_system", schema "public" at "127.0.0.1:5433"
+
+Applying migration `20250902100144_init`
+Applying migration `20250902231827_add_financial_system`
+Applying migration `20250902235501_add_academic_system`
+Applying migration `20250904141707_add_multitenancy_support`
+Applying migration `20250904142857_fix_schema_relations`
+Applying migration `20250904151253_legendary_blueprint_migration`
+Applying migration `20250905011821_20250905_schema_v2_2`
+Applying migration `20250905161758_legendary_schema_init`
+Applying migration `20250907235246_`
+Applying migration `20250917211023_fix_pos_order_relation_again`
+Applying migration `20250922082644_new_add_phone`
+Applying migration `20250926082318_add_device_tokens`
+Applying migration `20250929051955_add_exams_module`
+Applying migration `20250929060115_add_timetable_module`
+Applying migration `20250929084019_add_2fa_fields`
+Applying migration `20251006061641_add_2fa_fields`
+Applying migration `20260214053318_fix_nfc_multi_tenancy`
+Applying migration `20260224093119_sync_schema_nfc`
+
+Database reset successful
+
+The following migration(s) have been applied:
+
+migrations/
+  ΓööΓöÇ 20250902100144_init/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250902231827_add_financial_system/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250902235501_add_academic_system/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250904141707_add_multitenancy_support/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250904142857_fix_schema_relations/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250904151253_legendary_blueprint_migration/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250905011821_20250905_schema_v2_2/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250905161758_legendary_schema_init/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250907235246_/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250917211023_fix_pos_order_relation_again/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250922082644_new_add_phone/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250926082318_add_device_tokens/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250929051955_add_exams_module/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250929060115_add_timetable_module/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250929084019_add_2fa_fields/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20251006061641_add_2fa_fields/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20260214053318_fix_nfc_multi_tenancy/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20260224093119_sync_schema_nfc/
+    ΓööΓöÇ migration.sql
+
+Running generate... (Use --skip-generate to skip the generators)
+[2K[1A[2K[GRunning generate... - Prisma Client
+[2K[1A[2K[GΓ£ö Generated Prisma Client (v5.19.1) to .\node_modules\@prisma\client in 182ms
+
+Running seed command `node prisma/seed.js` ...
+--- Start Seeding for Peek Demo (Golden Path) ---
+--- Database Cleared ---
+Created School: Peek Kindergarten
+--- Seeding Completed Successfully ---
+
+=== PEEK MVP DEMO DATA MAP ===
+School:       Peek Kindergarten (ID: 7ca31e74-8ef4-41c1-8f7a-55ac74cdcf4a)
+Academy Year: 2025-2026 (ID: cf1c65f5-8028-416a-97e1-a5320b1335e8)
+Class:        Class A (ID: 0a64ccd8-f9af-4e4e-b040-f878df4c53b0)
+Subject 1:    Math (ID: e42e0052-b86f-47aa-8a46-3f6aa0feb019)
+Subject 2:    Art (ID: 08801582-7f02-444e-ac1d-6bc1e1c2e276)
+Student:      Leo Messi (ID: 4c1bec92-8190-4fee-b674-936383eb3ec6 | NFC: A1B2C3D4E5)
+
+=== DEMO LOGIN CREDENTIALS ===
+All Passwords: password123
+ADMIN   (School Admin): admin@peek.com
+TEACHER (Assigned):     teacher@peek.com
+PARENT  (1 Student):    parent@peek.com
+===================================
+
+
+The seed command has been executed.
+
+Database setup complete.
+[2026-03-10 02:19:31.485 +0300] [33mWARN[39m: [36mTwilio credentials not configured. SMS features disabled.[39m
+[2026-03-10 02:19:31.549 +0300] [32mINFO[39m: [36mLoading Firebase credentials from local file...[39m
+[2026-03-10 02:19:31.584 +0300] [32mINFO[39m: [36mFirebase Admin SDK initialized successfully.[39m
+[2026-03-10 02:19:31.910 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "parent@peek.com"
+[2026-03-10 02:19:31.927 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "parent@peek.com"
+    [35mfound[39m: true
+[2026-03-10 02:19:31.997 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "parent@peek.com"
+    [35mmatch[39m: true
+[2026-03-10 02:19:31.997 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "parent@peek.com"
+    [35mrole[39m: "parent"
+    [35mmappedRole[39m: "PARENT"
+[2026-03-10 02:19:31.999 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "d5d73690-2746-4c99-b911-ae245f1fef7b"
+    [35memail[39m: "parent@peek.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-10 02:19:32.003 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mduration[39m: "111ms"
+[2026-03-10 02:19:32.014 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "teacher@peek.com"
+[2026-03-10 02:19:32.016 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "teacher@peek.com"
+    [35mfound[39m: true
+[2026-03-10 02:19:32.083 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "teacher@peek.com"
+    [35mmatch[39m: true
+[2026-03-10 02:19:32.083 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "teacher@peek.com"
+    [35mrole[39m: "teacher"
+    [35mmappedRole[39m: "TEACHER"
+[2026-03-10 02:19:32.084 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "1b8a9482-4b6e-44b1-8e13-cb57a7e707c4"
+    [35memail[39m: "teacher@peek.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-10 02:19:32.085 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mduration[39m: "73ms"
+[2026-03-10 02:19:32.093 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "admin@peek.com"
+[2026-03-10 02:19:32.096 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "admin@peek.com"
+    [35mfound[39m: true
+[2026-03-10 02:19:32.164 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "admin@peek.com"
+    [35mmatch[39m: true
+[2026-03-10 02:19:32.164 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "admin@peek.com"
+    [35mrole[39m: "school_admin"
+    [35mmappedRole[39m: "ADMIN"
+[2026-03-10 02:19:32.164 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "a8eb6f77-ebd2-45e1-9d54-cecfc2e7937c"
+    [35memail[39m: "admin@peek.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-10 02:19:32.165 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mduration[39m: "73ms"
+[2026-03-10 02:19:32.210 +0300] [32mINFO[39m: [36mBulk attendance submitted successfully[39m
+    [35mclassId[39m: "0a64ccd8-f9af-4e4e-b040-f878df4c53b0"
+    [35mdate[39m: "2026-03-09"
+    [35mcount[39m: 1
+    [35muserId[39m: "1b8a9482-4b6e-44b1-8e13-cb57a7e707c4"
+    [35mschoolId[39m: "7ca31e74-8ef4-41c1-8f7a-55ac74cdcf4a"
+    [35maudit[39m: true
+    [35maction[39m: "ATTENDANCE_BULK_SUBMIT"
+[2026-03-10 02:19:32.211 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/attendance/bulk"
+    [35mstatus[39m: 200
+    [35mduration[39m: "29ms"
+[2026-03-10 02:19:32.231 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api/parent/attendance/4c1bec92-8190-4fee-b674-936383eb3ec6"
+    [35mstatus[39m: 200
+    [35mduration[39m: "11ms"
+[2026-03-10 02:19:32.319 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api/parent/attendance/6b2a8c0e-f2b9-41fd-8d8a-b4329acc856a"
+    [35mstatus[39m: 403
+    [35mduration[39m: "5ms"
+[2026-03-10 02:19:32.345 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api/parent/attendance/00000000-0000-0000-0000-000000000000"
+    [35mstatus[39m: 404
+    [35mduration[39m: "5ms"
+node.exe : PASS 
+__tests__/parent-attendance.test.js
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" 
+"C:\Users\Pc\AppData\Roaming\npm ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecif 
+   ied: (PASS __tests__/parent-attenda  
+  nce.test.js:String) [], RemoteExcep   
+ tion
+    + FullyQualifiedErrorId : NativeCom 
+   mandError
+ 
+[2026-03-10 02:19:32.518 +0300] [33mWARN[39m: [36mTwilio credentials not configured. SMS features disabled.[39m
+[2026-03-10 02:19:32.540 +0300] [32mINFO[39m: [36mLoading Firebase credentials from local file...[39m
+[2026-03-10 02:19:32.551 +0300] [32mINFO[39m: [36mFirebase Admin SDK initialized successfully.[39m
+[2026-03-10 02:19:32.666 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "parent@peek.com"
+[2026-03-10 02:19:32.682 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "parent@peek.com"
+    [35mfound[39m: true
+[2026-03-10 02:19:32.748 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "parent@peek.com"
+    [35mmatch[39m: true
+[2026-03-10 02:19:32.748 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "parent@peek.com"
+    [35mrole[39m: "parent"
+    [35mmappedRole[39m: "PARENT"
+[2026-03-10 02:19:32.748 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "d5d73690-2746-4c99-b911-ae245f1fef7b"
+    [35memail[39m: "parent@peek.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-10 02:19:32.749 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mduration[39m: "92ms"
+[2026-03-10 02:19:32.758 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "teacher@peek.com"
+[2026-03-10 02:19:32.760 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "teacher@peek.com"
+    [35mfound[39m: true
+[2026-03-10 02:19:32.826 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "teacher@peek.com"
+    [35mmatch[39m: true
+[2026-03-10 02:19:32.826 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "teacher@peek.com"
+    [35mrole[39m: "teacher"
+    [35mmappedRole[39m: "TEACHER"
+[2026-03-10 02:19:32.826 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "1b8a9482-4b6e-44b1-8e13-cb57a7e707c4"
+    [35memail[39m: "teacher@peek.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-10 02:19:32.827 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mduration[39m: "71ms"
+[2026-03-10 02:19:32.835 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "admin@peek.com"
+[2026-03-10 02:19:32.837 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "admin@peek.com"
+    [35mfound[39m: true
+[2026-03-10 02:19:32.901 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "admin@peek.com"
+    [35mmatch[39m: true
+[2026-03-10 02:19:32.901 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "admin@peek.com"
+    [35mrole[39m: "school_admin"
+    [35mmappedRole[39m: "ADMIN"
+[2026-03-10 02:19:32.901 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "a8eb6f77-ebd2-45e1-9d54-cecfc2e7937c"
+    [35memail[39m: "admin@peek.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-10 02:19:32.902 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mduration[39m: "69ms"
+[2026-03-10 02:19:32.919 +0300] [33mWARN[39m: [36mForbidden: User is not assigned to a school.[39m
+    [35muserId[39m: "d5d73690-2746-4c99-b911-ae245f1fef7b"
+[2026-03-10 02:19:32.921 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api/academics/homework?classId=0a64ccd8-f9af-4e4e-b040-f878df4c53b0"
+    [35mstatus[39m: 403
+    [35mduration[39m: "5ms"
+[2026-03-10 02:19:32.939 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api/parent/invoices/4c1bec92-8190-4fee-b674-936383eb3ec6"
+    [35mstatus[39m: 200
+    [35mduration[39m: "10ms"
+[2026-03-10 02:19:33.024 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api/parent/invoices/3570cd00-710f-4b1d-806a-2d76c6112d43"
+    [35mstatus[39m: 403
+    [35mduration[39m: "5ms"
+[2026-03-10 02:19:33.050 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api/parent/invoices/00000000-0000-0000-0000-000000000000"
+    [35mstatus[39m: 404
+    [35mduration[39m: "5ms"
+PASS __tests__/parent-security-invoices.
+test.js
+
+Test Suites: 2 passed, 2 total
+Tests:       7 passed, 7 total
+Snapshots:   0 total
+Time:        2.132 s
+Ran all test suites matching __tests__/p
+arent-attendance.test.js|__tests__/paren
+t-security-invoices.test.js.

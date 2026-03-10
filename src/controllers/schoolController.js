@@ -3,7 +3,7 @@ const prisma = require('../prismaClient');
 const logger = require('../config/logger');
 const { UserRole } = require('@prisma/client');
 const { ok, fail } = require('../utils/response');
-const { tenantWhere, assertTenantEntity } = require('../utils/tenant');
+const { getTenant, tenantWhere, assertTenantEntity } = require('../utils/tenant');
 // === SUPER ADMIN CONTROLLERS ===
 const createSchool = async (req, res) => {
     const { name, address } = req.body;
@@ -159,9 +159,14 @@ const createStudent = async (req, res) => {
     }
 
     try {
-        const targetClass = await prisma.class.findUnique({ where: { id: classId } });
+        const targetClass = await prisma.class.findFirst({
+            where: {
+                id: classId,
+                academicYear: { schoolId }
+            }
+        });
         if (!targetClass) {
-            return fail(res, 404, 'Class not found.', 'NOT_FOUND');
+            return fail(res, 404, 'Class not found in your school.', 'NOT_FOUND');
         }
 
         const studentFee = fee ? parseFloat(fee) : parseFloat(targetClass.defaultFee || 0);

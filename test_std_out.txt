@@ -1,0 +1,169 @@
+﻿
+Setting up database for the entire test run...
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "school_system", schema "public" at "127.0.0.1:5433"
+
+Applying migration `20250902100144_init`
+Applying migration `20250902231827_add_financial_system`
+Applying migration `20250902235501_add_academic_system`
+Applying migration `20250904141707_add_multitenancy_support`
+Applying migration `20250904142857_fix_schema_relations`
+Applying migration `20250904151253_legendary_blueprint_migration`
+Applying migration `20250905011821_20250905_schema_v2_2`
+Applying migration `20250905161758_legendary_schema_init`
+Applying migration `20250907235246_`
+Applying migration `20250917211023_fix_pos_order_relation_again`
+Applying migration `20250922082644_new_add_phone`
+Applying migration `20250926082318_add_device_tokens`
+Applying migration `20250929051955_add_exams_module`
+Applying migration `20250929060115_add_timetable_module`
+Applying migration `20250929084019_add_2fa_fields`
+Applying migration `20251006061641_add_2fa_fields`
+Applying migration `20260214053318_fix_nfc_multi_tenancy`
+Applying migration `20260224093119_sync_schema_nfc`
+
+Database reset successful
+
+The following migration(s) have been applied:
+
+migrations/
+  ΓööΓöÇ 20250902100144_init/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250902231827_add_financial_system/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250902235501_add_academic_system/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250904141707_add_multitenancy_support/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250904142857_fix_schema_relations/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250904151253_legendary_blueprint_migration/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250905011821_20250905_schema_v2_2/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250905161758_legendary_schema_init/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250907235246_/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250917211023_fix_pos_order_relation_again/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250922082644_new_add_phone/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250926082318_add_device_tokens/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250929051955_add_exams_module/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250929060115_add_timetable_module/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250929084019_add_2fa_fields/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20251006061641_add_2fa_fields/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20260214053318_fix_nfc_multi_tenancy/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20260224093119_sync_schema_nfc/
+    ΓööΓöÇ migration.sql
+
+Running generate... (Use --skip-generate to skip the generators)
+[2K[1A[2K[GRunning generate... - Prisma Client
+[2K[1A[2K[GEPERM: operation not permitted, unlink 
+'C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backen
+d-main\node_modules\.prisma\client\query_engine-windows.dll.node'
+
+Running seed command `node prisma/seed.js` ...
+--- Start Seeding for Peek Demo (Golden Path) ---
+--- Database Cleared ---
+Created School: Peek Kindergarten
+--- Seeding Completed Successfully ---
+
+=== PEEK MVP DEMO DATA MAP ===
+School:       Peek Kindergarten (ID: a92af7b6-ea14-417a-b86f-53553b3583f6)
+Academy Year: 2025-2026 (ID: ca7272ba-7484-4ce5-91f2-e87cda52d04a)
+Class:        Class A (ID: a8dfe84a-8f14-46c8-94c6-96cd3c980d60)
+Subject 1:    Math (ID: ffa9a14d-183f-4ac8-b2f0-ee4bb4f98cc4)
+Subject 2:    Art (ID: 83469c2e-4742-4b38-86e3-73a55aec5fcd)
+Student:      Leo Messi (ID: 1270f742-9a46-4178-bcd7-59ca78aad00c | NFC: A1B2C3D4E5)
+
+=== DEMO LOGIN CREDENTIALS ===
+All Passwords: password123
+ADMIN   (School Admin): admin@peek.com
+TEACHER (Assigned):     teacher@peek.com
+PARENT  (1 Student):    parent@peek.com
+===================================
+
+
+The seed command has been executed.
+
+Database setup complete.
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "school_system", schema "public" at "localhost:32781"
+
+Your database is now in sync with your Prisma schema. Done in 691ms
+
+[2026-03-10 03:28:14.445 +0300] [33mWARN[39m: [36mTwilio credentials not configured. SMS features disabled.[39m
+[2026-03-10 03:28:14.536 +0300] [32mINFO[39m: [36mLoading Firebase credentials from local file...[39m
+[2026-03-10 03:28:14.587 +0300] [32mINFO[39m: [36mFirebase Admin SDK initialized successfully.[39m
+[2026-03-10 03:28:15.118 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/auth/login"
+    [35mstatus[39m: 400
+    [35mduration[39m: "25ms"
+node.exe : FAIL __tests__/regression-cre
+ate-student-route.test.js (8.362 s)
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" 
+"C:\Users\Pc\AppData\Roaming\npm ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecif 
+   ied: (FAIL __tests__/...st.js (8.36  
+  2 s):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCom 
+   mandError
+ 
+  Regression: POST /api/school/students 
+404
+    ├ù Should return 201 when creating 
+a student (2 ms)
+
+  ΓùÅ Regression: POST 
+/api/school/students 404 ΓÇ║ Should 
+return 201 when creating a student
+
+    TypeError: Cannot read properties 
+of undefined (reading 'token')
+
+    [0m [90m 36 |[39m
+     [90m 37 |[39m     
+[36mconst[39m saLogin [33m=[39m 
+[36mawait[39m request(app)[33m.[39mp
+ost([32m'/api/auth/login'[39m)[33m.[
+39msend({ email[33m:[39m 
+superAdmin[33m.[39memail[33m,[39m 
+password[33m:[39m [32m'pass'[39m 
+})[33m;[39m
+    [31m[1m>[22m[39m[90m 38 |[39m 
+    [36mconst[39m saToken [33m=[39m 
+saLogin[33m.[39mbody[33m.[39mdata[3
+3m.[39mtoken[33m;[39m
+     [90m    |[39m                    
+                   [31m[1m^[22m[39m
+     [90m 39 |[39m
+     [90m 40 |[39m     
+[36mconst[39m onboardRes [33m=[39m 
+[36mawait[39m request(app)
+     [90m 41 |[39m         [33m.[39m
+post([32m'/api/platform/onboard-school'
+[39m)[0m
+
+      at Object.token (__tests__/regress
+ion-create-student-route.test.js:38:39)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        8.438 s
+Ran all test suites matching __tests__/r
+egression-create-student-route.test.js.

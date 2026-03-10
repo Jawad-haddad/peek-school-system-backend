@@ -1,0 +1,153 @@
+﻿
+Setting up database for the entire test run...
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "school_system", schema "public" at "127.0.0.1:5433"
+
+Applying migration `20250902100144_init`
+Applying migration `20250902231827_add_financial_system`
+Applying migration `20250902235501_add_academic_system`
+Applying migration `20250904141707_add_multitenancy_support`
+Applying migration `20250904142857_fix_schema_relations`
+Applying migration `20250904151253_legendary_blueprint_migration`
+Applying migration `20250905011821_20250905_schema_v2_2`
+Applying migration `20250905161758_legendary_schema_init`
+Applying migration `20250907235246_`
+Applying migration `20250917211023_fix_pos_order_relation_again`
+Applying migration `20250922082644_new_add_phone`
+Applying migration `20250926082318_add_device_tokens`
+Applying migration `20250929051955_add_exams_module`
+Applying migration `20250929060115_add_timetable_module`
+Applying migration `20250929084019_add_2fa_fields`
+Applying migration `20251006061641_add_2fa_fields`
+Applying migration `20260214053318_fix_nfc_multi_tenancy`
+Applying migration `20260224093119_sync_schema_nfc`
+
+Database reset successful
+
+The following migration(s) have been applied:
+
+migrations/
+  ΓööΓöÇ 20250902100144_init/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250902231827_add_financial_system/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250902235501_add_academic_system/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250904141707_add_multitenancy_support/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250904142857_fix_schema_relations/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250904151253_legendary_blueprint_migration/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250905011821_20250905_schema_v2_2/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250905161758_legendary_schema_init/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250907235246_/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250917211023_fix_pos_order_relation_again/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250922082644_new_add_phone/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250926082318_add_device_tokens/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250929051955_add_exams_module/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250929060115_add_timetable_module/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20250929084019_add_2fa_fields/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20251006061641_add_2fa_fields/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20260214053318_fix_nfc_multi_tenancy/
+    ΓööΓöÇ migration.sql
+  ΓööΓöÇ 20260224093119_sync_schema_nfc/
+    ΓööΓöÇ migration.sql
+
+Running generate... (Use --skip-generate to skip the generators)
+[2K[1A[2K[GRunning generate... - Prisma Client
+[2K[1A[2K[GEPERM: operation not permitted, unlink 
+'C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backen
+d-main\node_modules\.prisma\client\query_engine-windows.dll.node'
+
+Running seed command `node prisma/seed.js` ...
+--- Start Seeding for Peek Demo (Golden Path) ---
+--- Database Cleared ---
+Created School: Peek Kindergarten
+--- Seeding Completed Successfully ---
+
+=== PEEK MVP DEMO DATA MAP ===
+School:       Peek Kindergarten (ID: 759c7a41-6b1b-4946-b878-1bb826cbc235)
+Academy Year: 2025-2026 (ID: d7d21b26-a07b-4859-ac42-da87b6f25145)
+Class:        Class A (ID: 719fa57d-0663-4920-9f26-4a546685d567)
+Subject 1:    Math (ID: 8bcda37b-1fdc-40cf-9a2a-2de0248629be)
+Subject 2:    Art (ID: b650f24b-6790-4843-93f2-271589b441b0)
+Student:      Leo Messi (ID: 10a35e4b-f183-489e-9cde-2c385548fa4d | NFC: A1B2C3D4E5)
+
+=== DEMO LOGIN CREDENTIALS ===
+All Passwords: password123
+ADMIN   (School Admin): admin@peek.com
+TEACHER (Assigned):     teacher@peek.com
+PARENT  (1 Student):    parent@peek.com
+===================================
+
+
+The seed command has been executed.
+
+Database setup complete.
+[2026-03-10 02:44:03.876 +0300] [33mWARN[39m: [36mTwilio credentials not configured. SMS features disabled.[39m
+[2026-03-10 02:44:04.009 +0300] [32mINFO[39m: [36mLoading Firebase credentials from local file...[39m
+[2026-03-10 02:44:04.041 +0300] [32mINFO[39m: [36mFirebase Admin SDK initialized successfully.[39m
+[2026-03-10 02:44:04.427 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "admin@peek.com"
+[2026-03-10 02:44:04.446 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "admin@peek.com"
+    [35mfound[39m: true
+[2026-03-10 02:44:04.516 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "admin@peek.com"
+    [35mmatch[39m: true
+[2026-03-10 02:44:04.517 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "admin@peek.com"
+    [35mrole[39m: "school_admin"
+    [35mmappedRole[39m: "ADMIN"
+[2026-03-10 02:44:04.519 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "fec85567-8baa-4035-be87-89a0d8721e6e"
+    [35memail[39m: "admin@peek.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-10 02:44:04.523 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mduration[39m: "119ms"
+[2026-03-10 02:44:04.566 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api/school/classes"
+    [35mstatus[39m: 200
+    [35mduration[39m: "29ms"
+node.exe : PASS __tests__/regression-get
+Tenant-crash.test.js
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" 
+"C:\Users\Pc\AppData\Roaming\npm ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : 
+NotSpecified: (    PASS 
+__tests__/...t-crash.test.js:String)    
+ [], RemoteException
+    + FullyQualifiedErrorId : 
+NativeCommandEr    ror
+ 
+  Regression: getTenant crash on 
+classes fetch
+    ΓêÜ GET /api/school/classes returns 
+200 (not crash) (44 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        1.516 s
+Ran all test suites matching __tests__/r
+egression-getTenant-crash.test.js.

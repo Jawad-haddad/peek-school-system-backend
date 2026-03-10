@@ -1,0 +1,167 @@
+﻿Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "school_system", schema "public" at "localhost:32769"
+
+Your database is now in sync with your Prisma schema. Done in 552ms
+
+[2026-03-10 02:28:26.408 +0300] [33mWARN[39m: [36mTwilio credentials not configured. SMS features disabled.[39m
+[2026-03-10 02:28:26.517 +0300] [32mINFO[39m: [36mLoading Firebase credentials from local file...[39m
+[2026-03-10 02:28:26.551 +0300] [32mINFO[39m: [36mFirebase Admin SDK initialized successfully.[39m
+[2026-03-10 02:28:27.094 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "super.parent.1773098901360@test.com"
+[2026-03-10 02:28:27.096 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "super.parent.1773098901360@test.com"
+    [35mfound[39m: true
+[2026-03-10 02:28:27.162 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "super.parent.1773098901360@test.com"
+    [35mmatch[39m: true
+[2026-03-10 02:28:27.162 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "super.parent.1773098901360@test.com"
+    [35mrole[39m: "super_admin"
+    [35mmappedRole[39m: "SUPER_ADMIN"
+[2026-03-10 02:28:27.163 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "029de5ac-616a-4a9c-8248-1ae12bf02f4d"
+    [35memail[39m: "super.parent.1773098901360@test.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-10 02:28:27.165 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mduration[39m: "81ms"
+[2026-03-10 02:28:27.258 +0300] [32mINFO[39m: [36mSchool successfully onboarded via platform.[39m
+    [35maction[39m: "onboard_school"
+    [35mschoolId[39m: "f0b1b5e8-0414-448b-9893-a30fbdd7b2e6"
+    [35madminId[39m: "3ec867c3-ad72-4d45-9403-f560f6f5c601"
+[2026-03-10 02:28:27.259 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/platform/onboard-school"
+    [35mstatus[39m: 200
+    [35mduration[39m: "88ms"
+[2026-03-10 02:28:27.262 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "admin.parent.1773098901360@test.com"
+[2026-03-10 02:28:27.264 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "admin.parent.1773098901360@test.com"
+    [35mfound[39m: true
+[2026-03-10 02:28:27.329 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "admin.parent.1773098901360@test.com"
+    [35mmatch[39m: true
+[2026-03-10 02:28:27.329 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "admin.parent.1773098901360@test.com"
+    [35mrole[39m: "school_admin"
+    [35mmappedRole[39m: "ADMIN"
+[2026-03-10 02:28:27.329 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "3ec867c3-ad72-4d45-9403-f560f6f5c601"
+    [35memail[39m: "admin.parent.1773098901360@test.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-10 02:28:27.330 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mduration[39m: "68ms"
+[2026-03-10 02:28:27.427 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/school/students"
+    [35mstatus[39m: 201
+    [35mduration[39m: "95ms"
+[2026-03-10 02:28:27.445 +0300] [32mINFO[39m: [36mBulk attendance submitted successfully[39m
+    [35mclassId[39m: "e88d2e0c-5480-463b-a970-67fcbbc4135e"
+    [35mdate[39m: "2026-03-09"
+    [35mcount[39m: 1
+    [35muserId[39m: "3ec867c3-ad72-4d45-9403-f560f6f5c601"
+    [35mschoolId[39m: "f0b1b5e8-0414-448b-9893-a30fbdd7b2e6"
+    [35maudit[39m: true
+    [35maction[39m: "ATTENDANCE_BULK_SUBMIT"
+[2026-03-10 02:28:27.446 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/attendance/bulk"
+    [35mstatus[39m: 200
+    [35mduration[39m: "12ms"
+[2026-03-10 02:28:27.450 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "parent.golden.1773098907331@test.com"
+[2026-03-10 02:28:27.454 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "parent.golden.1773098907331@test.com"
+    [35mfound[39m: true
+[2026-03-10 02:28:27.521 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "parent.golden.1773098907331@test.com"
+    [35mmatch[39m: true
+[2026-03-10 02:28:27.522 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "parent.golden.1773098907331@test.com"
+    [35mrole[39m: "parent"
+    [35mmappedRole[39m: "PARENT"
+[2026-03-10 02:28:27.522 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "015b523f-2daf-4325-ab9c-f7faeb5295f0"
+    [35memail[39m: "parent.golden.1773098907331@test.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-10 02:28:27.522 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mduration[39m: "73ms"
+[2026-03-10 02:28:27.543 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api/students/my-children"
+    [35mstatus[39m: 200
+    [35mduration[39m: "17ms"
+[2026-03-10 02:28:27.556 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api/parent/attendance/03c6bd8b-f3ab-483a-b4d0-1fdca368eb16"
+    [35mstatus[39m: 200
+    [35mduration[39m: "8ms"
+[2026-03-10 02:28:27.568 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api/academics/homework?studentId=03c6bd8b-f3ab-483a-b4d0-1fdca368eb16"
+    [35mstatus[39m: 200
+    [35mduration[39m: "8ms"
+[2026-03-10 02:28:27.578 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api/parent/invoices/03c6bd8b-f3ab-483a-b4d0-1fdca368eb16"
+    [35mstatus[39m: 200
+    [35mduration[39m: "7ms"
+node.exe : PASS 
+__tests__/golden-path-parent.test.js 
+(7.965 s)
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" 
+"C:\Users\Pc\AppData\Roaming\npm ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecif 
+   ied: (PASS __tests__/...st.js (7.96  
+  5 s):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCom 
+   mandError
+ 
+  Golden Path: Parent E2E Journey
+    ΓêÜ Step 1: Super Admin logs in (92 
+ms)
+    ΓêÜ Step 2: Onboard school with 
+class (91 ms)
+    ΓêÜ Step 3: School Admin logs in 
+(70 ms)
+    ΓêÜ Step 4: Admin creates student 
+(auto-creates parent) (100 ms)
+    ΓêÜ Step 5: Admin submits 
+attendance for the student (16 ms)
+    ΓêÜ Step 6: Parent logs in (76 ms)
+    ΓêÜ Step 7: GET 
+/api/students/my-children returns at 
+least 1 child (21 ms)
+    ΓêÜ Step 8: GET 
+/api/parent/attendance/:studentId 
+returns 200 with records+summary (12 ms)
+    ΓêÜ Step 9: GET 
+/api/academics/homework?studentId=... 
+returns 200 (12 ms)
+    ΓêÜ Step 10: GET 
+/api/parent/invoices/:studentId returns 
+200 with invoices (10 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       10 passed, 10 total
+Snapshots:   0 total
+Time:        8.02 s
+Ran all test suites matching 
+__tests__/golden-path-parent.test.js.

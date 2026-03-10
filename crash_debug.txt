@@ -1,0 +1,5 @@
+﻿[2026-03-10 02:22:54.363 +0300] [33mWARN[39m: [36mΓÜá∩╕Å The following optional environment variables are missing. Some features may be disabled: TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER, FIREBASE_SERVICE_ACCOUNT[39m
+[2026-03-10 02:22:54.363 +0300] [32mINFO[39m: [36mΓ£à Environment validation completed successfully.[39m
+[2026-03-10 02:22:54.434 +0300] [33mWARN[39m: [36mTwilio credentials not configured. SMS features disabled.[39m
+[2026-03-10 02:22:54.480 +0300] [32mINFO[39m: [36mLoading Firebase credentials from local file...[39m
+[2026-03-10 02:22:54.512 +0300] [32mINFO[39m: [36mFirebase Admin SDK initialized successfully.[39m

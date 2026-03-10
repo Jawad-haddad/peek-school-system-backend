@@ -186,6 +186,11 @@ const getHomework = async (req, res) => {
             return ok(res, homework, { limit });
         }
 
+        // ── PARENT guard: require studentId ──
+        if (req.user.role === 'parent' && !studentId) {
+            return fail(res, 400, 'Parents must provide a studentId.', 'VALIDATION_ERROR');
+        }
+
         // ── PARENT branch (resolve via studentId) ──
         if (studentId) {
             const student = await prisma.student.findFirst({
