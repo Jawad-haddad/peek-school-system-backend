@@ -3,10 +3,24 @@ const router = express.Router();
 const { authMiddleware, hasRole, belongsToSchool } = require('../middleware/authMiddleware');
 const { createAnnouncement, getAnnouncements, sendBroadcast } = require('../controllers/communicationController');
 const { UserRole } = require('@prisma/client');
+const { announcementQuerySchema } = require('../validators/communication.validator');
+const { validateQuery } = require('../validators/userValidator');
 
 // Middleware sets
 const adminActions = [authMiddleware, hasRole([UserRole.super_admin, UserRole.school_admin]), belongsToSchool];
-const viewActions = [authMiddleware, belongsToSchool];
+const viewActions = [
+    authMiddleware,
+    hasRole([
+        UserRole.super_admin, 
+        UserRole.school_admin, 
+        UserRole.teacher, 
+        UserRole.parent,
+        UserRole.finance,
+        UserRole.canteen_staff,
+        UserRole.bus_supervisor
+    ]),
+    belongsToSchool
+];
 
 /**
  * @swagger
@@ -62,7 +76,7 @@ router.post('/announcements', adminActions, createAnnouncement);
  *       "200":
  *         description: List of announcements
  */
-router.get('/announcements', viewActions, getAnnouncements);
+router.get('/announcements', viewActions, validateQuery(announcementQuerySchema), getAnnouncements);
 
 /**
  * @swagger

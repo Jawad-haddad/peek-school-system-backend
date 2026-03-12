@@ -1,6 +1,7 @@
 const prisma = require('../prismaClient');
 const { sendNotification } = require('../services/notificationService');
 const logger = require('../config/logger');
+const { ok, fail } = require('../utils/response');
 
 const createAnnouncement = async (req, res) => {
     const { title, content, scope, classId } = req.body;
@@ -62,6 +63,7 @@ const createAnnouncement = async (req, res) => {
 
 const getAnnouncements = async (req, res) => {
     const { schoolId, id: userId, role } = req.user;
+    const limit = req.query.limit ? parseInt(req.query.limit, 10) : 20;
 
     try {
         let whereClause = {
@@ -77,7 +79,7 @@ const getAnnouncements = async (req, res) => {
                 where: { parentId: userId },
                 select: {
                     enrollments: {
-                        where: { academicYear: { isActive: true } },
+                        where: { academicYear: { current: true } },
                         select: { classId: true }
                     }
                 }
@@ -107,14 +109,15 @@ const getAnnouncements = async (req, res) => {
         const announcements = await prisma.announcement.findMany({
             where: whereClause,
             orderBy: { createdAt: 'desc' },
-            include: { class: { select: { name: true } } }
+            include: { class: { select: { name: true } } },
+            take: limit
         });
 
-        res.status(200).json(announcements);
+        return ok(res, announcements);
 
     } catch (error) {
         logger.error({ error, userId }, "Error fetching announcements");
-        res.status(500).json({ message: 'Failed to fetch announcements.' });
+        return fail(res, 500, 'Failed to fetch announcements.');
     }
 };
 
