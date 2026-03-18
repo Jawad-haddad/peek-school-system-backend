@@ -1,0 +1,548 @@
+﻿
+> school-backend@1.0.0 test:golden
+> jest __tests__/golden-path-admin.test.js --runInBand
+
+node.exe : FAIL __tests__
+/golden-path-admin.test.j
+s
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" "C
+:\Users\Pc\AppData\Roamin
+g\npm ...
++ ~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo       
+       : NotSpecified:   
+  (FAIL __tests__/gold   
+ en-path-admin.test.j    
+s:String) [], Remote    
+Exception
+    + FullyQualifiedErro 
+   rId : NativeCommandE  
+  rror
+ 
+  Golden Path: Admin E2E 
+Journey
+    ├ù Step 1: Super 
+Admin acquires access 
+token via /api/auth/login
+    ├ù Step 2: Super 
+Admin provisions a fully 
+initialized school via 
+Onboarding API
+    ├ù Step 3: New 
+School Admin acquires 
+access token via 
+/api/auth/login
+    ├ù Step 4: School 
+Admin creates a student 
+enrolled into the active 
+class (1 ms)
+    ├ù Step 5: School 
+Admin submits bulk 
+attendance for the class
+    ├ù Step 6: School 
+Admin fetches report 
+overview proving 
+downstream pipelines 
+function correctly
+    ├ù Step 7 
+(Optional): School Admin 
+creates a POS item
+    ├ù Step 8 
+(Optional): School Admin 
+processes an active POS 
+order for the student
+
+  ΓùÅ Golden Path: Admin 
+E2E Journey ΓÇ║ Step 1: 
+Super Admin acquires 
+access token via 
+/api/auth/login
+
+    Could not find a 
+working container 
+runtime strategy
+
+    [0m [90m 32 |[39m 
+beforeAll([36masync[39m
+ () [33m=>[39m {
+     [90m 33 |[39m     
+[90m// 1. Boot up 
+ephemeral Postgres 
+instance internally[39m
+    [31m[1m>[22m[39m
+[90m 34 |[39m     
+postgresContainer 
+[33m=[39m 
+[36mawait[39m 
+[36mnew[39m [33mPostgr
+eSqlContainer[39m([32m"
+postgres:15-alpine"[39m)
+     [90m    |[39m     
+                    
+[31m[1m^[22m[39m
+     [90m 35 |[39m     
+    [33m.[39mwithDataba
+se([32m"school_system"[
+39m)
+     [90m 36 |[39m     
+    [33m.[39mwithUserna
+me([32m"user"[39m)
+     [90m 37 |[39m     
+    [33m.[39mwithPasswo
+rd([32m"password"[39m)
+[0m
+
+      at getContainerRunt
+imeClient (node_modules/t
+estcontainers/src/contain
+er-runtime/clients/client
+.ts:63:9)
+      at PostgreSqlContai
+ner.start (node_modules/t
+estcontainers/src/generic
+-container/generic-contai
+ner.ts:90:20)
+      at PostgreSqlContai
+ner.start (node_modules/@
+testcontainers/postgresql
+/src/postgresql-container
+.ts:130:43)
+      at 
+Object.<anonymous> (__tes
+ts__/golden-path-admin.te
+st.js:34:25)
+
+  ΓùÅ Golden Path: Admin 
+E2E Journey ΓÇ║ Step 2: 
+Super Admin provisions a 
+fully initialized school 
+via Onboarding API
+
+    Could not find a 
+working container 
+runtime strategy
+
+    [0m [90m 32 |[39m 
+beforeAll([36masync[39m
+ () [33m=>[39m {
+     [90m 33 |[39m     
+[90m// 1. Boot up 
+ephemeral Postgres 
+instance internally[39m
+    [31m[1m>[22m[39m
+[90m 34 |[39m     
+postgresContainer 
+[33m=[39m 
+[36mawait[39m 
+[36mnew[39m [33mPostgr
+eSqlContainer[39m([32m"
+postgres:15-alpine"[39m)
+     [90m    |[39m     
+                    
+[31m[1m^[22m[39m
+     [90m 35 |[39m     
+    [33m.[39mwithDataba
+se([32m"school_system"[
+39m)
+     [90m 36 |[39m     
+    [33m.[39mwithUserna
+me([32m"user"[39m)
+     [90m 37 |[39m     
+    [33m.[39mwithPasswo
+rd([32m"password"[39m)
+[0m
+
+      at getContainerRunt
+imeClient (node_modules/t
+estcontainers/src/contain
+er-runtime/clients/client
+.ts:63:9)
+      at PostgreSqlContai
+ner.start (node_modules/t
+estcontainers/src/generic
+-container/generic-contai
+ner.ts:90:20)
+      at PostgreSqlContai
+ner.start (node_modules/@
+testcontainers/postgresql
+/src/postgresql-container
+.ts:130:43)
+      at 
+Object.<anonymous> (__tes
+ts__/golden-path-admin.te
+st.js:34:25)
+
+  ΓùÅ Golden Path: Admin 
+E2E Journey ΓÇ║ Step 3: 
+New School Admin 
+acquires access token 
+via /api/auth/login
+
+    Could not find a 
+working container 
+runtime strategy
+
+    [0m [90m 32 |[39m 
+beforeAll([36masync[39m
+ () [33m=>[39m {
+     [90m 33 |[39m     
+[90m// 1. Boot up 
+ephemeral Postgres 
+instance internally[39m
+    [31m[1m>[22m[39m
+[90m 34 |[39m     
+postgresContainer 
+[33m=[39m 
+[36mawait[39m 
+[36mnew[39m [33mPostgr
+eSqlContainer[39m([32m"
+postgres:15-alpine"[39m)
+     [90m    |[39m     
+                    
+[31m[1m^[22m[39m
+     [90m 35 |[39m     
+    [33m.[39mwithDataba
+se([32m"school_system"[
+39m)
+     [90m 36 |[39m     
+    [33m.[39mwithUserna
+me([32m"user"[39m)
+     [90m 37 |[39m     
+    [33m.[39mwithPasswo
+rd([32m"password"[39m)
+[0m
+
+      at getContainerRunt
+imeClient (node_modules/t
+estcontainers/src/contain
+er-runtime/clients/client
+.ts:63:9)
+      at PostgreSqlContai
+ner.start (node_modules/t
+estcontainers/src/generic
+-container/generic-contai
+ner.ts:90:20)
+      at PostgreSqlContai
+ner.start (node_modules/@
+testcontainers/postgresql
+/src/postgresql-container
+.ts:130:43)
+      at 
+Object.<anonymous> (__tes
+ts__/golden-path-admin.te
+st.js:34:25)
+
+  ΓùÅ Golden Path: Admin 
+E2E Journey ΓÇ║ Step 4: 
+School Admin creates a 
+student enrolled into 
+the active class
+
+    Could not find a 
+working container 
+runtime strategy
+
+    [0m [90m 32 |[39m 
+beforeAll([36masync[39m
+ () [33m=>[39m {
+     [90m 33 |[39m     
+[90m// 1. Boot up 
+ephemeral Postgres 
+instance internally[39m
+    [31m[1m>[22m[39m
+[90m 34 |[39m     
+postgresContainer 
+[33m=[39m 
+[36mawait[39m 
+[36mnew[39m [33mPostgr
+eSqlContainer[39m([32m"
+postgres:15-alpine"[39m)
+     [90m    |[39m     
+                    
+[31m[1m^[22m[39m
+     [90m 35 |[39m     
+    [33m.[39mwithDataba
+se([32m"school_system"[
+39m)
+     [90m 36 |[39m     
+    [33m.[39mwithUserna
+me([32m"user"[39m)
+     [90m 37 |[39m     
+    [33m.[39mwithPasswo
+rd([32m"password"[39m)
+[0m
+
+      at getContainerRunt
+imeClient (node_modules/t
+estcontainers/src/contain
+er-runtime/clients/client
+.ts:63:9)
+      at PostgreSqlContai
+ner.start (node_modules/t
+estcontainers/src/generic
+-container/generic-contai
+ner.ts:90:20)
+      at PostgreSqlContai
+ner.start (node_modules/@
+testcontainers/postgresql
+/src/postgresql-container
+.ts:130:43)
+      at 
+Object.<anonymous> (__tes
+ts__/golden-path-admin.te
+st.js:34:25)
+
+  ΓùÅ Golden Path: Admin 
+E2E Journey ΓÇ║ Step 5: 
+School Admin submits 
+bulk attendance for the 
+class
+
+    Could not find a 
+working container 
+runtime strategy
+
+    [0m [90m 32 |[39m 
+beforeAll([36masync[39m
+ () [33m=>[39m {
+     [90m 33 |[39m     
+[90m// 1. Boot up 
+ephemeral Postgres 
+instance internally[39m
+    [31m[1m>[22m[39m
+[90m 34 |[39m     
+postgresContainer 
+[33m=[39m 
+[36mawait[39m 
+[36mnew[39m [33mPostgr
+eSqlContainer[39m([32m"
+postgres:15-alpine"[39m)
+     [90m    |[39m     
+                    
+[31m[1m^[22m[39m
+     [90m 35 |[39m     
+    [33m.[39mwithDataba
+se([32m"school_system"[
+39m)
+     [90m 36 |[39m     
+    [33m.[39mwithUserna
+me([32m"user"[39m)
+     [90m 37 |[39m     
+    [33m.[39mwithPasswo
+rd([32m"password"[39m)
+[0m
+
+      at getContainerRunt
+imeClient (node_modules/t
+estcontainers/src/contain
+er-runtime/clients/client
+.ts:63:9)
+      at PostgreSqlContai
+ner.start (node_modules/t
+estcontainers/src/generic
+-container/generic-contai
+ner.ts:90:20)
+      at PostgreSqlContai
+ner.start (node_modules/@
+testcontainers/postgresql
+/src/postgresql-container
+.ts:130:43)
+      at 
+Object.<anonymous> (__tes
+ts__/golden-path-admin.te
+st.js:34:25)
+
+  ΓùÅ Golden Path: Admin 
+E2E Journey ΓÇ║ Step 6: 
+School Admin fetches 
+report overview proving 
+downstream pipelines 
+function correctly
+
+    Could not find a 
+working container 
+runtime strategy
+
+    [0m [90m 32 |[39m 
+beforeAll([36masync[39m
+ () [33m=>[39m {
+     [90m 33 |[39m     
+[90m// 1. Boot up 
+ephemeral Postgres 
+instance internally[39m
+    [31m[1m>[22m[39m
+[90m 34 |[39m     
+postgresContainer 
+[33m=[39m 
+[36mawait[39m 
+[36mnew[39m [33mPostgr
+eSqlContainer[39m([32m"
+postgres:15-alpine"[39m)
+     [90m    |[39m     
+                    
+[31m[1m^[22m[39m
+     [90m 35 |[39m     
+    [33m.[39mwithDataba
+se([32m"school_system"[
+39m)
+     [90m 36 |[39m     
+    [33m.[39mwithUserna
+me([32m"user"[39m)
+     [90m 37 |[39m     
+    [33m.[39mwithPasswo
+rd([32m"password"[39m)
+[0m
+
+      at getContainerRunt
+imeClient (node_modules/t
+estcontainers/src/contain
+er-runtime/clients/client
+.ts:63:9)
+      at PostgreSqlContai
+ner.start (node_modules/t
+estcontainers/src/generic
+-container/generic-contai
+ner.ts:90:20)
+      at PostgreSqlContai
+ner.start (node_modules/@
+testcontainers/postgresql
+/src/postgresql-container
+.ts:130:43)
+      at 
+Object.<anonymous> (__tes
+ts__/golden-path-admin.te
+st.js:34:25)
+
+  ΓùÅ Golden Path: Admin 
+E2E Journey ΓÇ║ Step 7 
+(Optional): School Admin 
+creates a POS item
+
+    Could not find a 
+working container 
+runtime strategy
+
+    [0m [90m 32 |[39m 
+beforeAll([36masync[39m
+ () [33m=>[39m {
+     [90m 33 |[39m     
+[90m// 1. Boot up 
+ephemeral Postgres 
+instance internally[39m
+    [31m[1m>[22m[39m
+[90m 34 |[39m     
+postgresContainer 
+[33m=[39m 
+[36mawait[39m 
+[36mnew[39m [33mPostgr
+eSqlContainer[39m([32m"
+postgres:15-alpine"[39m)
+     [90m    |[39m     
+                    
+[31m[1m^[22m[39m
+     [90m 35 |[39m     
+    [33m.[39mwithDataba
+se([32m"school_system"[
+39m)
+     [90m 36 |[39m     
+    [33m.[39mwithUserna
+me([32m"user"[39m)
+     [90m 37 |[39m     
+    [33m.[39mwithPasswo
+rd([32m"password"[39m)
+[0m
+
+      at getContainerRunt
+imeClient (node_modules/t
+estcontainers/src/contain
+er-runtime/clients/client
+.ts:63:9)
+      at PostgreSqlContai
+ner.start (node_modules/t
+estcontainers/src/generic
+-container/generic-contai
+ner.ts:90:20)
+      at PostgreSqlContai
+ner.start (node_modules/@
+testcontainers/postgresql
+/src/postgresql-container
+.ts:130:43)
+      at 
+Object.<anonymous> (__tes
+ts__/golden-path-admin.te
+st.js:34:25)
+
+  ΓùÅ Golden Path: Admin 
+E2E Journey ΓÇ║ Step 8 
+(Optional): School Admin 
+processes an active POS 
+order for the student
+
+    Could not find a 
+working container 
+runtime strategy
+
+    [0m [90m 32 |[39m 
+beforeAll([36masync[39m
+ () [33m=>[39m {
+     [90m 33 |[39m     
+[90m// 1. Boot up 
+ephemeral Postgres 
+instance internally[39m
+    [31m[1m>[22m[39m
+[90m 34 |[39m     
+postgresContainer 
+[33m=[39m 
+[36mawait[39m 
+[36mnew[39m [33mPostgr
+eSqlContainer[39m([32m"
+postgres:15-alpine"[39m)
+     [90m    |[39m     
+                    
+[31m[1m^[22m[39m
+     [90m 35 |[39m     
+    [33m.[39mwithDataba
+se([32m"school_system"[
+39m)
+     [90m 36 |[39m     
+    [33m.[39mwithUserna
+me([32m"user"[39m)
+     [90m 37 |[39m     
+    [33m.[39mwithPasswo
+rd([32m"password"[39m)
+[0m
+
+      at getContainerRunt
+imeClient (node_modules/t
+estcontainers/src/contain
+er-runtime/clients/client
+.ts:63:9)
+      at PostgreSqlContai
+ner.start (node_modules/t
+estcontainers/src/generic
+-container/generic-contai
+ner.ts:90:20)
+      at PostgreSqlContai
+ner.start (node_modules/@
+testcontainers/postgresql
+/src/postgresql-container
+.ts:130:43)
+      at 
+Object.<anonymous> (__tes
+ts__/golden-path-admin.te
+st.js:34:25)
+
+Test Suites: 1 failed, 1 
+total
+Tests:       8 failed, 8 
+total
+Snapshots:   0 total
+Time:        1.788 s, 
+estimated 6 s
+Ran all test suites 
+matching __tests__/golden
+-path-admin.test.js.

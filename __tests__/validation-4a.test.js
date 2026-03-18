@@ -35,7 +35,8 @@ jest.mock('../src/controllers/schoolController', () => ({
 
 jest.mock('../src/controllers/attendanceController', () => ({
     submitClassAttendance: (req, res) => res.status(200).json({ success: true, data: { fake: 'attendance-recorded' } }),
-    getClassAttendance: jest.fn()
+    getClassAttendance: jest.fn(),
+    getAttendanceHistory: jest.fn()
 }));
 
 // Ignore non-target controller setups

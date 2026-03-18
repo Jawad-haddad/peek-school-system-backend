@@ -601,6 +601,7 @@ model Announcement {
   title     String
   content   String
   scope     AnnouncementScope // 'SCHOOL', 'CLASS'
+  audience  String?  // 'ALL', 'PARENTS_ONLY', 'TEACHERS_ONLY' — null treated as ALL
   schoolId  String
   classId   String?
   createdAt DateTime @default(now())

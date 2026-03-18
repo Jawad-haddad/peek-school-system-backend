@@ -574,17 +574,85 @@ const createTimeTableEntry = async (req, res) => {
     const schoolId = req.user.schoolId;
     const { classId, subjectId, teacherId, dayOfWeek, startTime, endTime } = req.body;
     if (!classId || !subjectId || !teacherId || !dayOfWeek || !startTime || !endTime) {
-        return res.status(400).json({ message: 'All fields are required.' });
+        return fail(res, 400, 'All fields are required.', 'VALIDATION_ERROR');
     }
     try {
+        // Cross-school validation: subject must belong to this school
+        const subject = await prisma.subject.findFirst({ where: { id: subjectId, schoolId } });
+        if (!subject) {
+            return fail(res, 400, 'Subject does not belong to your school.', 'VALIDATION_ERROR');
+        }
+        // Cross-school validation: teacher must belong to this school
+        const teacher = await prisma.user.findFirst({ where: { id: teacherId, schoolId, role: 'teacher' } });
+        if (!teacher) {
+            return fail(res, 400, 'Teacher does not belong to your school.', 'VALIDATION_ERROR');
+        }
+        // Cross-school validation: class must belong to this school
+        const classRecord = await prisma.class.findFirst({ where: { id: classId, academicYear: { schoolId } } });
+        if (!classRecord) {
+            return fail(res, 400, 'Class does not belong to your school.', 'VALIDATION_ERROR');
+        }
+
         const entry = await prisma.timeTableEntry.create({
-            data: { classId, subjectId, teacherId, dayOfWeek, startTime, endTime, schoolId }
+            data: { classId, subjectId, teacherId, dayOfWeek, startTime, endTime, schoolId },
+            include: {
+                subject: { select: { name: true } },
+                teacher: { select: { fullName: true } }
+            }
         });
         logger.info({ entryId: entry.id, classId, teacherId }, "New timetable entry created");
-        res.status(201).json(entry);
+        return ok(res, entry, null, 201);
     } catch (error) {
         logger.error({ error, classId, teacherId }, "Error creating timetable entry");
-        res.status(500).json({ message: 'Failed to create timetable entry.' });
+        return fail(res, 500, 'Failed to create timetable entry.', 'SERVER_ERROR');
+    }
+};
+
+const updateTimeTableEntry = async (req, res) => {
+    const schoolId = req.user.schoolId;
+    const { entryId } = req.params;
+    const { subjectId, teacherId, dayOfWeek, startTime, endTime } = req.body;
+
+    try {
+        // Verify entry belongs to caller's school
+        const existing = await prisma.timeTableEntry.findFirst({ where: { id: entryId, schoolId } });
+        if (!existing) {
+            return fail(res, 404, 'Timetable entry not found in your school.', 'NOT_FOUND');
+        }
+
+        const data = {};
+        if (subjectId !== undefined) {
+            const subject = await prisma.subject.findFirst({ where: { id: subjectId, schoolId } });
+            if (!subject) return fail(res, 400, 'Subject does not belong to your school.', 'VALIDATION_ERROR');
+            data.subjectId = subjectId;
+        }
+        if (teacherId !== undefined) {
+            const teacher = await prisma.user.findFirst({ where: { id: teacherId, schoolId, role: 'teacher' } });
+            if (!teacher) return fail(res, 400, 'Teacher does not belong to your school.', 'VALIDATION_ERROR');
+            data.teacherId = teacherId;
+        }
+        if (dayOfWeek !== undefined) data.dayOfWeek = dayOfWeek;
+        if (startTime !== undefined) data.startTime = startTime;
+        if (endTime !== undefined) data.endTime = endTime;
+
+        if (Object.keys(data).length === 0) {
+            return fail(res, 400, 'No fields provided for update.', 'VALIDATION_ERROR');
+        }
+
+        const updated = await prisma.timeTableEntry.update({
+            where: { id: entryId },
+            data,
+            include: {
+                subject: { select: { name: true } },
+                teacher: { select: { fullName: true } }
+            }
+        });
+
+        logger.info({ entryId, schoolId }, 'Timetable entry updated');
+        return ok(res, updated);
+    } catch (error) {
+        logger.error({ error: error.message, entryId }, 'Error updating timetable entry');
+        return fail(res, 500, 'Failed to update timetable entry.', 'SERVER_ERROR');
     }
 };
 
@@ -826,15 +894,15 @@ const getClassTimetable = async (req, res) => {
         const timetable = await prisma.timeTableEntry.findMany({
             where: { classId, schoolId },
             include: {
-                subject: { select: { name: true } },
-                teacher: { select: { fullName: true } }
+                subject: { select: { id: true, name: true } },
+                teacher: { select: { id: true, fullName: true } }
             },
-            orderBy: { startTime: 'asc' } // Optional sort
+            orderBy: { startTime: 'asc' }
         });
-        res.status(200).json(timetable);
+        return ok(res, timetable);
     } catch (error) {
         logger.error({ error, classId }, "Error fetching timetable");
-        res.status(500).json({ message: "Failed to fetch timetable." });
+        return fail(res, 500, 'Failed to fetch timetable.', 'SERVER_ERROR');
     }
 };
 
@@ -908,6 +976,7 @@ module.exports = {
     createExam,
     scheduleExam,
     createTimeTableEntry,
+    updateTimeTableEntry,
     addExamMarks,
     createAcademicYear,
     deleteAcademicYear,

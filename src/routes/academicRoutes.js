@@ -18,6 +18,7 @@ const {
   getMyStudents,
   getClassStudents,
   createTimeTableEntry,
+  updateTimeTableEntry,
   createAcademicYear,
   createTeacher,
 } = require('../controllers/academicController');
@@ -211,6 +212,7 @@ router.post('/teachers', adminActions, createTeacher);
  *         description: Timetable entry created successfully
  */
 router.post('/timetable', adminActions, createTimeTableEntry);
+router.put('/timetable/:entryId', adminActions, updateTimeTableEntry);
 
 // --- Grades ---
 // GET  → roster + existing grades

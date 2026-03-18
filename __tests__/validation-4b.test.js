@@ -25,8 +25,12 @@ jest.mock('../src/controllers/schoolController', () => ({
 
 jest.mock('../src/controllers/academicController', () => ({
     createHomework: jest.fn(),
+    updateHomework: jest.fn(),
+    deleteHomework: jest.fn(),
     getHomework: jest.fn(),
     getHomeworkForStudent: jest.fn(),
+    getHomeworkGrades: jest.fn(),
+    submitHomeworkGrades: jest.fn(),
     addGrade: jest.fn(),
     getMySchedule: jest.fn(),
     getTeacherClasses: jest.fn(),
@@ -35,6 +39,7 @@ jest.mock('../src/controllers/academicController', () => ({
     getMyStudents: jest.fn(),
     getClassStudents: jest.fn(),
     createTimeTableEntry: jest.fn(),
+    updateTimeTableEntry: jest.fn(),
     getClassTimetable: jest.fn(),
     createSubject: (req, res) => res.status(200).json({ success: true, data: { fake: 'subject-created-academic' } }),
     createAcademicYear: jest.fn(),

@@ -142,4 +142,59 @@ describe('GET /api/communication/announcements', () => {
         expect(res.body.success).toBe(true);
         expect(res.body.data.length).toBe(2);
     });
+
+    describe('Audience-aware filtering on read', () => {
+        let annAll, annParents, annTeachers;
+
+        beforeAll(async () => {
+            // Clean existing announcements to isolate these tests
+            await prisma.announcement.deleteMany({ where: { schoolId: school1.id } });
+
+            annAll = await prisma.announcement.create({
+                data: { title: 'For All', content: 'Everyone', scope: 'SCHOOL', audience: 'ALL', schoolId: school1.id }
+            });
+            annParents = await prisma.announcement.create({
+                data: { title: 'For Parents', content: 'Parents only', scope: 'SCHOOL', audience: 'PARENTS_ONLY', schoolId: school1.id }
+            });
+            annTeachers = await prisma.announcement.create({
+                data: { title: 'For Teachers', content: 'Teachers only', scope: 'SCHOOL', audience: 'TEACHERS_ONLY', schoolId: school1.id }
+            });
+        });
+
+        it('Parent sees ALL + PARENTS_ONLY, not TEACHERS_ONLY', async () => {
+            const res = await request(app)
+                .get('/api/communication/announcements')
+                .set('Authorization', `Bearer ${parentToken}`);
+
+            expect(res.status).toBe(200);
+            const ids = res.body.data.map(a => a.id);
+            expect(ids).toContain(annAll.id);
+            expect(ids).toContain(annParents.id);
+            expect(ids).not.toContain(annTeachers.id);
+        });
+
+        it('Teacher sees ALL + TEACHERS_ONLY, not PARENTS_ONLY', async () => {
+            const res = await request(app)
+                .get('/api/communication/announcements')
+                .set('Authorization', `Bearer ${teacherToken}`);
+
+            expect(res.status).toBe(200);
+            const ids = res.body.data.map(a => a.id);
+            expect(ids).toContain(annAll.id);
+            expect(ids).toContain(annTeachers.id);
+            expect(ids).not.toContain(annParents.id);
+        });
+
+        it('Admin sees all broadcasts regardless of audience', async () => {
+            const res = await request(app)
+                .get('/api/communication/announcements')
+                .set('Authorization', `Bearer ${adminToken}`);
+
+            expect(res.status).toBe(200);
+            const ids = res.body.data.map(a => a.id);
+            expect(ids).toContain(annAll.id);
+            expect(ids).toContain(annParents.id);
+            expect(ids).toContain(annTeachers.id);
+        });
+    });
 });

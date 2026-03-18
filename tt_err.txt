@@ -1,0 +1,178 @@
+﻿Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "school_system", schema "public" at "localhost:32771"
+
+Your database is now in sync with your Prisma schema. Done in 595ms
+
+[2026-03-13 06:24:42.695 +0300] [33mWARN[39m: [36mTwilio credentials not configured. SMS features disabled.[39m
+[2026-03-13 06:24:42.759 +0300] [32mINFO[39m: [36mLoading Firebase credentials from local file...[39m
+[2026-03-13 06:24:42.797 +0300] [32mINFO[39m: [36mFirebase Admin SDK initialized successfully.[39m
+[2026-03-13 06:24:43.200 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "tt.sa.1773372278160@test.com"
+[2026-03-13 06:24:43.204 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "tt.sa.1773372278160@test.com"
+    [35mfound[39m: true
+[2026-03-13 06:24:43.266 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "tt.sa.1773372278160@test.com"
+    [35mmatch[39m: true
+[2026-03-13 06:24:43.266 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "tt.sa.1773372278160@test.com"
+    [35mrole[39m: "super_admin"
+    [35mmappedRole[39m: "SUPER_ADMIN"
+[2026-03-13 06:24:43.268 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "bd2e562d-43cd-4531-8f5e-8cf1b95b584f"
+    [35memail[39m: "tt.sa.1773372278160@test.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-13 06:24:43.269 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mduration[39m: "81ms"
+[2026-03-13 06:24:43.354 +0300] [32mINFO[39m: [36mSchool successfully onboarded via platform.[39m
+    [35maction[39m: "onboard_school"
+    [35mschoolId[39m: "9d319daa-1f9e-4ad2-8a45-271c709938ba"
+    [35madminId[39m: "a617d8ed-ed42-415e-ba68-78eef048b167"
+[2026-03-13 06:24:43.355 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/platform/onboard-school"
+    [35mstatus[39m: 200
+    [35mduration[39m: "82ms"
+[2026-03-13 06:24:43.358 +0300] [32mINFO[39m: [36mLogin attempt[39m
+    [35memail[39m: "ttadmin.1773372278160@test.com"
+[2026-03-13 06:24:43.360 +0300] [34mDEBUG[39m: [36mUser lookup result[39m
+    [35memail[39m: "ttadmin.1773372278160@test.com"
+    [35mfound[39m: true
+[2026-03-13 06:24:43.425 +0300] [34mDEBUG[39m: [36mPassword comparison result[39m
+    [35memail[39m: "ttadmin.1773372278160@test.com"
+    [35mmatch[39m: true
+[2026-03-13 06:24:43.425 +0300] [32mINFO[39m: [36mLogin successful[39m
+    [35memail[39m: "ttadmin.1773372278160@test.com"
+    [35mrole[39m: "school_admin"
+    [35mmappedRole[39m: "ADMIN"
+[2026-03-13 06:24:43.426 +0300] [32mINFO[39m: [36mUser login successful[39m
+    [35muserId[39m: "a617d8ed-ed42-415e-ba68-78eef048b167"
+    [35memail[39m: "ttadmin.1773372278160@test.com"
+    [35maudit[39m: true
+    [35maction[39m: "LOGIN_SUCCESS"
+[2026-03-13 06:24:43.426 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/auth/login"
+    [35mstatus[39m: 200
+    [35mduration[39m: "68ms"
+[2026-03-13 06:24:43.498 +0300] [32mINFO[39m: [36mNew teacher created successfully[39m
+    [35mteacherId[39m: "5b3babe6-a310-418a-9db4-62e542629980"
+    [35mschoolId[39m: "9d319daa-1f9e-4ad2-8a45-271c709938ba"
+[2026-03-13 06:24:43.498 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/academics/teachers"
+    [35mstatus[39m: 201
+    [35mduration[39m: "70ms"
+[2026-03-13 06:24:43.509 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/academics/subjects"
+    [35mstatus[39m: 201
+    [35mduration[39m: "9ms"
+[2026-03-13 06:24:43.518 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api/academics/subjects"
+    [35mstatus[39m: 200
+    [35mduration[39m: "5ms"
+[2026-03-13 06:24:43.531 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api/academics/teachers"
+    [35mstatus[39m: 200
+    [35mduration[39m: "7ms"
+[2026-03-13 06:24:43.547 +0300] [32mINFO[39m: [36mNew timetable entry created[39m
+    [35mentryId[39m: "1d5bcb1f-b6ad-4768-927e-3c54ba936c16"
+    [35mclassId[39m: "581c95f4-5989-4cac-8916-cfd9c24b385e"
+    [35mteacherId[39m: "5b3babe6-a310-418a-9db4-62e542629980"
+[2026-03-13 06:24:43.547 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/academics/timetable"
+    [35mstatus[39m: 201
+    [35mduration[39m: "14ms"
+[2026-03-13 06:24:43.559 +0300] [32mINFO[39m: [36mTimetable entry updated[39m
+    [35mentryId[39m: "1d5bcb1f-b6ad-4768-927e-3c54ba936c16"
+    [35mschoolId[39m: "9d319daa-1f9e-4ad2-8a45-271c709938ba"
+[2026-03-13 06:24:43.559 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "PUT"
+    [35murl[39m: "/api/academics/timetable/1d5bcb1f-b6ad-4768-927e-3c54ba936c16"
+    [35mstatus[39m: 200
+    [35mduration[39m: "9ms"
+[2026-03-13 06:24:43.567 +0300] [32mINFO[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api/school/classes/581c95f4-5989-4cac-8916-cfd9c24b385e/timetable"
+    [35mstatus[39m: 200
+    [35mduration[39m: "5ms"
+[2026-03-13 06:24:43.598 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/academics/timetable"
+    [35mstatus[39m: 400
+    [35mduration[39m: "3ms"
+[2026-03-13 06:24:43.670 +0300] [33mWARN[39m: [36mHTTP Request[39m
+    [35mmethod[39m: "POST"
+    [35murl[39m: "/api/academics/timetable"
+    [35mstatus[39m: 400
+    [35mduration[39m: "4ms"
+node.exe : PASS __tests
+__/timetable-edit.test.
+js (6.845 s)
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Users\Pc\AppData\Ro
+aming\npm ...
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: (PASS __tests_   
+ _/...st.js (6.845     
+s):String) [], Rem    
+oteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+  Timetable Edit 
+Dependencies
+    ΓêÜ GET /api/academ
+ics/subjects ΓåÆ loads 
+subjects for school 
+(11 ms)
+    ΓêÜ GET /api/academ
+ics/teachers ΓåÆ loads 
+teachers for school 
+(10 ms)
+    ΓêÜ POST /api/acade
+mics/timetable ΓåÆ 
+create entry succeeds 
+with valid data (17 ms)
+    ΓêÜ PUT /api/academ
+ics/timetable/:entryId 
+ΓåÆ update entry 
+succeeds (11 ms)
+    ΓêÜ GET /api/school
+/classes/:classId/timet
+able ΓåÆ returns 
+envelope with entries 
+(8 ms)
+    ΓêÜ cross-school 
+subject is blocked (31 
+ms)
+    ΓêÜ cross-school 
+teacher is blocked (72 
+ms)
+
+Test Suites: 1 passed, 
+1 total
+Tests:       7 passed, 
+7 total
+Snapshots:   0 total
+Time:        6.902 s
+Ran all test suites 
+matching __tests__/time
+table-edit.test.js.

@@ -7,7 +7,7 @@ const createAcademicYearSchema = z.object({
     endDate: z.string().refine((val) => !isNaN(Date.parse(val)), { message: 'Invalid ISO end date string' }),
     isCurrent: z.boolean().optional(),
 })
-    .strict()
+    .passthrough()
     .refine((data) => {
         // Only refine dates if they both parsed validly above
         if (!isNaN(Date.parse(data.startDate)) && !isNaN(Date.parse(data.endDate))) {
@@ -25,7 +25,7 @@ const updateAcademicYearSchema = z.object({
     endDate: z.string().refine((val) => !isNaN(Date.parse(val)), { message: 'Invalid ISO end date string' }).optional(),
     isCurrent: z.boolean().optional(),
 })
-    .strict()
+    .passthrough()
     .refine((data) => {
         if (data.startDate && data.endDate) {
             if (!isNaN(Date.parse(data.startDate)) && !isNaN(Date.parse(data.endDate))) {

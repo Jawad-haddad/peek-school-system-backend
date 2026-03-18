@@ -26,13 +26,14 @@ const {
     updateClass
 } = require('../controllers/schoolController');
 const { toggleStudentNfc } = require('../controllers/studentController');
-const { getAllExams } = require('../controllers/examController'); // Kept for backward compatibility
+const { getAllExams, getExamSchedules, createExamSchedule, updateExam, deleteExamSchedule } = require('../controllers/examController'); // Kept for backward compatibility
 const { getFeeStats } = require('../controllers/statsController'); // Imported for stats alias
 const { getClassTimetable } = require('../controllers/academicController'); // Import for timetable route
 const { UserRole } = require('@prisma/client');
 
 // Middleware for school admin actions
 const schoolAdminActions = [authMiddleware, hasRole([UserRole.super_admin, UserRole.school_admin]), belongsToSchool];
+const teacherAdminActions = [authMiddleware, hasRole([UserRole.super_admin, UserRole.school_admin, UserRole.teacher]), belongsToSchool];
 
 // --- SUPER ADMIN ROUTE ---
 router.post('/', [authMiddleware, hasRole([UserRole.super_admin])], createSchool);
@@ -130,7 +131,13 @@ router.get('/classes', [authMiddleware, hasRole([UserRole.school_admin, UserRole
 router.get('/students', schoolAdminActions, validateQuery(paginationSchema), cachePrivate(30), getStudents);
 
 // NEW ROUTES (Fixing 404s)
-router.get('/exams', [authMiddleware, hasRole([UserRole.school_admin, UserRole.teacher]), belongsToSchool], getAllExams); // Deprecated: Use /api/exams
+router.get('/exams', teacherAdminActions, getAllExams); // Deprecated: Use /api/exams
+router.get('/exams/:examId/schedules', teacherAdminActions, getExamSchedules); // Frontend: examApi.fetchExamSchedules → GET /school/exams/:examId/schedules
+router.post('/exams/:examId/schedules', schoolAdminActions, createExamSchedule); // Frontend: examApi.createSchedule → POST /school/exams/:examId/schedules
+router.get('/exam-schedules', teacherAdminActions, getExamSchedules); // Frontend UI uses GET /school/exam-schedules?examId=...
+router.post('/exam-schedules', schoolAdminActions, createExamSchedule); // Frontend UI uses POST /school/exam-schedules
+router.put('/exams/:examId', schoolAdminActions, updateExam);                   // Frontend: examApi.updateExam → PUT /school/exams/:examId
+router.delete('/exam-schedules/:scheduleId', schoolAdminActions, deleteExamSchedule); // Frontend: examApi.deleteSchedule → DELETE /school/exam-schedules/:scheduleId
 router.get('/stats/fees', schoolAdminActions, getFeeStats);
 router.get('/classes/:classId/timetable', [authMiddleware, hasRole([UserRole.school_admin, UserRole.teacher]), belongsToSchool], getClassTimetable);
 

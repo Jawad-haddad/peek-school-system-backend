@@ -1,0 +1,311 @@
+
+FAIL: __tests__\academics.test.js
+  x Academics Module > should allow a teacher to add a grade to a homework
+    TypeError: Cannot read properties of null (reading 'id')
+        at Object.id (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\academics.test.js:16:29)
+  x Academics Module > should allow a teacher to record attendance
+    TypeError: Cannot read properties of null (reading 'id')
+        at Object.id (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\academics.test.js:16:29)
+
+FAIL: __tests__\observability.test.js
+  x Observability & Security Headers > Strict Auth Rate Limiter > should trigger 429 after limit is exceeded on login endpoint
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+    
+    Expected: [32m429[39m
+    Received: [31m401[39m
+        at Object.toBe (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\observability.test.js:32:45)
+
+FAIL: src\__tests__\bus_scenario.test.js
+  x Bus Logistics Integration Test > Full Morning Run Simulation
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+    
+    Expected: [32m201[39m
+    Received: [31m401[39m
+        at Object.toBe (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\src\__tests__\bus_scenario.test.js:103:37)
+  x Bus Logistics Integration Test > Security Checks: Unauthorized Access
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+    
+    Expected: [32m403[39m
+    Received: [31m401[39m
+        at Object.toBe (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\src\__tests__\bus_scenario.test.js:171:46)
+
+FAIL: __tests__\finance.test.js
+  x Finance & POS Modules > should allow a parent to top up their child wallet
+    TypeError: Cannot read properties of null (reading 'id')
+        at Object.id (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\finance.test.js:18:29)
+  x Finance & POS Modules > should allow an admin to create a POS order for a student
+    TypeError: Cannot read properties of null (reading 'id')
+        at Object.id (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\finance.test.js:18:29)
+
+FAIL: __tests__\teacher-scope.test.js
+  x  > teacher can GET /api/teacher/classes and see assigned classes
+    PrismaClientKnownRequestError: 
+    Invalid `prisma.homework.create()` invocation in
+    C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-scope.test.js:91:38
+    
+      88 });
+  x  > teacher can GET students for their assigned class
+    PrismaClientKnownRequestError: 
+    Invalid `prisma.homework.create()` invocation in
+    C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-scope.test.js:91:38
+    
+      88 });
+  x  > teacher gets 403 TEACHER_NOT_ASSIGNED when accessing unassigned class students
+    PrismaClientKnownRequestError: 
+    Invalid `prisma.homework.create()` invocation in
+    C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-scope.test.js:91:38
+    
+      88 });
+  x  > teacher gets 403 TEACHER_NOT_ASSIGNED when submitting attendance for unassigned class
+    PrismaClientKnownRequestError: 
+    Invalid `prisma.homework.create()` invocation in
+    C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-scope.test.js:91:38
+    
+      88 });
+  x  > teacher gets 403 TEACHER_NOT_ASSIGNED when submitting marks for unassigned exam schedule
+    PrismaClientKnownRequestError: 
+    Invalid `prisma.homework.create()` invocation in
+    C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-scope.test.js:91:38
+    
+      88 });
+  x  > teacher gets 403 TEACHER_NOT_ASSIGNED when grading homework for unassigned class
+    PrismaClientKnownRequestError: 
+    Invalid `prisma.homework.create()` invocation in
+    C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-scope.test.js:91:38
+    
+      88 });
+
+FAIL: __tests__\auth.test.js
+  x Authentication Endpoints > POST /api/users/login > should log in successfully with correct credentials
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+    
+    Expected: [32m200[39m
+    Received: [31m401[39m
+        at Object.toBe (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\auth.test.js:30:41)
+
+FAIL: __tests__\teacher-homework-grades.test.js
+  x Teacher-scoped Homework Grades > teacher can fetch grades roster for assigned homework
+    PrismaClientKnownRequestError: 
+    Invalid `prisma.homework.create()` invocation in
+    C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-homework-grades.test.js:89:25
+    
+      86 // Note: use raw SQL to set maxPoints because the Prisma client may be cached
+  x Teacher-scoped Homework Grades > teacher cannot fetch grades roster for unassigned homework → 403
+    PrismaClientKnownRequestError: 
+    Invalid `prisma.homework.create()` invocation in
+    C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-homework-grades.test.js:89:25
+    
+      86 // Note: use raw SQL to set maxPoints because the Prisma client may be cached
+  x Teacher-scoped Homework Grades > teacher can submit grades for assigned homework
+    PrismaClientKnownRequestError: 
+    Invalid `prisma.homework.create()` invocation in
+    C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-homework-grades.test.js:89:25
+    
+      86 // Note: use raw SQL to set maxPoints because the Prisma client may be cached
+  x Teacher-scoped Homework Grades > submitted grade appears in subsequent roster fetch
+    PrismaClientKnownRequestError: 
+    Invalid `prisma.homework.create()` invocation in
+    C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-homework-grades.test.js:89:25
+    
+      86 // Note: use raw SQL to set maxPoints because the Prisma client may be cached
+  x Teacher-scoped Homework Grades > teacher cannot submit grades for unassigned homework → 403
+    PrismaClientKnownRequestError: 
+    Invalid `prisma.homework.create()` invocation in
+    C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-homework-grades.test.js:89:25
+    
+      86 // Note: use raw SQL to set maxPoints because the Prisma client may be cached
+  x Teacher-scoped Homework Grades > grade > maxPoints rejected with 400 VALIDATION_ERROR
+    PrismaClientKnownRequestError: 
+    Invalid `prisma.homework.create()` invocation in
+    C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-homework-grades.test.js:89:25
+    
+      86 // Note: use raw SQL to set maxPoints because the Prisma client may be cached
+  x Teacher-scoped Homework Grades > grade without maxPoints cap accepted
+    PrismaClientKnownRequestError: 
+    Invalid `prisma.homework.create()` invocation in
+    C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-homework-grades.test.js:89:25
+    
+      86 // Note: use raw SQL to set maxPoints because the Prisma client may be cached
+  x Teacher-scoped Homework Grades > empty grades array rejected with 400 VALIDATION_ERROR
+    PrismaClientKnownRequestError: 
+    Invalid `prisma.homework.create()` invocation in
+    C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-homework-grades.test.js:89:25
+    
+      86 // Note: use raw SQL to set maxPoints because the Prisma client may be cached
+  x Teacher-scoped Homework Grades > student not enrolled in class rejected with 400 VALIDATION_ERROR
+    PrismaClientKnownRequestError: 
+    Invalid `prisma.homework.create()` invocation in
+    C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-homework-grades.test.js:89:25
+    
+      86 // Note: use raw SQL to set maxPoints because the Prisma client may be cached
+
+FAIL: __tests__\teacher-homework-crud.test.js
+  x Teacher-scoped Homework CRUD > teacher can create homework for assigned class
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+    
+    Expected: [32m201[39m
+    Received: [31m500[39m
+        at Object.toBe (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-homework-crud.test.js:103:28)
+  x Teacher-scoped Homework CRUD > teacher can list homework for assigned class only
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+    
+    Expected: [32m200[39m
+    Received: [31m500[39m
+        at Object.toBe (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-homework-crud.test.js:152:28)
+  x Teacher-scoped Homework CRUD > teacher can update homework for assigned class
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeDefined[2m()[22m
+    
+    Received: [31mundefined[39m
+        at Object.toBeDefined (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-homework-crud.test.js:171:35)
+        at Promise.finally.completed (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+  x Teacher-scoped Homework CRUD > teacher cannot update homework for unassigned class → 403
+    PrismaClientKnownRequestError: 
+    Invalid `prisma.homework.create()` invocation in
+    C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-homework-crud.test.js:185:42
+    
+      182 
+  x Teacher-scoped Homework CRUD > teacher can delete homework for assigned class
+    PrismaClientKnownRequestError: 
+    Invalid `prisma.homework.create()` invocation in
+    C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-homework-crud.test.js:202:42
+    
+      199 
+  x Teacher-scoped Homework CRUD > teacher cannot delete homework for unassigned class → 403
+    PrismaClientKnownRequestError: 
+    Invalid `prisma.homework.create()` invocation in
+    C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-homework-crud.test.js:215:42
+    
+      212 });
+
+FAIL: __tests__\mvp-smoke.test.js
+  x Flow 1: Auth Login > ADMIN login returns correct shape and role
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoHaveProperty[2m([22m[32mpath[39m[2m)[22m
+    
+    Expected path: [32m"message"[39m
+    Received path: [31m[][39m
+    
+  x Flow 1: Auth Login > TEACHER login returns correct shape and role
+    TypeError: Cannot read properties of undefined (reading 'role')
+        at Object.role (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:48:30)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 1: Auth Login > PARENT login returns correct shape and role
+    TypeError: Cannot read properties of undefined (reading 'role')
+        at Object.role (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:57:30)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 2: Classes CRUD + RBAC > ADMIN can GET /api/school/classes
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:107:42)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 2: Classes CRUD + RBAC > ADMIN can POST /api/school/classes
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:107:42)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 2: Classes CRUD + RBAC > ADMIN can PUT /api/school/classes/:classId
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:107:42)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 2: Classes CRUD + RBAC > ADMIN can DELETE /api/school/classes/:classId
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:107:42)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 2: Classes CRUD + RBAC > POST class with missing name returns 400
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:107:42)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 2: Classes CRUD + RBAC > TEACHER cannot POST class (403)
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:107:42)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 2: Classes CRUD + RBAC > TEACHER cannot PUT class (403)
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:107:42)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 2: Classes CRUD + RBAC > TEACHER cannot DELETE class (403)
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:107:42)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 2: Classes CRUD + RBAC > PARENT cannot GET classes (403)
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:107:42)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 2: Classes CRUD + RBAC > PARENT cannot POST class (403)
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:107:42)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 2: Classes CRUD + RBAC > Non-existent classId returns 404 on PUT
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:107:42)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 2: Classes CRUD + RBAC > Non-existent classId returns 404 on DELETE
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:107:42)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 3: Teacher Attendance > TEACHER can GET /api/academics/classes/:classId/students
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:268:62)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 3: Teacher Attendance > TEACHER can POST /api/attendance/bulk with valid payload
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:268:62)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 3: Teacher Attendance > Uppercase status "ABSENT" with reason is accepted (normalized)
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:268:62)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 3: Teacher Attendance > Non-ISO date format returns 400
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:268:62)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 3: Teacher Attendance > Invalid status "here" returns 400
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:268:62)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 3: Teacher Attendance > Invalid alphanumeric date returns 400
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:268:62)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 3: Teacher Attendance > Empty records array returns 400
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:268:62)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 3: Teacher Attendance > Missing studentId in record returns 400
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:268:62)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 3: Teacher Attendance > TEACHER can read back attendance ensuring UPSERT caught the ABSENT overwrite
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:268:62)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+  x Flow 3: Teacher Attendance > PARENT cannot POST /api/attendance/bulk (403)
+    TypeError: Cannot read properties of undefined (reading 'schoolId')
+        at Object.schoolId (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\mvp-smoke.test.js:268:62)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+FAIL: __tests__\teacher-exams-view.test.js
+  x Teacher-scoped Exam View > from/to date filter → invalid format rejected with 400
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+    
+    Expected: [32m400[39m
+    Received: [31m500[39m
+        at Object.toBe (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-exams-view.test.js:139:28)
+  x Teacher-scoped Exam View > invalid UUID scheduleId rejected with 400
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+    
+    Expected: [32m400[39m
+    Received: [31m500[39m
+        at Object.toBe (C:\Users\Pc\Downloads\peek-school-system-backend-main\peek-school-system-backend-main\__tests__\teacher-exams-view.test.js:182:28)
+
+FAIL: __tests__\helpers.js
+   Suite Error:
+      [1m● [22mTest suite failed to run
+    
+        Your test suite must contain at least one test.
+    
+          [2mat onResult ([22mnode_modules/@jest/core/build/index.js[2m:1057:18)[22m
+          [2mat [22mnode_modules/@jest/core/build/index.js[2m:1127:165[22m
+          [2mat [22mnode_modules/emittery/index.js[2m:363:13[22m
+              at Array.map (<anonymous>)
+          [2mat Emittery.emit ([22mnode_modules/emittery/index.js[2m:361:23)[22m
+    
+
+Total failures: 56 in 11 suites.

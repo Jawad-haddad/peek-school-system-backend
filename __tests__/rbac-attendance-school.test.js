@@ -5,7 +5,8 @@ const express = require('express');
 // 1. Mock the controllers to avoid DB connections
 jest.mock('../src/controllers/attendanceController', () => ({
     submitClassAttendance: (req, res) => res.status(200).json({ success: true, data: { fake: 'attendance-submitted' } }),
-    getClassAttendance: (req, res) => res.status(200).json({ success: true, data: [] })
+    getClassAttendance: (req, res) => res.status(200).json({ success: true, data: [] }),
+    getAttendanceHistory: (req, res) => res.status(200).json({ success: true, data: [] })
 }));
 
 jest.mock('../src/controllers/schoolController', () => ({
@@ -42,7 +43,8 @@ jest.mock('../src/controllers/academicController', () => ({
     getClassTimetable: jest.fn()
 }));
 jest.mock('../src/validators/userValidator', () => ({
-    validate: () => (req, res, next) => next()
+    validate: () => (req, res, next) => next(),
+    validateQuery: () => (req, res, next) => next()
 }));
 
 // 2. Mock authMiddleware internals to easily inject users without real JWTs, 

@@ -68,10 +68,32 @@ const getAnnouncements = async (req, res) => {
     try {
         let whereClause = {
             schoolId,
-            OR: [
-                { scope: 'SCHOOL' }
-            ]
+            OR: []
         };
+
+        // Build SCHOOL-scope filter based on role
+        if (role === 'parent') {
+            whereClause.OR.push({
+                scope: 'SCHOOL',
+                OR: [
+                    { audience: null },
+                    { audience: 'ALL' },
+                    { audience: 'PARENTS_ONLY' },
+                ]
+            });
+        } else if (role === 'teacher') {
+            whereClause.OR.push({
+                scope: 'SCHOOL',
+                OR: [
+                    { audience: null },
+                    { audience: 'ALL' },
+                    { audience: 'TEACHERS_ONLY' },
+                ]
+            });
+        } else {
+            // Admin and other roles see all school announcements
+            whereClause.OR.push({ scope: 'SCHOOL' });
+        }
 
         if (role === 'parent') {
             // Find all classes children are enrolled in
@@ -122,17 +144,83 @@ const getAnnouncements = async (req, res) => {
 };
 
 const sendBroadcast = async (req, res) => {
-    // Wrapper for createAnnouncement to match requested route /broadcast
-    // Map frontend 'message' to 'content' if needed
-    if (req.body.message && !req.body.content) {
-        req.body.content = req.body.message;
-    }
-    // Map frontend 'target' to 'scope' if needed
-    if (req.body.target === 'all' || !req.body.scope) {
-        req.body.scope = 'SCHOOL';
+    let { title, content, message, audience, scope } = req.body;
+    const schoolId = req.user.schoolId;
+
+    // Normalize frontend payload
+    if (!content && message) content = message;
+    if (!audience && scope) {
+        audience = scope === 'SCHOOL' ? 'ALL' : scope;
     }
 
-    return createAnnouncement(req, res);
+    // Validate required fields
+    if (!title || !content) {
+        return fail(res, 400, 'Title and content are required.', 'VALIDATION_ERROR');
+    }
+
+    const VALID_AUDIENCES = ['ALL', 'PARENTS_ONLY', 'TEACHERS_ONLY'];
+    if (!audience || !VALID_AUDIENCES.includes(audience)) {
+        return fail(res, 400,
+            `Invalid audience. Must be one of: ${VALID_AUDIENCES.join(', ')}`,
+            'VALIDATION_ERROR',
+            [{ field: 'audience', message: `Must be one of: ${VALID_AUDIENCES.join(', ')}` }]
+        );
+    }
+
+    try {
+        // 1. Create the announcement record (always school-wide scope)
+        const announcement = await prisma.announcement.create({
+            data: {
+                title,
+                content,
+                scope: 'SCHOOL',
+                audience,
+                schoolId
+            }
+        });
+
+        // 2. Build recipient query filtered by audience + school
+        const recipientWhere = { schoolId, isActive: true };
+        if (audience === 'PARENTS_ONLY') {
+            recipientWhere.role = 'parent';
+        } else if (audience === 'TEACHERS_ONLY') {
+            recipientWhere.role = 'teacher';
+        }
+        // ALL → no role filter, gets all active users in school
+
+        const recipients = await prisma.user.findMany({
+            where: recipientWhere,
+            select: { id: true, role: true }
+        });
+
+        // 3. Send push notifications to each recipient (fire & forget)
+        recipients.forEach(recipient => {
+            sendNotification({
+                userId: recipient.id,
+                title: `Broadcast: ${title}`,
+                body: content.substring(0, 100),
+                preferenceType: 'schoolAnnouncements',
+                data: { announcementId: announcement.id, screen: 'AnnouncementDetails' }
+            });
+        });
+
+        logger.info({
+            announcementId: announcement.id,
+            schoolId,
+            audience,
+            recipientCount: recipients.length
+        }, 'Broadcast sent');
+
+        return ok(res, {
+            announcement,
+            audience,
+            recipientCount: recipients.length
+        }, null, 201);
+
+    } catch (error) {
+        logger.error({ error: error.message, schoolId, title, audience }, 'Error sending broadcast');
+        return fail(res, 500, 'Failed to send broadcast.', 'SERVER_ERROR');
+    }
 };
 
 module.exports = {

@@ -59,7 +59,8 @@ const createExam = async (req, res) => {
 };
 
 const createExamSchedule = async (req, res) => {
-    const { examId, classId, subjectId, date, startTime, endTime, roomNo } = req.body;
+    const examId = req.params.examId || req.body.examId;
+    const { classId, subjectId, date, startTime, endTime, roomNo } = req.body;
 
     if (!examId || !classId || !subjectId || !date || !startTime || !endTime) {
         return res.status(400).json({ message: "All schedule fields are required." });
@@ -223,7 +224,7 @@ const getStudentGrades = async (req, res) => {
 };
 
 const getExamSchedules = async (req, res) => {
-    const { examId } = req.params;
+    const examId = req.params.examId || req.query.examId;
     const schoolId = req.user.schoolId;
 
     try {
@@ -317,6 +318,28 @@ const deleteExam = async (req, res) => {
     }
 };
 
+const deleteExamSchedule = async (req, res) => {
+    const { scheduleId } = req.params;
+    const schoolId = req.user.schoolId;
+
+    try {
+        const schedule = await prisma.examSchedule.findUnique({
+            where: { id: scheduleId },
+            include: { exam: { select: { schoolId: true } } }
+        });
+
+        if (!schedule || schedule.exam.schoolId !== schoolId) {
+            return res.status(404).json({ message: 'Exam schedule not found.' });
+        }
+
+        await prisma.examSchedule.delete({ where: { id: scheduleId } });
+        res.status(204).send();
+    } catch (error) {
+        logger.error({ error, scheduleId }, 'Error deleting exam schedule');
+        res.status(500).json({ message: 'Failed to delete exam schedule.' });
+    }
+};
+
 module.exports = {
     createExam,
     createExamSchedule,
@@ -326,5 +349,6 @@ module.exports = {
     getAllExams,
     getExamSchedules,
     updateExam,
-    deleteExam
+    deleteExam,
+    deleteExamSchedule
 };
