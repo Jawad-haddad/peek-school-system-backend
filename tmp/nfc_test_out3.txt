@@ -1,0 +1,336 @@
+﻿node.exe : FAIL __tests__/nfc-a
+ttendance.test.js (15.66 s)
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" "C:\User
+s\Pc\AppData\Roaming\npm ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~
+    + CategoryInfo          :  
+   NotSpecified: (FAIL __test  
+  s__/...st.js (15.66 s):Str   
+ ing) [], RemoteException
+    + FullyQualifiedErrorId :  
+   NativeCommandError
+ 
+  NFC Card Management & 
+Attendance
+    POST /api/nfc/cards/assign
+      ΓêÜ assigns a card to a 
+student ΓåÆ 201 (35 ms)
+      ΓêÜ rejects duplicate 
+UID in the same school ΓåÆ 409 
+NFC_DUPLICATE_UID (6 ms)
+      ΓêÜ rejects parent role 
+ΓåÆ 403 FORBIDDEN_ROLE (3 ms)
+    PATCH 
+/api/nfc/cards/:id/block
+      ΓêÜ blocks an active 
+card ΓåÆ 200 (4 ms)
+      ΓêÜ rejects cross-school 
+block ΓåÆ 403 TENANT_FORBIDDEN 
+(3 ms)
+    POST /api/nfc/scan
+      ├ù rejects unknown card 
+ΓåÆ 404 NFC_UNKNOWN_CARD (5007 
+ms)
+      ├ù rejects blocked card 
+ΓåÆ 403 NFC_CARD_BLOCKED (5002 
+ms)
+      ├ù records attendance on 
+valid scan ΓåÆ 200 CHECK_IN 
+(5014 ms)
+      ΓêÜ rejects rapid 
+duplicate scan ΓåÆ 429 
+NFC_COOLDOWN (4 ms)
+      ΓêÜ rejects scan without 
+device key ΓåÆ 401 (3 ms)
+      ΓêÜ rejects scan with 
+wrong device key ΓåÆ 401 (4 ms)
+    DELETE 
+/api/nfc/cards/:id/unassign
+      ΓêÜ deletes the card ΓåÆ 
+200 (4 ms)
+
+  ΓùÅ NFC Card Management & 
+Attendance ΓÇ║ POST 
+/api/nfc/scan ΓÇ║ rejects 
+unknown card ΓåÆ 404 
+NFC_UNKNOWN_CARD
+
+    thrown: "Exceeded timeout 
+of 5000 ms for a test.
+    Add a timeout value to 
+this test to increase the 
+timeout, if this is a 
+long-running test. See https://
+jestjs.io/docs/api#testname-fn-
+timeout."
+
+    [0m [90m 191 |[39m
+     [90m 192 |[39m         
+[90m// ΓöÇΓöÇ 5. Unknown card 
+ΓåÆ 404 ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö
+ÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+ΓöÇΓöÇΓöÇΓöÇΓöÇ[39m
+    [31m[1m>[22m[39m[90m 
+193 |[39m         
+it([32m'rejects unknown card 
+ΓåÆ 404 NFC_UNKNOWN_CARD'[39m
+[33m,[39m [36masync[39m () 
+[33m=>[39m {
+     [90m     |[39m         
+[31m[1m^[22m[39m
+     [90m 194 |[39m          
+   mockPrisma[33m.[39mnfcCard
+[33m.[39mfindFirst[33m.[39m
+mockResolvedValue([36mnull[39
+m)[33m;[39m
+     [90m 195 |[39m
+     [90m 196 |[39m          
+   [36mconst[39m res 
+[33m=[39m [36mawait[39m 
+request(app)[0m
+
+      at it (__tests__/nfc-atte
+ndance.test.js:193:9)
+      at describe (__tests__/nf
+c-attendance.test.js:163:5)
+      at Object.describe (__tes
+ts__/nfc-attendance.test.js:89:
+1)
+
+  ΓùÅ NFC Card Management & 
+Attendance ΓÇ║ POST 
+/api/nfc/scan ΓÇ║ rejects 
+unknown card ΓåÆ 404 
+NFC_UNKNOWN_CARD
+
+    ReferenceError: deviceId 
+is not defined
+
+    [0m [90m 251 |[39m      
+   })[33m;[39m
+     [90m 252 |[39m     } 
+[36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 
+253 |[39m         
+logger[33m.[39merror({ 
+error[33m,[39m 
+uid[33m:[39m 
+normalizedUid[33m,[39m 
+deviceId }[33m,[39m 
+[32m'Error processing NFC 
+scan'[39m)[33m;[39m
+     [90m     |[39m          
+                               
+          [31m[1m^[22m[39m
+     [90m 254 |[39m         
+fail(res[33m,[39m 
+[35m500[39m[33m,[39m 
+[32m'Failed to process 
+scan.'[39m[33m,[39m [32m'SE
+RVER_ERROR'[39m)[33m;[39m
+     [90m 255 |[39m     }
+     [90m 256 |[39m 
+}[33m;[39m[0m
+
+      at deviceId (src/controll
+ers/nfcController.js:253:51)
+
+  ΓùÅ NFC Card Management & 
+Attendance ΓÇ║ POST 
+/api/nfc/scan ΓÇ║ rejects 
+blocked card ΓåÆ 403 
+NFC_CARD_BLOCKED
+
+    thrown: "Exceeded timeout 
+of 5000 ms for a test.
+    Add a timeout value to 
+this test to increase the 
+timeout, if this is a 
+long-running test. See https://
+jestjs.io/docs/api#testname-fn-
+timeout."
+
+    [0m [90m 204 |[39m
+     [90m 205 |[39m         
+[90m// ΓöÇΓöÇ 4. Blocked card 
+scan ΓåÆ 403 ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓ
+öÇΓöÇ[39m
+    [31m[1m>[22m[39m[90m 
+206 |[39m         
+it([32m'rejects blocked card 
+ΓåÆ 403 NFC_CARD_BLOCKED'[39m
+[33m,[39m [36masync[39m () 
+[33m=>[39m {
+     [90m     |[39m         
+[31m[1m^[22m[39m
+     [90m 207 |[39m          
+   mockPrisma[33m.[39mnfcCard
+[33m.[39mfindFirst[33m.[39m
+mockResolvedValue(makeCardResul
+t({ status[33m:[39m 
+[32m'BLOCKED'[39m 
+}))[33m;[39m
+     [90m 208 |[39m
+     [90m 209 |[39m          
+   [36mconst[39m res 
+[33m=[39m [36mawait[39m 
+request(app)[0m
+
+      at it (__tests__/nfc-atte
+ndance.test.js:206:9)
+      at describe (__tests__/nf
+c-attendance.test.js:163:5)
+      at Object.describe (__tes
+ts__/nfc-attendance.test.js:89:
+1)
+
+  ΓùÅ NFC Card Management & 
+Attendance ΓÇ║ POST 
+/api/nfc/scan ΓÇ║ rejects 
+blocked card ΓåÆ 403 
+NFC_CARD_BLOCKED
+
+    ReferenceError: deviceId 
+is not defined
+
+    [0m [90m 251 |[39m      
+   })[33m;[39m
+     [90m 252 |[39m     } 
+[36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 
+253 |[39m         
+logger[33m.[39merror({ 
+error[33m,[39m 
+uid[33m:[39m 
+normalizedUid[33m,[39m 
+deviceId }[33m,[39m 
+[32m'Error processing NFC 
+scan'[39m)[33m;[39m
+     [90m     |[39m          
+                               
+          [31m[1m^[22m[39m
+     [90m 254 |[39m         
+fail(res[33m,[39m 
+[35m500[39m[33m,[39m 
+[32m'Failed to process 
+scan.'[39m[33m,[39m [32m'SE
+RVER_ERROR'[39m)[33m;[39m
+     [90m 255 |[39m     }
+     [90m 256 |[39m 
+}[33m;[39m[0m
+
+      at deviceId (src/controll
+ers/nfcController.js:253:51)
+
+  ΓùÅ NFC Card Management & 
+Attendance ΓÇ║ POST 
+/api/nfc/scan ΓÇ║ records 
+attendance on valid scan ΓåÆ 
+200 CHECK_IN
+
+    thrown: "Exceeded timeout 
+of 5000 ms for a test.
+    Add a timeout value to 
+this test to increase the 
+timeout, if this is a 
+long-running test. See https://
+jestjs.io/docs/api#testname-fn-
+timeout."
+
+    [0m [90m 217 |[39m
+     [90m 218 |[39m         
+[90m// ΓöÇΓöÇ 6. Successful 
+attendance scan ΓöÇΓöÇΓöÇΓöÇΓöÇ
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓ
+öÇ[39m
+    [31m[1m>[22m[39m[90m 
+219 |[39m         
+it([32m'records attendance on 
+valid scan ΓåÆ 200 
+CHECK_IN'[39m[33m,[39m 
+[36masync[39m () 
+[33m=>[39m {
+     [90m     |[39m         
+[31m[1m^[22m[39m
+     [90m 220 |[39m          
+   mockPrisma[33m.[39mnfcCard
+[33m.[39mfindFirst[33m.[39m
+mockResolvedValue(makeCardResul
+t())[33m;[39m
+     [90m 221 |[39m          
+   mockPrisma[33m.[39mattenda
+nce[33m.[39mupsert[33m.[39m
+mockResolvedValue({ 
+id[33m:[39m 
+[32m'att-1'[39m })[33m;[39m
+     [90m 222 |[39m          
+   mockPrisma[33m.[39mnfcCard
+[33m.[39mupdate[33m.[39mmoc
+kResolvedValue({})[33m;[39m[
+0m
+
+      at it (__tests__/nfc-atte
+ndance.test.js:219:9)
+      at describe (__tests__/nf
+c-attendance.test.js:163:5)
+      at Object.describe (__tes
+ts__/nfc-attendance.test.js:89:
+1)
+
+  ΓùÅ NFC Card Management & 
+Attendance ΓÇ║ POST 
+/api/nfc/scan ΓÇ║ records 
+attendance on valid scan ΓåÆ 
+200 CHECK_IN
+
+    ReferenceError: deviceId 
+is not defined
+
+    [0m [90m 251 |[39m      
+   })[33m;[39m
+     [90m 252 |[39m     } 
+[36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 
+253 |[39m         
+logger[33m.[39merror({ 
+error[33m,[39m 
+uid[33m:[39m 
+normalizedUid[33m,[39m 
+deviceId }[33m,[39m 
+[32m'Error processing NFC 
+scan'[39m)[33m;[39m
+     [90m     |[39m          
+                               
+          [31m[1m^[22m[39m
+     [90m 254 |[39m         
+fail(res[33m,[39m 
+[35m500[39m[33m,[39m 
+[32m'Failed to process 
+scan.'[39m[33m,[39m [32m'SE
+RVER_ERROR'[39m)[33m;[39m
+     [90m 255 |[39m     }
+     [90m 256 |[39m 
+}[33m;[39m[0m
+
+      at deviceId (src/controll
+ers/nfcController.js:253:51)
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 9 
+passed, 12 total
+Snapshots:   0 total
+Time:        15.723 s, 
+estimated 16 s
+Ran all test suites matching __
+tests__/nfc-attendance.test.js.
+Force exiting Jest: Have you 
+considered using 
+`--detectOpenHandles` to 
+detect async operations that 
+kept running after all tests 
+finished?

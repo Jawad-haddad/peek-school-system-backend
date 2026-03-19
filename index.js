@@ -38,6 +38,7 @@ const statsRoutes = require('./src/routes/statsRoutes');
 const platformRoutes = require('./src/routes/platformRoutes');
 const teacherRoutes = require('./src/routes/teacherRoutes');
 const parentRoutes = require('./src/routes/parentRoutes');
+const nfcRoutes = require('./src/routes/nfcRoutes');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./src/config/swaggerConfig');
 
@@ -118,6 +119,7 @@ app.use('/api/stats', statsRoutes);
 app.use('/api/platform', platformRoutes); // Admin onboarding
 app.use('/api/teacher', teacherRoutes);   // Teacher-scoped endpoints
 app.use('/api/parent', parentRoutes);     // Parent-scoped endpoints
+app.use('/api/nfc', nfcRoutes);           // NFC card management + ESP32 scan
 
 // ── 404 Catch-All ────────────────────────────────────────
 app.use((req, res, next) => {

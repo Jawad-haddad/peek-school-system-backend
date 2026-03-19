@@ -1,0 +1,257 @@
+﻿node.exe : FAIL __tests__/nfc-a
+ttendance.test.js
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" "C:\User
+s\Pc\AppData\Roaming\npm ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~
+    + CategoryInfo          :  
+   NotSpecified: (FAIL __test  
+  s__/nfc-attendance.test.js   
+ :String) [], RemoteExcepti    
+on
+    + FullyQualifiedErrorId :  
+   NativeCommandError
+ 
+  NFC Card Management & 
+Attendance
+    POST /api/nfc/cards/assign
+      ├ù assigns a card to a 
+student ΓåÆ 201 (25 ms)
+      ├ù rejects duplicate UID 
+in the same school ΓåÆ 409 
+NFC_DUPLICATE_UID (5 ms)
+      ΓêÜ rejects parent role 
+ΓåÆ 403 FORBIDDEN_ROLE (4 ms)
+    PATCH 
+/api/nfc/cards/:id/block
+      ├ù blocks an active card 
+ΓåÆ 200 (4 ms)
+      ├ù rejects cross-school 
+block ΓåÆ 403 TENANT_FORBIDDEN 
+(3 ms)
+    POST /api/nfc/scan
+      ΓêÜ rejects unknown card 
+ΓåÆ 404 NFC_UNKNOWN_CARD (3 ms)
+      ΓêÜ rejects blocked card 
+ΓåÆ 403 NFC_CARD_BLOCKED (3 ms)
+      ΓêÜ records attendance 
+on valid scan ΓåÆ 200 CHECK_IN 
+(3 ms)
+      ΓêÜ rejects rapid 
+duplicate scan ΓåÆ 429 
+NFC_COOLDOWN (3 ms)
+      ΓêÜ rejects scan without 
+device key ΓåÆ 401 (3 ms)
+      ΓêÜ rejects scan with 
+wrong device key ΓåÆ 401 (2 ms)
+    DELETE 
+/api/nfc/cards/:id/unassign
+      ├ù deletes the card ΓåÆ 
+200 (3 ms)
+
+  ΓùÅ NFC Card Management & 
+Attendance ΓÇ║ POST 
+/api/nfc/cards/assign ΓÇ║ 
+assigns a card to a student 
+ΓåÆ 201
+
+    expect(received).toBe(expec
+ted) // Object.is equality
+
+    Expected: 201
+    Received: 400
+
+    [0m [90m  98 |[39m      
+           [33m.[39msend({ 
+uid[33m:[39m [33mSAMPLE_UID
+[39m[33m,[39m 
+studentId[33m:[39m [33mSTUDE
+NT_ID[39m[33m,[39m 
+label[33m:[39m [32m'Primary 
+card'[39m })[33m;[39m
+     [90m  99 |[39m
+    [31m[1m>[22m[39m[90m 
+100 |[39m             expect(r
+es[33m.[39mstatus)[33m.[39m
+toBe([35m201[39m)[33m;[39m
+     [90m     |[39m          
+                      
+[31m[1m^[22m[39m
+     [90m 101 |[39m          
+   expect(res[33m.[39mbody[3
+3m.[39msuccess)[33m.[39mtoBe
+([36mtrue[39m)[33m;[39m
+     [90m 102 |[39m          
+   expect(res[33m.[39mbody[3
+3m.[39mdata[33m.[39muid)[33
+m.[39mtoBe([33mSAMPLE_UID[39
+m)[33m;[39m
+     [90m 103 |[39m         
+})[33m;[39m[0m
+
+      at Object.toBe (__tests__
+/nfc-attendance.test.js:100:32)
+
+  ΓùÅ NFC Card Management & 
+Attendance ΓÇ║ POST 
+/api/nfc/cards/assign ΓÇ║ 
+rejects duplicate UID in the 
+same school ΓåÆ 409 
+NFC_DUPLICATE_UID
+
+    expect(received).toBe(expec
+ted) // Object.is equality
+
+    Expected: 409
+    Received: 400
+
+    [0m [90m 113 |[39m      
+           [33m.[39msend({ 
+uid[33m:[39m [33mSAMPLE_UID
+[39m[33m,[39m 
+studentId[33m:[39m 
+[33mSTUDENT_ID[39m 
+})[33m;[39m
+     [90m 114 |[39m
+    [31m[1m>[22m[39m[90m 
+115 |[39m             expect(r
+es[33m.[39mstatus)[33m.[39m
+toBe([35m409[39m)[33m;[39m
+     [90m     |[39m          
+                      
+[31m[1m^[22m[39m
+     [90m 116 |[39m          
+   expect(res[33m.[39mbody[3
+3m.[39merror[33m.[39mcode)[
+33m.[39mtoBe([32m'NFC_DUPLICA
+TE_UID'[39m)[33m;[39m
+     [90m 117 |[39m         
+})[33m;[39m
+     [90m 118 |[39m[0m
+
+      at Object.toBe (__tests__
+/nfc-attendance.test.js:115:32)
+
+  ΓùÅ NFC Card Management & 
+Attendance ΓÇ║ PATCH 
+/api/nfc/cards/:id/block ΓÇ║ 
+blocks an active card ΓåÆ 200
+
+    expect(received).toBe(expec
+ted) // Object.is equality
+
+    Expected: 200
+    Received: 400
+
+    [0m [90m 139 |[39m      
+           [33m.[39m[36mset
+[39m(adminHeaders)[33m;[39m
+     [90m 140 |[39m
+    [31m[1m>[22m[39m[90m 
+141 |[39m             expect(r
+es[33m.[39mstatus)[33m.[39m
+toBe([35m200[39m)[33m;[39m
+     [90m     |[39m          
+                      
+[31m[1m^[22m[39m
+     [90m 142 |[39m          
+   expect(res[33m.[39mbody[3
+3m.[39mdata[33m.[39mstatus)
+[33m.[39mtoBe([32m'BLOCKED'[
+39m)[33m;[39m
+     [90m 143 |[39m         
+})[33m;[39m
+     [90m 144 |[39m[0m
+
+      at Object.toBe (__tests__
+/nfc-attendance.test.js:141:32)
+
+  ΓùÅ NFC Card Management & 
+Attendance ΓÇ║ PATCH 
+/api/nfc/cards/:id/block ΓÇ║ 
+rejects cross-school block ΓåÆ 
+403 TENANT_FORBIDDEN
+
+    expect(received).toBe(expec
+ted) // Object.is equality
+
+    Expected: 403
+    Received: 400
+
+    [0m [90m 151 |[39m      
+           [33m.[39m[36mset
+[39m(adminHeaders)[33m;[39m 
+[90m// school-A user trying 
+to block school-B card[39m
+     [90m 152 |[39m
+    [31m[1m>[22m[39m[90m 
+153 |[39m             expect(r
+es[33m.[39mstatus)[33m.[39m
+toBe([35m403[39m)[33m;[39m
+     [90m     |[39m          
+                      
+[31m[1m^[22m[39m
+     [90m 154 |[39m          
+   expect(res[33m.[39mbody[3
+3m.[39merror[33m.[39mcode)[
+33m.[39mtoBe([32m'TENANT_FORB
+IDDEN'[39m)[33m;[39m
+     [90m 155 |[39m         
+})[33m;[39m
+     [90m 156 |[39m     
+})[33m;[39m[0m
+
+      at Object.toBe (__tests__
+/nfc-attendance.test.js:153:32)
+
+  ΓùÅ NFC Card Management & 
+Attendance ΓÇ║ DELETE 
+/api/nfc/cards/:id/unassign 
+ΓÇ║ deletes the card ΓåÆ 200
+
+    expect(received).toBe(expec
+ted) // Object.is equality
+
+    Expected: 200
+    Received: 400
+
+    [0m [90m 267 |[39m      
+           [33m.[39m[36mset
+[39m(adminHeaders)[33m;[39m
+     [90m 268 |[39m
+    [31m[1m>[22m[39m[90m 
+269 |[39m             expect(r
+es[33m.[39mstatus)[33m.[39m
+toBe([35m200[39m)[33m;[39m
+     [90m     |[39m          
+                      
+[31m[1m^[22m[39m
+     [90m 270 |[39m          
+   expect(res[33m.[39mbody[3
+3m.[39msuccess)[33m.[39mtoBe
+([36mtrue[39m)[33m;[39m
+     [90m 271 |[39m         
+})[33m;[39m
+     [90m 272 |[39m     
+})[33m;[39m[0m
+
+      at Object.toBe (__tests__
+/nfc-attendance.test.js:269:32)
+
+Test Suites: 1 failed, 1 total
+Tests:       5 failed, 7 
+passed, 12 total
+Snapshots:   0 total
+Time:        0.635 s, 
+estimated 1 s
+Ran all test suites matching __
+tests__/nfc-attendance.test.js.
+Force exiting Jest: Have you 
+considered using 
+`--detectOpenHandles` to 
+detect async operations that 
+kept running after all tests 
+finished?

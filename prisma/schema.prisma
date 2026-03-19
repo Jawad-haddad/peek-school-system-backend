@@ -80,6 +80,16 @@ enum AnnouncementScope {
   CLASS
 }
 
+enum NfcCardStatus {
+  ACTIVE
+  BLOCKED
+}
+
+enum NfcDeviceStatus {
+  ACTIVE
+  DISABLED
+}
+
 // ================================================= //
 // ==============       CORE MODELS       ============= //
 // ================================================= //
@@ -100,6 +110,8 @@ model School {
   posOrders             POSOrder[]
   busTrips              BusTrip[]
   walletTransactions    WalletTransaction[]
+  nfcCards               NfcCard[]
+  nfcDevices            NfcDevice[]
   // Timestamps
   createdAt             DateTime            @default(now())
   updatedAt             DateTime            @updatedAt
@@ -168,6 +180,7 @@ model Student {
   walletTxns            WalletTransaction[]
   posOrders             POSOrder[]
   busTripEntries        BusTripEntry[]
+  nfcCards              NfcCard[]
   createdAt             DateTime            @default(now())
   updatedAt             DateTime            @updatedAt
   examMarks             ExamMark[]
@@ -628,4 +641,43 @@ model Message {
 
   @@index([senderId])
   @@index([receiverId])
+}
+
+// ======================================================= //
+// ==============     NFC CARD MODELS     ================ //
+// ======================================================= //
+
+model NfcCard {
+  id            String        @id @default(uuid())
+  uid           String                              // e.g. "A1:B2:C3:D4"
+  status        NfcCardStatus @default(ACTIVE)
+  label         String?                             // optional friendly name
+  lastScannedAt DateTime?
+  studentId     String
+  schoolId      String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  student       Student       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  school        School        @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@unique([schoolId, uid])
+  @@index([studentId])
+  @@index([schoolId])
+}
+
+model NfcDevice {
+  id        String          @id @default(uuid())
+  deviceId  String
+  name      String
+  schoolId  String
+  apiKey    String
+  status    NfcDeviceStatus @default(ACTIVE)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  school    School          @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@unique([schoolId, deviceId])
+  @@index([schoolId])
 }

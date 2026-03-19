@@ -1,0 +1,115 @@
+﻿node.exe : FAIL __tests__/nfc-a
+ttendance.test.js
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" "C:\User
+s\Pc\AppData\Roaming\npm ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~
+    + CategoryInfo          :  
+   NotSpecified: (FAIL __test  
+  s__/nfc-attendance.test.js   
+ :String) [], RemoteExcepti    
+on
+    + FullyQualifiedErrorId :  
+   NativeCommandError
+ 
+  NFC Card Management & 
+Attendance
+    POST /api/nfc/cards/assign
+      ΓêÜ assigns a card to a 
+student ΓåÆ 201 (34 ms)
+      ΓêÜ rejects duplicate 
+UID in the same school ΓåÆ 409 
+NFC_DUPLICATE_UID (4 ms)
+      ΓêÜ rejects parent role 
+ΓåÆ 403 FORBIDDEN_ROLE (3 ms)
+    PATCH 
+/api/nfc/cards/:id/block
+      ΓêÜ blocks an active 
+card ΓåÆ 200 (4 ms)
+      ΓêÜ rejects cross-school 
+block ΓåÆ 403 TENANT_FORBIDDEN 
+(3 ms)
+    POST /api/nfc/scan
+      ΓêÜ rejects unknown card 
+ΓåÆ 404 NFC_UNKNOWN_CARD (3 ms)
+      ΓêÜ rejects blocked card 
+ΓåÆ 403 NFC_CARD_BLOCKED (4 ms)
+      ΓêÜ records attendance 
+on valid scan ΓåÆ 200 CHECK_IN 
+(4 ms)
+      ΓêÜ rejects rapid 
+duplicate scan ΓåÆ 429 
+NFC_COOLDOWN (2 ms)
+      ΓêÜ rejects scan without 
+device key ΓåÆ 401 (3 ms)
+      ΓêÜ rejects scan with 
+wrong device key ΓåÆ 401 (2 ms)
+    DELETE 
+/api/nfc/cards/:id/unassign
+      ΓêÜ deletes the card ΓåÆ 
+200 (2 ms)
+    POST /api/nfc/devices
+      ├ù creates a new device 
+auto-generating deviceId and 
+apiKey ΓåÆ 201 (5 ms)
+
+  ΓùÅ NFC Card Management & 
+Attendance ΓÇ║ POST 
+/api/nfc/devices ΓÇ║ creates a 
+new device auto-generating 
+deviceId and apiKey ΓåÆ 201
+
+    expect(received).toBe(expec
+ted) // Object.is equality
+
+    Expected: 201
+    Received: 200
+
+    [0m [90m 310 |[39m      
+           [33m.[39msend({ 
+name[33m:[39m [32m'Library 
+Reader'[39m })[33m;[39m
+     [90m 311 |[39m
+    [31m[1m>[22m[39m[90m 
+312 |[39m             expect(r
+es[33m.[39mstatus)[33m.[39m
+toBe([35m201[39m)[33m;[39m
+     [90m     |[39m          
+                      
+[31m[1m^[22m[39m
+     [90m 313 |[39m          
+   expect(res[33m.[39mbody[3
+3m.[39msuccess)[33m.[39mtoBe
+([36mtrue[39m)[33m;[39m
+     [90m 314 |[39m          
+   expect(res[33m.[39mbody[3
+3m.[39mdata[33m.[39mname)[3
+3m.[39mtoBe([32m'Library 
+Reader'[39m)[33m;[39m
+     [90m 315 |[39m          
+   expect(res[33m.[39mbody[3
+3m.[39mdata[33m.[39mdeviceId
+)[33m.[39mtoMatch([35m/^dev-
+[0-9a-f]{8}$/[39m)[33m;[39m
+[0m
+
+      at Object.toBe (__tests__
+/nfc-attendance.test.js:312:32)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 12 
+passed, 13 total
+Snapshots:   0 total
+Time:        0.686 s, 
+estimated 1 s
+Ran all test suites matching __
+tests__/nfc-attendance.test.js.
+Force exiting Jest: Have you 
+considered using 
+`--detectOpenHandles` to 
+detect async operations that 
+kept running after all tests 
+finished?

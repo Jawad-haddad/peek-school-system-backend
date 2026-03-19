@@ -1,0 +1,68 @@
+﻿node.exe : PASS __tests__/nfc-a
+ttendance.test.js
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" "C:\User
+s\Pc\AppData\Roaming\npm ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~
+    + CategoryInfo          :  
+   NotSpecified: (PASS __test  
+  s__/nfc-attendance.test.js   
+ :String) [], RemoteExcepti    
+on
+    + FullyQualifiedErrorId :  
+   NativeCommandError
+ 
+  NFC Card Management & 
+Attendance
+    POST /api/nfc/cards/assign
+      ΓêÜ assigns a card to a 
+student ΓåÆ 201 (37 ms)
+      ΓêÜ rejects duplicate 
+UID in the same school ΓåÆ 409 
+NFC_DUPLICATE_UID (5 ms)
+      ΓêÜ rejects parent role 
+ΓåÆ 403 FORBIDDEN_ROLE (4 ms)
+    PATCH 
+/api/nfc/cards/:id/block
+      ΓêÜ blocks an active 
+card ΓåÆ 200 (4 ms)
+      ΓêÜ rejects cross-school 
+block ΓåÆ 403 TENANT_FORBIDDEN 
+(4 ms)
+    POST /api/nfc/scan
+      ΓêÜ rejects unknown card 
+ΓåÆ 404 NFC_UNKNOWN_CARD (3 ms)
+      ΓêÜ rejects blocked card 
+ΓåÆ 403 NFC_CARD_BLOCKED (2 ms)
+      ΓêÜ records attendance 
+on valid scan ΓåÆ 200 CHECK_IN 
+(4 ms)
+      ΓêÜ rejects rapid 
+duplicate scan ΓåÆ 429 
+NFC_COOLDOWN (3 ms)
+      ΓêÜ rejects scan without 
+device key ΓåÆ 401 (3 ms)
+      ΓêÜ rejects scan with 
+wrong device key ΓåÆ 401 (2 ms)
+    DELETE 
+/api/nfc/cards/:id/unassign
+      ΓêÜ deletes the card ΓåÆ 
+200 (2 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       12 passed, 12 
+total
+Snapshots:   0 total
+Time:        0.737 s, 
+estimated 1 s
+Ran all test suites matching __
+tests__/nfc-attendance.test.js.
+Force exiting Jest: Have you 
+considered using 
+`--detectOpenHandles` to 
+detect async operations that 
+kept running after all tests 
+finished?
